@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/image.png</file>
+        <file>images/datadig.png</file>
+        <file>images/delete.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/camico.ico</file>
+        <file>icons/camico2.ico</file>
+    </qresource>
+</RCC>
