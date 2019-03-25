@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
+    <width>666</width>
     <height>483</height>
    </rect>
   </property>
@@ -25,6 +25,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="image_open"/>
+   <addaction name="fit_to_image"/>
    <addaction name="show_srcImage"/>
    <addaction name="separator"/>
    <addaction name="edge_canny"/>
@@ -36,7 +37,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>650</width>
+     <width>666</width>
      <height>23</height>
     </rect>
    </property>
@@ -48,7 +49,7 @@
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>特征提取</string>
+     <string>特征提取(&amp;A)</string>
     </property>
     <addaction name="edge_canny"/>
    </widget>
@@ -76,7 +77,7 @@
   <action name="edge_canny">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/images/datadig.png</normaloff>:/images/images/datadig.png</iconset>
+     <normaloff>:/images/images/C.png</normaloff>:/images/images/C.png</iconset>
    </property>
    <property name="text">
     <string>Canny 边缘 (&amp;C)</string>
@@ -103,10 +104,22 @@
   <action name="show_srcImage">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/images/image.png</normaloff>:/images/images/image.png</iconset>
+     <normaloff>:/images/images/geren.png</normaloff>:/images/images/geren.png</iconset>
    </property>
    <property name="text">
     <string>显示原图(&amp;R)</string>
+   </property>
+  </action>
+  <action name="fit_to_image">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/resize.png</normaloff>:/images/images/resize.png</iconset>
+   </property>
+   <property name="text">
+    <string>适应图像(&amp;I)</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F</string>
    </property>
   </action>
  </widget>
