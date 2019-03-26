@@ -155,7 +155,7 @@ void MainWindow::showImage(Mat img, bool isResize)
 //    std::cout << viewWidth << ", " << viewHeight << std::endl;
 //    std::cout << img.cols << ", " << img.rows << std::endl;
     if (viewWidth < img.cols || viewHeight < img.rows) {
-        // TODO: 自动调整尺寸比较大的图片
+        // 自动调整尺寸比较大的图片
         int c = img.cols;
         int r = img.rows;
 
@@ -169,8 +169,8 @@ void MainWindow::showImage(Mat img, bool isResize)
         }
 
         disImage = disImage.scaled(int(c*scale), int(r*scale));
-        std::cout << scale << std::endl;
-        std::cout << c*scale << ", " << r*scale << std::endl;
+//        std::cout << scale << std::endl;
+//        std::cout << c*scale << ", " << r*scale << std::endl;
     }
 
     // 获取显示区尺寸
