@@ -4,6 +4,8 @@
 
 作者：`Kevin Lin [hayzlsls@whu.edu.cn]`
 
+[TOC]
+
 ## 一、技术栈
 ### 1. 用户界面
 - Qt 5.12.2
@@ -15,3 +17,15 @@
 ### v0.1.0
 - 图像读取与显示
 - Canny 算子边缘检测
+
+### TODO: v0.2.0
+TODO: 添加边缘提取的其他算法：拉普拉斯（Laplacian）、高斯-拉普拉斯（LOG）、索贝尔（Sobel）、罗伯特（Robert）、普利伊特（Prewitt）。并针对每个算子设计参数输入对话框。
+
+- 图像读取与显示
+- 边缘检测
+  - Canny
+  - [TODO] Laplacian
+  - [TODO] LOG
+  - [TODO] Sobel
+  - [TODO] Robert
+  - [TODO] Prewitt
