@@ -8,6 +8,8 @@
 #include <QMouseEvent> // 鼠标事件
 #include <QKeyEvent> // 键盘事件
 #include <QWheelEvent> // 鼠标滚动事件
+#include <QGuiApplication>
+#include <QScreen>
 
 /* UI */
 #include <QGridLayout>
@@ -19,6 +21,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // 屏幕大小
+    QScreen *pSc = QGuiApplication::primaryScreen();
+    availableWidth = pSc->availableGeometry().width();
+    availableHeight = pSc->availableGeometry().height();
+
+//    this->setGeometry(0, 0, availableWidth, availableHeight); // 设置软件大小
+//    this->showFullScreen(); // 全屏（沉浸式）
+//    this->showMaximized();  // 最大化
+//    std::cout << ui->toolBar->geometry().height() << std::endl;
+//    std::cout << ui->menuBar->geometry().height() << std::endl;
 
     // 初始化显示场景
     scene = new QGraphicsScene;
@@ -61,10 +74,14 @@ void MainWindow::on_image_open_triggered()
 
     if (fileName.isEmpty()) return;
 
+    // 清空已有图像
+    releaseImages();
+
     Mat inputImage = imread(fileName.toLocal8Bit().data(), 1);
 
-    if (!inputImage.empty() || !inputImage.data) {
+    if (!inputImage.empty() && inputImage.data) {
         srcImage = inputImage;
+        this->CannySlider->hide();
     } else {
         QMessageBox::warning(this,
                              tr("打开图像失败！"),
@@ -90,6 +107,7 @@ void MainWindow::on_clear_image_triggered()
 
         // 清空图像
         srcImage.release();
+        if (!cedge.empty()) cedge.release();
 
     }
 }
@@ -97,41 +115,66 @@ void MainWindow::on_clear_image_triggered()
 void MainWindow::on_edge_canny_triggered()
 {
     if (srcImage.empty()) {
-        QMessageBox::warning(this,
-                             tr("提示"),
-                             tr("请先打开一张图像"));
+        showMessageBox(tr("请先打开一张图像"));
+    } else if (!cedge.empty()){
+        CannySlider->show();
+        showImage(cedge, false);
     } else {
         // 对话框
         QMessageBox *infoBox = new QMessageBox;
         infoBox->setIcon(QMessageBox::Information);
-        infoBox->setWindowTitle("提示");
-        infoBox->setText("运算中");
+        infoBox->setWindowTitle(tr("提示"));
+        infoBox->setText(tr("运算中"));
         infoBox->show();
 
         CannySlider->show();
 
-        Mat result = edgeDetectCanny(srcImage, CannySlider->value());
+        cedge = edgeDetectCanny(srcImage, CannySlider->value()).clone();
 
-        infoBox->setText("运算结束");
+        infoBox->setText(tr("运算结束"));
         infoBox->close();
 
         // 显示
-        showImage(result);
+        showImage(cedge, false);
     }
 }
 
-void MainWindow::showImage(Mat img)
+void MainWindow::showImage(Mat img, bool isResize)
 {
-
     // 转换数据（包含在 convert.h 中）
     QImage disImage = cvMat2QImage(img);
 
-    // 获取显示区尺寸
-    QSize winSize = ImageView->size();
+    // 调整窗口大小
+    if (isResize) {
+        resizeToImage(img);
+    }
 
-    // 用 QGraphicsScene 管理图像数据
+    // 调整图像大小
+    int viewWidth = this->geometry().width() - 23;
+    int viewHeight = this->geometry().height() - ui->menuBar->height() - ui->toolBar->height() - 23;
+//    std::cout << viewWidth << ", " << viewHeight << std::endl;
+//    std::cout << img.cols << ", " << img.rows << std::endl;
+    if (viewWidth < img.cols || viewHeight < img.rows) {
+        // 自动调整尺寸比较大的图片
+        int c = img.cols;
+        int r = img.rows;
+
+        double scale = 1.0; // 缩放比例
+        if (viewHeight < r) {
+            scale = double(viewHeight) / double(r);
+            if (viewWidth < c * scale) scale = viewWidth / c;
+        } else if (viewWidth < c) {
+            scale = double(viewWidth) / double(c);
+//            if (viewHeight < r * scale) scale = viewHeight / r; // 这步永远不会执行，因为已经无法满足 viewHeight < r，更不可能满足viewHeight < r * scale
+        }
+
+        disImage = disImage.scaled(int(c*scale), int(r*scale));
+//        std::cout << scale << std::endl;
+//        std::cout << c*scale << ", " << r*scale << std::endl;
+    }
+
     scene->clear();
-    scene->addPixmap(QPixmap::fromImage(disImage.scaled(winSize)));
+    scene->addPixmap(QPixmap::fromImage(disImage));
 
     ImageView->show();
 }
@@ -167,17 +210,60 @@ Mat MainWindow::edgeDetectCanny(Mat img, int edgeThresh)
 
 void MainWindow::On_CannySlider_valueChanged(int threshod)
 {
-    std::cout << threshod << std::endl;
     if (!srcImage.empty())
     {
-        Mat edge = edgeDetectCanny(srcImage, threshod);
+        cedge = edgeDetectCanny(srcImage, threshod).clone();
 
-        showImage(edge);
+        showImage(cedge, false);
     }
 }
 
 void MainWindow::on_show_srcImage_triggered()
 {
-    if (!srcImage.empty())
-        showImage(srcImage);
+    if (srcImage.empty()) showMessageBox(tr("请先打开一张图像"));
+    else{
+        showImage(srcImage, false);
+        CannySlider->hide();
+    }
+}
+
+void MainWindow::showMessageBox(QString msg)
+{
+
+    QMessageBox::warning(this,
+                         tr("提示"),
+                         msg);
+}
+
+void MainWindow::resizeToImage(Mat img)
+{
+    if (!img.empty()) {
+        int appWidth = img.cols + 23;
+        int appHeight = img.rows + ui->menuBar->height() + ui->toolBar->height() + 23;
+        // 如果大于屏幕，则直接全屏显示
+        if (appWidth >= availableWidth || appHeight >= availableHeight) {
+            this->setGeometry(0, 0, availableWidth, availableHeight);
+            this->showMaximized();
+        }
+        // 否则适应图片
+        else {
+            int leftTopX = (availableWidth - appWidth) / 2;
+            int lettTopY = (availableHeight - appHeight) / 2;
+
+            if (this->isMaximized()) this->showNormal();
+            this->setGeometry(leftTopX, lettTopY, appWidth, appHeight);
+        }
+    }
+}
+
+void MainWindow::on_fit_to_image_triggered()
+{
+    if (!cedge.empty()) resizeToImage(cedge);
+    else if (!srcImage.empty()) resizeToImage(srcImage);
+}
+
+void MainWindow::releaseImages()
+{
+    if (!srcImage.empty()) srcImage.release();
+    if (!cedge.empty()) cedge.release();
 }
