@@ -69,8 +69,9 @@ MainWindow::~MainWindow()
 void MainWindow::on_image_open_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
-                                                    ".",
+                                                    this->imagePath,
                                                     tr("Image File(*.png *.jpg *.jpeg *.bmp)"));
+    this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
 
     if (fileName.isEmpty()) return;
 
@@ -107,7 +108,7 @@ void MainWindow::on_clear_image_triggered()
 
         // 清空图像
         srcImage.release();
-        if (!cedge.empty()) cedge.release();
+        if (!edgeImage.empty()) edgeImage.release();
 
     }
 }
@@ -116,26 +117,20 @@ void MainWindow::on_edge_canny_triggered()
 {
     if (srcImage.empty()) {
         showMessageBox(tr("请先打开一张图像"));
-    } else if (!cedge.empty()){
+    } else if (!edgeImage.empty()){
         CannySlider->show();
-        showImage(cedge, false);
+        showImage(edgeImage, false);
     } else {
         // 对话框
-        QMessageBox *infoBox = new QMessageBox;
-        infoBox->setIcon(QMessageBox::Information);
-        infoBox->setWindowTitle(tr("提示"));
-        infoBox->setText(tr("运算中"));
-        infoBox->show();
-
+        QMessageBox::information(this,
+                                 tr("提示"),
+                                 tr("运算中"));
         CannySlider->show();
 
-        cedge = edgeDetectCanny(srcImage, CannySlider->value()).clone();
-
-        infoBox->setText(tr("运算结束"));
-        infoBox->close();
+        edgeImage = edgeDetectCanny(srcImage, CannySlider->value()).clone();
 
         // 显示
-        showImage(cedge, false);
+        showImage(edgeImage, false);
     }
 }
 
@@ -181,12 +176,12 @@ void MainWindow::showImage(Mat img, bool isResize)
 
 Mat MainWindow::edgeDetectCanny(Mat img, int edgeThresh)
 {
-    Mat cedge;
+    Mat edgeImage;
 
     if (img.empty()) {
-        return cedge;
+        return edgeImage;
     } else {
-        cedge.create(img.size(), img.type());
+        edgeImage.create(img.size(), img.type());
     }
     
     // 深拷贝
@@ -200,21 +195,21 @@ Mat MainWindow::edgeDetectCanny(Mat img, int edgeThresh)
     // 在灰度图上运行canny算子
     Mat edge;
     Canny(blurImage, edge, edgeThresh, edgeThresh*3, 3);
-    cedge = Scalar::all(0);
+    edgeImage = Scalar::all(0);
 
-    // 获取边缘图像 cedge
-    image.copyTo(cedge, edge);
+    // 获取边缘图像 edgeImage
+    image.copyTo(edgeImage, edge);
 
-    return  cedge;
+    return  edgeImage;
 }
 
 void MainWindow::On_CannySlider_valueChanged(int threshod)
 {
     if (!srcImage.empty())
     {
-        cedge = edgeDetectCanny(srcImage, threshod).clone();
+        edgeImage = edgeDetectCanny(srcImage, threshod).clone();
 
-        showImage(cedge, false);
+        showImage(edgeImage, false);
     }
 }
 
@@ -258,12 +253,37 @@ void MainWindow::resizeToImage(Mat img)
 
 void MainWindow::on_fit_to_image_triggered()
 {
-    if (!cedge.empty()) resizeToImage(cedge);
+    if (!edgeImage.empty()) resizeToImage(edgeImage);
     else if (!srcImage.empty()) resizeToImage(srcImage);
 }
 
 void MainWindow::releaseImages()
 {
     if (!srcImage.empty()) srcImage.release();
-    if (!cedge.empty()) cedge.release();
+    if (!edgeImage.empty()) edgeImage.release();
+}
+
+void MainWindow::on_edge_laplacian_triggered()
+{
+    cout << "laplacian" << endl;
+}
+
+void MainWindow::on_edge_log_triggered()
+{
+    cout << "LOG" << endl;
+}
+
+void MainWindow::on_edge_sobel_triggered()
+{
+    cout << "sobel" << endl;
+}
+
+void MainWindow::on_edge_roberts_triggered()
+{
+    cout << "roberts" << endl;
+}
+
+void MainWindow::on_edge_prewitt_triggered()
+{
+    cout << "prewitt" << endl;
 }

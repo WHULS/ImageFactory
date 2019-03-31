@@ -28,8 +28,6 @@
    <addaction name="fit_to_image"/>
    <addaction name="show_srcImage"/>
    <addaction name="separator"/>
-   <addaction name="edge_canny"/>
-   <addaction name="separator"/>
    <addaction name="clear_image"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -52,6 +50,11 @@
      <string>特征提取(&amp;A)</string>
     </property>
     <addaction name="edge_canny"/>
+    <addaction name="edge_laplacian"/>
+    <addaction name="edge_log"/>
+    <addaction name="edge_sobel"/>
+    <addaction name="edge_roberts"/>
+    <addaction name="edge_prewitt"/>
    </widget>
    <addaction name="menu_F"/>
    <addaction name="menu"/>
@@ -77,13 +80,10 @@
   <action name="edge_canny">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/images/C.png</normaloff>:/images/images/C.png</iconset>
+     <normaloff>:/images/images/Canny.png</normaloff>:/images/images/Canny.png</iconset>
    </property>
    <property name="text">
-    <string>Canny 边缘 (&amp;C)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+C</string>
+    <string>Canny (&amp;C)</string>
    </property>
   </action>
   <action name="clear_image">
@@ -120,6 +120,51 @@
    </property>
    <property name="shortcut">
     <string>Shift+F</string>
+   </property>
+  </action>
+  <action name="edge_laplacian">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Laplacian.png</normaloff>:/images/images/Laplacian.png</iconset>
+   </property>
+   <property name="text">
+    <string>Laplacian (&amp;L)</string>
+   </property>
+  </action>
+  <action name="edge_log">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Log.png</normaloff>:/images/images/Log.png</iconset>
+   </property>
+   <property name="text">
+    <string>LOG (&amp;G)</string>
+   </property>
+  </action>
+  <action name="edge_sobel">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Sobel.png</normaloff>:/images/images/Sobel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sobel (&amp;S)</string>
+   </property>
+  </action>
+  <action name="edge_roberts">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Robert.png</normaloff>:/images/images/Robert.png</iconset>
+   </property>
+   <property name="text">
+    <string>Roberts (&amp;R)</string>
+   </property>
+  </action>
+  <action name="edge_prewitt">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Prewitt.png</normaloff>:/images/images/Prewitt.png</iconset>
+   </property>
+   <property name="text">
+    <string>Prewitt (&amp;P)</string>
    </property>
   </action>
  </widget>

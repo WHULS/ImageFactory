@@ -11,6 +11,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+
+using namespace std;
 using namespace cv;
 
 namespace Ui {
@@ -46,6 +48,16 @@ private slots:
 
     void on_fit_to_image_triggered();
 
+    void on_edge_laplacian_triggered();
+
+    void on_edge_log_triggered();
+
+    void on_edge_sobel_triggered();
+
+    void on_edge_roberts_triggered();
+
+    void on_edge_prewitt_triggered();
+
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
 
@@ -53,8 +65,9 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
+    QString imagePath; // 图像路径
     cv::Mat srcImage; // 原始图像
-    cv::Mat cedge; // Canny 边缘图像
+    cv::Mat edgeImage; // 边缘图像
 
     // 屏幕
     int availableHeight;

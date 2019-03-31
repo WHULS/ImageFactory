@@ -3,9 +3,14 @@
         <file>images/image.png</file>
         <file>images/datadig.png</file>
         <file>images/delete.png</file>
-        <file>images/C.png</file>
         <file>images/geren.png</file>
         <file>images/resize.png</file>
+        <file>images/Prewitt.png</file>
+        <file>images/Robert.png</file>
+        <file>images/Sobel.png</file>
+        <file>images/Log.png</file>
+        <file>images/Laplacian.png</file>
+        <file>images/Canny.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>
