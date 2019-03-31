@@ -19,6 +19,8 @@ namespace Ui {
 class MainWindow;
 }
 
+enum EdgeMethod{mCanny=0, mLaplacian=1, mSobel=2, mLOG=3, mPrewitt=4, mRoberts=5};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -58,6 +60,12 @@ private slots:
 
     void on_edge_prewitt_triggered();
 
+    void on_show_edge_triggered();
+
+    void on_show_blur_triggered();
+
+    void on_show_gray_triggered();
+
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
 
@@ -66,8 +74,11 @@ private:
 
     // 图像
     QString imagePath; // 图像路径
-    cv::Mat srcImage; // 原始图像
+    cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
+    int edgeMethod = -1;
+    Mat grayImage; // 灰度图
+    Mat blurImage; // 模糊图
 
     // 屏幕
     int availableHeight;

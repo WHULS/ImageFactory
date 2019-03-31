@@ -33,6 +33,9 @@ public:
     QAction *edge_sobel;
     QAction *edge_roberts;
     QAction *edge_prewitt;
+    QAction *show_edge;
+    QAction *show_blur;
+    QAction *show_gray;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -95,6 +98,17 @@ public:
         QIcon icon9;
         icon9.addFile(QString::fromUtf8(":/images/images/Prewitt.png"), QSize(), QIcon::Normal, QIcon::Off);
         edge_prewitt->setIcon(icon9);
+        show_edge = new QAction(MainWindow);
+        show_edge->setObjectName(QString::fromUtf8("show_edge"));
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/images/images/datadig.png"), QSize(), QIcon::Normal, QIcon::Off);
+        show_edge->setIcon(icon10);
+        show_blur = new QAction(MainWindow);
+        show_blur->setObjectName(QString::fromUtf8("show_blur"));
+        show_blur->setIcon(icon10);
+        show_gray = new QAction(MainWindow);
+        show_gray->setObjectName(QString::fromUtf8("show_gray"));
+        show_gray->setIcon(icon10);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -113,6 +127,10 @@ public:
         toolBar->addAction(image_open);
         toolBar->addAction(fit_to_image);
         toolBar->addAction(show_srcImage);
+        toolBar->addSeparator();
+        toolBar->addAction(show_edge);
+        toolBar->addAction(show_blur);
+        toolBar->addAction(show_gray);
         toolBar->addSeparator();
         toolBar->addAction(clear_image);
         menuBar->addAction(menu_F->menuAction());
@@ -158,6 +176,9 @@ public:
         edge_sobel->setText(QApplication::translate("MainWindow", "Sobel (&S)", nullptr));
         edge_roberts->setText(QApplication::translate("MainWindow", "Roberts (&R)", nullptr));
         edge_prewitt->setText(QApplication::translate("MainWindow", "Prewitt (&P)", nullptr));
+        show_edge->setText(QApplication::translate("MainWindow", "\350\276\271\347\274\230\345\233\276 (&E)", nullptr));
+        show_blur->setText(QApplication::translate("MainWindow", "\346\250\241\347\263\212\345\233\276 (&B)", nullptr));
+        show_gray->setText(QApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276 (&G)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));

@@ -28,6 +28,10 @@
    <addaction name="fit_to_image"/>
    <addaction name="show_srcImage"/>
    <addaction name="separator"/>
+   <addaction name="show_edge"/>
+   <addaction name="show_blur"/>
+   <addaction name="show_gray"/>
+   <addaction name="separator"/>
    <addaction name="clear_image"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -165,6 +169,33 @@
    </property>
    <property name="text">
     <string>Prewitt (&amp;P)</string>
+   </property>
+  </action>
+  <action name="show_edge">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/datadig.png</normaloff>:/images/images/datadig.png</iconset>
+   </property>
+   <property name="text">
+    <string>边缘图 (&amp;E)</string>
+   </property>
+  </action>
+  <action name="show_blur">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/datadig.png</normaloff>:/images/images/datadig.png</iconset>
+   </property>
+   <property name="text">
+    <string>模糊图 (&amp;B)</string>
+   </property>
+  </action>
+  <action name="show_gray">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/datadig.png</normaloff>:/images/images/datadig.png</iconset>
+   </property>
+   <property name="text">
+    <string>灰度图 (&amp;G)</string>
    </property>
   </action>
  </widget>
