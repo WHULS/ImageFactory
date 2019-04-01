@@ -36,6 +36,8 @@ public:
     QAction *show_edge;
     QAction *show_blur;
     QAction *show_gray;
+    QAction *edge_dog;
+    QAction *go_kinect_window;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -109,6 +111,16 @@ public:
         show_gray = new QAction(MainWindow);
         show_gray->setObjectName(QString::fromUtf8("show_gray"));
         show_gray->setIcon(icon10);
+        edge_dog = new QAction(MainWindow);
+        edge_dog->setObjectName(QString::fromUtf8("edge_dog"));
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/images/images/DOG.png"), QSize(), QIcon::Normal, QIcon::Off);
+        edge_dog->setIcon(icon11);
+        go_kinect_window = new QAction(MainWindow);
+        go_kinect_window->setObjectName(QString::fromUtf8("go_kinect_window"));
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/images/images/xbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+        go_kinect_window->setIcon(icon12);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -133,6 +145,8 @@ public:
         toolBar->addAction(show_gray);
         toolBar->addSeparator();
         toolBar->addAction(clear_image);
+        toolBar->addSeparator();
+        toolBar->addAction(go_kinect_window);
         menuBar->addAction(menu_F->menuAction());
         menuBar->addAction(menu->menuAction());
         menu_F->addAction(image_open);
@@ -142,6 +156,7 @@ public:
         menu->addAction(edge_sobel);
         menu->addAction(edge_roberts);
         menu->addAction(edge_prewitt);
+        menu->addAction(edge_dog);
 
         retranslateUi(MainWindow);
 
@@ -179,6 +194,8 @@ public:
         show_edge->setText(QApplication::translate("MainWindow", "\350\276\271\347\274\230\345\233\276 (&E)", nullptr));
         show_blur->setText(QApplication::translate("MainWindow", "\346\250\241\347\263\212\345\233\276 (&B)", nullptr));
         show_gray->setText(QApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276 (&G)", nullptr));
+        edge_dog->setText(QApplication::translate("MainWindow", "DOG (&D)", nullptr));
+        go_kinect_window->setText(QApplication::translate("MainWindow", "\350\275\254\345\210\260 Kinect (&K)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));

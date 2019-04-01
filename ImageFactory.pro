@@ -29,17 +29,22 @@ SOURCES += \
         mainwindow.cpp \
     mygraphicsview.cpp \
     convert.cpp \
-    myslider.cpp
+    myslider.cpp \
+    kinectwindow.cpp
 
 HEADERS += \
         mainwindow.h \
     mygraphicsview.h \
     convert.h \
     convert.h \
-    myslider.h
+    myslider.h \
+    kinectwindow.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    kinectwindow.ui
+
+UI_DIR = $$PWD
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

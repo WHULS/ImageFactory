@@ -6,6 +6,7 @@
 #include <QSlider>
 #include "mygraphicsview.h"
 #include "myslider.h"
+#include "kinectwindow.h"
 
 // 引入OpenCV
 #include <opencv2/opencv.hpp>
@@ -19,7 +20,8 @@ namespace Ui {
 class MainWindow;
 }
 
-enum EdgeMethod{mCanny=0, mLaplacian=1, mSobel=2, mLOG=3, mPrewitt=4, mRoberts=5};
+enum EdgeMethod{mCanny=0, mLaplacian=1, mSobel=2, mLOG=3, mPrewitt=4, mRoberts=5,
+               mDOG=6};
 
 class MainWindow : public QMainWindow
 {
@@ -31,7 +33,7 @@ public:
 
     void releaseImages();
 
-    void showImage(Mat, bool = true);
+    void showImage(Mat, bool = false);
 
     void resizeToImage(Mat); // 调整窗口到最适照片
 
@@ -65,6 +67,10 @@ private slots:
     void on_show_blur_triggered();
 
     void on_show_gray_triggered();
+
+    void on_edge_dog_triggered();
+
+    void on_go_kinect_window_triggered();
 
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）

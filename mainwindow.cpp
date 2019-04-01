@@ -92,7 +92,7 @@ void MainWindow::on_image_open_triggered()
     }
 
     // 显示图像
-    showImage(inputImage);
+    showImage(inputImage, true);
 }
 
 void MainWindow::on_clear_image_triggered()
@@ -117,7 +117,7 @@ void MainWindow::on_edge_canny_triggered()
         showMessageBox(tr("请先打开一张图像"));
     } else if (edgeMethod == mCanny){
         CannySlider->show();
-        showImage(edgeImage, false);
+        showImage(edgeImage);
     } else {
         edgeMethod = mCanny;
         // 对话框
@@ -135,7 +135,7 @@ void MainWindow::on_edge_canny_triggered()
         msgBox->hide();
 
         // 显示
-        showImage(edgeImage, false);
+        showImage(edgeImage);
     }
 }
 
@@ -192,18 +192,17 @@ Mat MainWindow::edgeDetectCanny(Mat img, int edgeThresh)
     // 深拷贝
     Mat image = img.clone();
 
+    Mat grayImage, blurImage;
     // 获取灰度图
-    if (grayImage.empty())
-        cvtColor(image, grayImage, COLOR_BGR2GRAY);
-    // 使用高斯模糊
-    int sigma = 3;
-    int ksize = (sigma*5) | 1;
-    if (blurImage.empty())
-        GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+    cvtColor(image, grayImage, COLOR_BGR2GRAY);
+    // 模糊
+    blur(grayImage, blurImage, Size(3,3));
+
+    this->blurImage = blurImage.clone();
 
     // 在灰度图上运行canny算子
     Mat edge;
-    Canny(blurImage, edge, edgeThresh, edgeThresh*3, 3);
+    Canny(grayImage, edge, edgeThresh, edgeThresh*3, 3);
     edgeImage = Scalar::all(0);
 
     // 获取边缘图像(上色) edgeImage
@@ -218,7 +217,7 @@ void MainWindow::On_CannySlider_valueChanged(int threshod)
     {
         edgeImage = edgeDetectCanny(srcImage, threshod).clone();
 
-        showImage(edgeImage, false);
+        showImage(edgeImage);
     }
 }
 
@@ -226,7 +225,7 @@ void MainWindow::on_show_srcImage_triggered()
 {
     if (!srcImage.empty())
     {
-        showImage(srcImage, false);
+        showImage(srcImage);
         CannySlider->hide();
     }
 }
@@ -280,7 +279,7 @@ void MainWindow::on_edge_laplacian_triggered()
     {
         if (edgeMethod == mLaplacian)
         {
-            showImage(edgeImage, false);
+            showImage(edgeImage);
         } else {
             edgeMethod = mLaplacian;
 
@@ -295,7 +294,7 @@ void MainWindow::on_edge_laplacian_triggered()
             Laplacian(grayImage, laplace, CV_16S, 5);
             convertScaleAbs(laplace, edgeImage, (sigma+1)*0.25);
 
-            showImage(edgeImage, false);
+            showImage(edgeImage);
         }
     }
 }
@@ -306,27 +305,28 @@ void MainWindow::on_edge_log_triggered()
     {
         if (edgeMethod == mLOG)
         {
-            showImage(edgeImage, false);
+            showImage(edgeImage);
         } else {
             edgeMethod = mLOG;
 
             Mat image = srcImage.clone();
             Mat laplace;
 
-            // 获取灰度图
-            if (grayImage.empty())
-                cvtColor(image, grayImage, COLOR_BGR2GRAY);
-            // 使用高斯模糊
+            Mat grayImage, blurImage;
             int sigma = 3;
             int ksize = (sigma*5) | 1;
-            if (blurImage.empty())
-                GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+            // 获取灰度图
+            cvtColor(image, grayImage, COLOR_BGR2GRAY);
+            // 使用高斯模糊
+            GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+
+            this->blurImage = blurImage.clone();
 
 
             Laplacian(blurImage, laplace, CV_16S, 5);
             convertScaleAbs(laplace, edgeImage, (sigma+1)*0.25);
 
-            showImage(edgeImage, false);
+            showImage(edgeImage);
         }
     }
 }
@@ -337,20 +337,21 @@ void MainWindow::on_edge_sobel_triggered()
     {
         if (edgeMethod == mSobel)
         {
-            showImage(edgeImage, false);
+            showImage(edgeImage);
         } else {
             edgeMethod = mSobel;
 
             Mat image = srcImage.clone();
 
-            // 获取灰度图
-            if (grayImage.empty())
-                cvtColor(image, grayImage, COLOR_BGR2GRAY);
-            // 使用高斯模糊
+            Mat grayImage, blurImage;
             int sigma = 3;
             int ksize = (sigma*5) | 1;
-            if (blurImage.empty())
-                GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+            // 获取灰度图
+            cvtColor(image, grayImage, COLOR_BGR2GRAY);
+            // 使用高斯模糊
+            GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+
+            this->blurImage = blurImage.clone();
 
             Mat grad_x, grad_y;
             Mat abs_grad_x, abs_grad_y;
@@ -368,14 +369,45 @@ void MainWindow::on_edge_sobel_triggered()
 
             addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, edgeImage);
 
-            showImage(edgeImage, false);
+            equalizeHist(edgeImage, edgeImage);
+
+            showImage(edgeImage);
         }
     }
 }
 
 void MainWindow::on_edge_roberts_triggered()
 {
-    cout << "roberts" << endl;
+    if (!srcImage.empty())
+    {
+        if (edgeMethod == mRoberts)
+        {
+            showImage(edgeImage);
+        }
+        else
+        {
+            edgeMethod = mRoberts;
+
+            Mat image = srcImage.clone();
+            Mat gray, blur;
+            cvtColor(image, gray, COLOR_BGR2GRAY);
+
+            uchar *pGray = gray.data;
+            int height=gray.rows, width=gray.cols;
+
+            Mat edge(height, width, CV_8UC1);
+            uchar *pEdge = edge.data;
+
+            for (int i=0; i<height; i++)
+            {
+                for (int j=0; j<width; j++)
+                {
+                    pEdge[i*width + j] = pGray[i*width + j];
+                }
+            }
+            showImage(edge);
+        }
+    }
 }
 
 void MainWindow::on_edge_prewitt_triggered()
@@ -386,17 +418,94 @@ void MainWindow::on_edge_prewitt_triggered()
 void MainWindow::on_show_edge_triggered()
 {
     if (!edgeImage.empty())
-        showImage(edgeImage, false);
+        showImage(edgeImage);
 }
 
 void MainWindow::on_show_blur_triggered()
 {
-    if (!blurImage.empty())
-        showImage(blurImage, false);
+    if (blurImage.empty())
+    {
+        if (!srcImage.empty())
+        {
+            Mat image = srcImage.clone();
+            int sigma = 3;
+            int ksize = (sigma*5) | 1;
+            // 获取灰度图
+            if (grayImage.empty())
+                cvtColor(image, grayImage, COLOR_BGR2GRAY);
+            // 使用高斯模糊
+            GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
+        }
+        else {
+            return;
+        }
+    }
+    showImage(blurImage);
 }
 
 void MainWindow::on_show_gray_triggered()
 {
-    if (!grayImage.empty())
-        showImage(grayImage, false);
+    if (grayImage.empty())
+    {
+        if (!srcImage.empty())
+        {
+            Mat image = srcImage.clone();
+            cvtColor(image, grayImage, COLOR_BGR2GRAY);
+        }
+        else {
+            return;
+        }
+
+    }
+    showImage(grayImage);
+}
+
+void MainWindow::on_edge_dog_triggered()
+{
+    if (!srcImage.empty())
+    {
+        if (edgeMethod == mDOG)
+        {
+            showImage(edgeImage);
+        }
+        else
+        {
+            edgeMethod = mDOG;
+
+            Mat image=srcImage.clone(), grayImage;
+            Mat blur1, blur2;
+            int sigma = 3;
+            int ksize = (sigma*5) | 1;
+            int k = 3; // 高斯模糊之间的倍数
+
+            cvtColor(image, grayImage, COLOR_BGR2GRAY);
+
+            GaussianBlur(grayImage, blur1, Size(ksize, ksize), sigma, sigma);
+            GaussianBlur(grayImage, blur2, Size(ksize, ksize), sigma*k, sigma*k);
+
+            addWeighted(blur2, 1, blur1, -1, 0, edgeImage);
+
+            // 直方图均衡化
+            equalizeHist(edgeImage, edgeImage);
+            showImage(edgeImage);
+
+        }
+    }
+}
+
+void MainWindow::on_go_kinect_window_triggered()
+{
+    KinectWindow *kw = new KinectWindow;
+    if (kw->init())
+    {
+        kw->showFullScreen();
+    }
+    else
+    {
+        if (kw->close())
+            QMessageBox::information(this,
+                                 tr("提示"),
+                                 tr("初始化 Kinect 失败"),
+                                 QMessageBox::Yes);
+    }
 }
