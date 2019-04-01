@@ -29,20 +29,17 @@ SOURCES += \
         mainwindow.cpp \
     mygraphicsview.cpp \
     convert.cpp \
-    myslider.cpp \
-    kinectwindow.cpp
+    myslider.cpp
 
 HEADERS += \
         mainwindow.h \
     mygraphicsview.h \
     convert.h \
     convert.h \
-    myslider.h \
-    kinectwindow.h
+    myslider.h
 
 FORMS += \
-        mainwindow.ui \
-    kinectwindow.ui
+    mainwindow.ui
 
 UI_DIR = $$PWD
 
@@ -58,38 +55,6 @@ DISTFILES += \
     icons.rc
 RC_FILE += icons.rc
 
+# OpenCV
 INCLUDEPATH += $$PWD/cv/include
 LIBS += -L $$PWD/cv/lib/libopencv_*.a
-
-#LIBS += E:\opencv-build\bin\libopencv_calib3d401.dll
-#LIBS += E:\opencv-build\bin\libopencv_core401.dll
-#LIBS += E:\opencv-build\bin\libopencv_dnn401.dll
-#LIBS += E:\opencv-build\bin\libopencv_features2d401.dll
-#LIBS += E:\opencv-build\bin\libopencv_flann401.dll
-#LIBS += E:\opencv-build\bin\libopencv_gapi401.dll
-#LIBS += E:\opencv-build\bin\libopencv_highgui401.dll
-#LIBS += E:\opencv-build\bin\libopencv_imgcodecs401.dll
-#LIBS += E:\opencv-build\bin\libopencv_imgproc401.dll
-#LIBS += E:\opencv-build\bin\libopencv_ml401.dll
-#LIBS += E:\opencv-build\bin\libopencv_objdetect401.dll
-#LIBS += E:\opencv-build\bin\libopencv_photo401.dll
-#LIBS += E:\opencv-build\bin\libopencv_stitching401.dll
-#LIBS += E:\opencv-build\bin\libopencv_video401.dll
-#LIBS += E:\opencv-build\bin\libopencv_videoio401.dll
-#LIBS += E:\opencv-build\bin\opencv_ffmpeg401_64.dll
-
-#LIBS += $$PWD\cv\lib\libopencv_calib3d401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_core401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_dnn401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_features2d401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_flann401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_gapi401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_highgui401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_imgcodecs401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_imgproc401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_ml401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_objdetect401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_photo401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_stitching401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_video401.dll.a
-#LIBS += $$PWD\cv\lib\libopencv_videoio401.dll.a

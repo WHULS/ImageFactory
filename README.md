@@ -10,7 +10,7 @@
     * [2\. 图像处理](#2-%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86)
   * [二、功能](#%E4%BA%8C%E5%8A%9F%E8%83%BD)
     * [v0\.1\.0](#v010)
-    * [TODO: v0\.2\.0](#todo-v020)
+    * [v0\.2\.0](#todo-v020)
 
 ## 一、技术栈
 ### 1. 用户界面
@@ -24,14 +24,27 @@
 - 图像读取与显示
 - Canny 算子边缘检测
 
-### TODO: v0.2.0
-TODO: 添加边缘提取的其他算法：拉普拉斯（Laplacian）、高斯-拉普拉斯（LOG）、索贝尔（Sobel）、罗伯特（Robert）、普利伊特（Prewitt）。并针对每个算子设计参数输入对话框。
+### v0.2.0
+添加边缘提取的其他算法：拉普拉斯（Laplacian）、高斯-拉普拉斯（LOG）、索贝尔（Sobel）、罗伯特（Robert）、普利伊特（Prewitt）、高斯差分算子（DOG）。
 
 - 图像读取与显示
 - 边缘检测
   - Canny
-  - [TODO] Laplacian
-  - [TODO] LOG
-  - [TODO] Sobel
-  - [TODO] Robert
-  - [TODO] Prewitt
+  - Laplacian
+  - LOG
+  - Sobel
+  - Robert
+  - Prewitt
+  - DOG
+
+### TODO: v0.3.0
+- 点特征提取
+  - Moravec
+  - Harris
+  - Forstner
+- 影像匹配
+  - 相关系数
+  - 最小二乘
+- 镜头检校 - 使用 OpenCV 的标准板
+- 摄影机定标
+- *三维点云提取与生成

@@ -34,7 +34,6 @@
    <addaction name="separator"/>
    <addaction name="clear_image"/>
    <addaction name="separator"/>
-   <addaction name="go_kinect_window"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -208,15 +207,6 @@
    </property>
    <property name="text">
     <string>DOG (&amp;D)</string>
-   </property>
-  </action>
-  <action name="go_kinect_window">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/images/images/xbox.png</normaloff>:/images/images/xbox.png</iconset>
-   </property>
-   <property name="text">
-    <string>转到 Kinect (&amp;K)</string>
    </property>
   </action>
  </widget>

@@ -392,27 +392,67 @@ void MainWindow::on_edge_roberts_triggered()
             Mat gray, blur;
             cvtColor(image, gray, COLOR_BGR2GRAY);
 
-            uchar *pGray = gray.data;
             int height=gray.rows, width=gray.cols;
-
             Mat edge(height, width, CV_8UC1);
-            uchar *pEdge = edge.data;
 
-            for (int i=0; i<height; i++)
+            for (int i=0; i<height-1; i++)
             {
-                for (int j=0; j<width; j++)
+                for (int j=0; j<width-1; j++)
                 {
-                    pEdge[i*width + j] = pGray[i*width + j];
+                    edge.at<uchar>(i,j) = uchar(
+                                abs( gray.at<uchar>(i,j)*-1 + gray.at<uchar>(i+1,j+1) )/2
+                                +
+                                abs( gray.at<uchar>(i,j+1)*-1 + gray.at<uchar>(i+1,j) )/2
+                            );
                 }
             }
-            showImage(edge);
+            edgeImage = edge.clone();
+            showImage(edgeImage);
         }
     }
 }
 
 void MainWindow::on_edge_prewitt_triggered()
 {
-    cout << "prewitt" << endl;
+    if (!srcImage.empty())
+    {
+        if (edgeMethod == mPrewitt)
+        {
+            showImage(edgeImage);
+        }
+        else
+        {
+            edgeMethod = mPrewitt;
+
+            Mat image = srcImage.clone();
+            Mat gray, blur;
+            cvtColor(image, gray, COLOR_BGR2GRAY);
+
+            int height=gray.rows, width=gray.cols;
+            Mat edge(height, width, CV_8UC1);
+
+            for (int i=1; i<height-1; i++)
+            {
+                for (int j=1; j<width-1; j++)
+                {
+                    edge.at<uchar>(i,j) =
+                            uchar(
+                                abs(
+                                    (gray.at<uchar>(i-1, j+1) + gray.at<uchar>(i, j+1) + gray.at<uchar>(i+1, j+1))*-1 +
+                                    gray.at<uchar>(i-1, j-1) + gray.at<uchar>(i, j-1) + gray.at<uchar>(i+1, j-1)
+                                ) /2
+                                +
+                                abs(
+                                    (gray.at<uchar>(i-1, j-1) + gray.at<uchar>(i-1, j) + gray.at<uchar>(i-1, j+1))*-1 +
+                                    gray.at<uchar>(i+1, j-1) + gray.at<uchar>(i+1, j) + gray.at<uchar>(i+1, j+1)
+                                ) /2
+                            );
+                }
+            }
+            edgeImage = edge;
+            showImage(edgeImage);
+        }
+    }
 }
 
 void MainWindow::on_show_edge_triggered()
@@ -488,24 +528,6 @@ void MainWindow::on_edge_dog_triggered()
             // 直方图均衡化
             equalizeHist(edgeImage, edgeImage);
             showImage(edgeImage);
-
         }
-    }
-}
-
-void MainWindow::on_go_kinect_window_triggered()
-{
-    KinectWindow *kw = new KinectWindow;
-    if (kw->init())
-    {
-        kw->showFullScreen();
-    }
-    else
-    {
-        if (kw->close())
-            QMessageBox::information(this,
-                                 tr("提示"),
-                                 tr("初始化 Kinect 失败"),
-                                 QMessageBox::Yes);
     }
 }

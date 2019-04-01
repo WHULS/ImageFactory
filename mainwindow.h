@@ -6,7 +6,6 @@
 #include <QSlider>
 #include "mygraphicsview.h"
 #include "myslider.h"
-#include "kinectwindow.h"
 
 // 引入OpenCV
 #include <opencv2/opencv.hpp>
@@ -69,8 +68,6 @@ private slots:
     void on_show_gray_triggered();
 
     void on_edge_dog_triggered();
-
-    void on_go_kinect_window_triggered();
 
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
