@@ -62,8 +62,15 @@
     <addaction name="edge_prewitt"/>
     <addaction name="edge_dog"/>
    </widget>
+   <widget class="QMenu" name="menu_Y">
+    <property name="title">
+     <string>点云提取 (&amp;Y)</string>
+    </property>
+    <addaction name="calibration"/>
+   </widget>
    <addaction name="menu_F"/>
    <addaction name="menu"/>
+   <addaction name="menu_Y"/>
   </widget>
   <action name="image_open">
    <property name="checkable">
@@ -207,6 +214,18 @@
    </property>
    <property name="text">
     <string>DOG (&amp;D)</string>
+   </property>
+  </action>
+  <action name="calibration">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/camico2.ico</normaloff>:/icons/icons/camico2.ico</iconset>
+   </property>
+   <property name="text">
+    <string>摄影机定标(&amp;B)</string>
+   </property>
+   <property name="toolTip">
+    <string>摄影机定标(B)</string>
    </property>
   </action>
  </widget>

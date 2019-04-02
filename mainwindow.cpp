@@ -540,3 +540,31 @@ void MainWindow::on_edge_dog_triggered()
         }
     }
 }
+
+void MainWindow::on_calibration_triggered()
+{
+    if(!srcImage.empty())
+    {
+        Mat image = srcImage.clone(), gray;
+
+        cvtColor(image, gray, COLOR_BGR2GRAY);
+        GaussianBlur(gray, gray, Size(9,9), 2, 2);
+
+        vector<Vec3f> circles;
+
+        HoughCircles(gray, circles, HOUGH_GRADIENT, 1, gray.rows/16, 100, 30, 1, 30);
+
+        for (size_t i=0; i<circles.size(); i++) {
+            Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+            int radius = cvRound(circles[i][2]);
+
+            // draw the circle center
+            circle(image, center, 1, Scalar(0, 100, 100), 3, LINE_AA);
+
+            // draw the circle outline
+            circle(image, center, radius, Scalar(0, 0, 255), 3, LINE_AA);
+        }
+
+        showImage(image);
+    }
+}

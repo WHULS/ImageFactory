@@ -37,11 +37,13 @@ public:
     QAction *show_blur;
     QAction *show_gray;
     QAction *edge_dog;
+    QAction *calibration;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
     QMenu *menu_F;
     QMenu *menu;
+    QMenu *menu_Y;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -115,6 +117,11 @@ public:
         QIcon icon11;
         icon11.addFile(QString::fromUtf8(":/images/images/DOG.png"), QSize(), QIcon::Normal, QIcon::Off);
         edge_dog->setIcon(icon11);
+        calibration = new QAction(MainWindow);
+        calibration->setObjectName(QString::fromUtf8("calibration"));
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/icons/icons/camico2.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        calibration->setIcon(icon12);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -128,6 +135,8 @@ public:
         menu_F->setObjectName(QString::fromUtf8("menu_F"));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
+        menu_Y = new QMenu(menuBar);
+        menu_Y->setObjectName(QString::fromUtf8("menu_Y"));
         MainWindow->setMenuBar(menuBar);
 
         toolBar->addAction(image_open);
@@ -142,6 +151,7 @@ public:
         toolBar->addSeparator();
         menuBar->addAction(menu_F->menuAction());
         menuBar->addAction(menu->menuAction());
+        menuBar->addAction(menu_Y->menuAction());
         menu_F->addAction(image_open);
         menu->addAction(edge_canny);
         menu->addAction(edge_laplacian);
@@ -150,6 +160,7 @@ public:
         menu->addAction(edge_roberts);
         menu->addAction(edge_prewitt);
         menu->addAction(edge_dog);
+        menu_Y->addAction(calibration);
 
         retranslateUi(MainWindow);
 
@@ -188,9 +199,14 @@ public:
         show_blur->setText(QApplication::translate("MainWindow", "\346\250\241\347\263\212\345\233\276 (&B)", nullptr));
         show_gray->setText(QApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276 (&G)", nullptr));
         edge_dog->setText(QApplication::translate("MainWindow", "DOG (&D)", nullptr));
+        calibration->setText(QApplication::translate("MainWindow", "\346\221\204\345\275\261\346\234\272\345\256\232\346\240\207(&B)", nullptr));
+#ifndef QT_NO_TOOLTIP
+        calibration->setToolTip(QApplication::translate("MainWindow", "\346\221\204\345\275\261\346\234\272\345\256\232\346\240\207(B)", nullptr));
+#endif // QT_NO_TOOLTIP
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));
+        menu_Y->setTitle(QApplication::translate("MainWindow", "\347\202\271\344\272\221\346\217\220\345\217\226 (&Y)", nullptr));
     } // retranslateUi
 
 };

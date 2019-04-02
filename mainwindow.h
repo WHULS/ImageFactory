@@ -11,6 +11,10 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+
+#include <math.h>
 
 using namespace std;
 using namespace cv;
@@ -69,6 +73,8 @@ private slots:
 
     void on_edge_dog_triggered();
 
+    void on_calibration_triggered();
+
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
 
@@ -76,7 +82,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath; // 图像路径
+    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
