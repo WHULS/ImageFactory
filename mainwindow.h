@@ -23,8 +23,23 @@ namespace Ui {
 class MainWindow;
 }
 
+// 边缘提取方法
 enum EdgeMethod{mCanny=0, mLaplacian=1, mSobel=2, mLOG=3, mPrewitt=4, mRoberts=5,
                mDOG=6};
+
+// 定义结构体存储控制点
+/**
+  * @param x
+  * @param y
+  * @param z
+  * @param num 点号
+  */
+typedef struct {
+    double x;
+    double y;
+    double z;
+    int num;
+} CPoint;
 
 class MainWindow : public QMainWindow
 {
@@ -35,14 +50,13 @@ public:
     ~MainWindow();
 
     void releaseImages();
-
     void showImage(Mat, bool = false);
-
     void resizeToImage(Mat); // 调整窗口到最适照片
-
     Mat edgeDetectCanny(Mat, int edgeThresh = 1);
-
     void showMessageBox(QString);
+    Mat difference_of_gaussian(Mat image, int sigma=3, int ksize=15, int k=3);
+
+    void HoughCircleDetect(Mat image, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius);
 
 private slots:
     void on_image_open_triggered();
@@ -75,14 +89,17 @@ private slots:
 
     void on_calibration_triggered();
 
+    void on_read_control_point_triggered();
+
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
+    void On_HoughCircle_valueChanged(double, double, double, double, int, int);
 
 private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径
+    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径 F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -96,6 +113,10 @@ private:
     QGraphicsScene *scene;
     MyGraphicsView *ImageView;
     MySlider *CannySlider;
+
+    // 控制点
+    vector<CPoint> cPoint;
+    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/";
 
 };
 

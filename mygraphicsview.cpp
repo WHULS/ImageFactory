@@ -25,6 +25,7 @@ void MyGraphicsView::wheelEvent(QWheelEvent *event)
             step = numSteps.y();
         }
 
+        // TODO: 调整图像大小
         std::cout << step << std::endl;
     }
 

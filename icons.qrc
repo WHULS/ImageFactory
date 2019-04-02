@@ -13,6 +13,7 @@
         <file>images/Canny.png</file>
         <file>images/DOG.png</file>
         <file>images/xbox.png</file>
+        <file>images/dingwei.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>

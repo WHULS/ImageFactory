@@ -13,6 +13,7 @@
 
 /* UI */
 #include <QGridLayout>
+#include <houghcircledlg.h>
 
 #include "convert.h"
 
@@ -509,6 +510,33 @@ void MainWindow::on_show_gray_triggered()
     showImage(grayImage);
 }
 
+/**
+ * @brief MainWindow::difference_of_gaussian
+ * @param image
+ * @param sigma
+ * @param ksize
+ * @param k 高斯模糊之间的倍数
+ * @return DOG 边缘图像
+ */
+Mat MainWindow::difference_of_gaussian(Mat image, int sigma, int ksize, int k)
+{
+    Mat gray;
+    Mat blur1, blur2;
+
+    cvtColor(image, gray, COLOR_BGR2GRAY);
+
+    GaussianBlur(gray, blur1, Size(ksize, ksize), sigma, sigma);
+    GaussianBlur(gray, blur2, Size(ksize, ksize), sigma*k, sigma*k);
+
+    Mat edge;
+    addWeighted(blur2, 1, blur1, -1, 0, edge);
+
+    // 直方图均衡化
+    equalizeHist(edge, edge);
+
+    return edge;
+}
+
 void MainWindow::on_edge_dog_triggered()
 {
     if (!srcImage.empty())
@@ -520,22 +548,8 @@ void MainWindow::on_edge_dog_triggered()
         else
         {
             edgeMethod = mDOG;
-
-            Mat image=srcImage.clone(), grayImage;
-            Mat blur1, blur2;
             int sigma = 3;
-            int ksize = (sigma*5) | 1;
-            int k = 3; // 高斯模糊之间的倍数
-
-            cvtColor(image, grayImage, COLOR_BGR2GRAY);
-
-            GaussianBlur(grayImage, blur1, Size(ksize, ksize), sigma, sigma);
-            GaussianBlur(grayImage, blur2, Size(ksize, ksize), sigma*k, sigma*k);
-
-            addWeighted(blur2, 1, blur1, -1, 0, edgeImage);
-
-            // 直方图均衡化
-            equalizeHist(edgeImage, edgeImage);
+            edgeImage = difference_of_gaussian(srcImage.clone(), sigma, (sigma*5 | 1));
             showImage(edgeImage);
         }
     }
@@ -543,28 +557,130 @@ void MainWindow::on_edge_dog_triggered()
 
 void MainWindow::on_calibration_triggered()
 {
-    if(!srcImage.empty())
+    /*if(!srcImage.empty())
     {
-        Mat image = srcImage.clone(), gray;
+        // Hough 变换检测圆
+//        Mat image = srcImage.clone();
+//        HoughCircleDetect(image, HOUGH_GRADIENT, 1, image.rows/8, 100, 30, 1, 30);
 
-        cvtColor(image, gray, COLOR_BGR2GRAY);
-        GaussianBlur(gray, gray, Size(9,9), 2, 2);
+//        // 创建对话框
+//        HoughCircleDlg *hcDlg = new HoughCircleDlg(this);
+//        hcDlg->show();
 
-        vector<Vec3f> circles;
+//        // 连接信号和槽
+//        connect(hcDlg, SIGNAL(ParamsChanged(double, double, double, double, int, int)),
+//                this, SLOT(On_HoughCircle_valueChanged(double, double, double, double, int, int)));
 
-        HoughCircles(gray, circles, HOUGH_GRADIENT, 1, gray.rows/16, 100, 30, 1, 30);
+        Mat image = srcImage.clone();
+        // 用 DOG 算子检测边缘（弃用：轮廓过于明显，产生双环）
+        Mat edge = difference_of_gaussian(image);
+        // 腐蚀，缩小轮廓
+        erode(edge, edge, getStructuringElement(MORPH_RECT, Size(6,6)));
+        showImage(edge);
 
-        for (size_t i=0; i<circles.size(); i++) {
-            Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-            int radius = cvRound(circles[i][2]);
+        vector<vector<Point>> contours;
+        findContours(edge, contours, RETR_LIST, CHAIN_APPROX_NONE);
 
-            // draw the circle center
-            circle(image, center, 1, Scalar(0, 100, 100), 3, LINE_AA);
 
-            // draw the circle outline
-            circle(image, center, radius, Scalar(0, 0, 255), 3, LINE_AA);
+        // 绘制轮廓线
+//        for (size_t i=0; i<contours.size(); i++)
+//        {
+//            // 计算每个 contour 的面积
+//            double area = contourArea(contours[i]);
+
+//            // 忽略太小或太大的区域
+//            if (area < 1e2 || 1e5 < area) continue;
+//            cout << contours[i].size() << endl;
+
+//            // 绘制 contour
+//            drawContours(image, contours, static_cast<int>(i), Scalar(0,0,255), 2);
+//        }
+
+//        showImage(image);
+        RotatedRect box;
+        int count = 0;
+        for (size_t i=0; i<contours.size(); i++)
+        {
+            double area = contourArea(contours[i]);
+            if (area < 1e2 || 1e5 < area) continue;
+            if (contours[i].size() < 100) continue;
+
+            box = fitEllipse(contours[i]);
+
+            double boxRatio = double(box.size.height)/double(box.size.width);
+            if (boxRatio > 5) continue;
+
+            ellipse(image, box, Scalar(0, 255, 0), 2);
+            putText(image, to_string(count), box.center, FONT_HERSHEY_SIMPLEX, 2, Scalar(0, 0, 255), 2);
+
+            count++;
         }
 
-        showImage(image);
+        imshow("Hello?", image);
+    }*/
+
+}
+/** Hough 检测图像中的圆并显示(原图输入)
+ * @brief MainWindow::HoughCircleDetect
+ * @param image
+ * @param method
+ * @param dp
+ * @param minDist
+ * @param param1
+ * @param param2
+ * @param minRadius
+ * @param maxRadius
+ */
+void MainWindow::HoughCircleDetect(Mat image, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)
+{
+    Mat gray;
+
+    cvtColor(image, gray, COLOR_BGR2GRAY);
+    GaussianBlur(gray, gray, Size(9,9), 3, 3);
+
+    vector<Vec3f> circles;
+
+    HoughCircles(gray, circles, method, dp, minDist, param1, param2, minRadius, maxRadius);
+
+    for (size_t i=0; i<circles.size(); i++) {
+        Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        int radius = cvRound(circles[i][2]);
+
+        // draw the circle center
+        circle(image, center, 1, Scalar(0, 100, 100), 3, LINE_AA);
+
+        // draw the circle outline
+        circle(image, center, radius, Scalar(0, 0, 255), 3, LINE_AA);
+    }
+
+    showImage(image);
+}
+
+// 匹配 HoughDlg 的插槽
+void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)
+{
+    if (!srcImage.empty())
+    {
+        Mat image = srcImage.clone();
+        HoughCircleDetect(image, HOUGH_GRADIENT, dp, minDist, param1, param2, minRadius, maxRadius);
+    }
+}
+
+void MainWindow::on_read_control_point_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
+                                                    this->cpPath,
+                                                    tr("控制点文件(*.txt)"));
+    this->cpPath = fileName.section("/", 0, -2);
+
+    FILE *fp = fopen(fileName.toLocal8Bit().data(), "r");
+    if (fp)
+    {
+        int beginPos, pointNum;
+        fscanf(fp, "%d\t%d\n", &beginPos, &pointNum); // 获取控制点文件头信息
+
+        // 关闭文件
+        if (feof(fp))
+            fclose(fp);
     }
 }

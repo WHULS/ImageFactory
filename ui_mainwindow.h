@@ -186,6 +186,9 @@ public:
         clear_image->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", nullptr));
 #endif // QT_NO_SHORTCUT
         show_srcImage->setText(QApplication::translate("MainWindow", "\346\230\276\347\244\272\345\216\237\345\233\276(&R)", nullptr));
+#ifndef QT_NO_SHORTCUT
+        show_srcImage->setShortcut(QApplication::translate("MainWindow", "Ctrl+Z", nullptr));
+#endif // QT_NO_SHORTCUT
         fit_to_image->setText(QApplication::translate("MainWindow", "\351\200\202\345\272\224\345\233\276\345\203\217(&I)", nullptr));
 #ifndef QT_NO_SHORTCUT
         fit_to_image->setShortcut(QApplication::translate("MainWindow", "Shift+F", nullptr));
@@ -196,6 +199,9 @@ public:
         edge_roberts->setText(QApplication::translate("MainWindow", "Roberts (&R)", nullptr));
         edge_prewitt->setText(QApplication::translate("MainWindow", "Prewitt (&P)", nullptr));
         show_edge->setText(QApplication::translate("MainWindow", "\350\276\271\347\274\230\345\233\276 (&E)", nullptr));
+#ifndef QT_NO_SHORTCUT
+        show_edge->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", nullptr));
+#endif // QT_NO_SHORTCUT
         show_blur->setText(QApplication::translate("MainWindow", "\346\250\241\347\263\212\345\233\276 (&B)", nullptr));
         show_gray->setText(QApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276 (&G)", nullptr));
         edge_dog->setText(QApplication::translate("MainWindow", "DOG (&D)", nullptr));

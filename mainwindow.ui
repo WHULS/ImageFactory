@@ -66,6 +66,7 @@
     <property name="title">
      <string>点云提取 (&amp;Y)</string>
     </property>
+    <addaction name="read_control_point"/>
     <addaction name="calibration"/>
    </widget>
    <addaction name="menu_F"/>
@@ -121,6 +122,9 @@
    </property>
    <property name="text">
     <string>显示原图(&amp;R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="fit_to_image">
@@ -188,6 +192,9 @@
    <property name="text">
     <string>边缘图 (&amp;E)</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="show_blur">
    <property name="icon">
@@ -226,6 +233,15 @@
    </property>
    <property name="toolTip">
     <string>摄影机定标(B)</string>
+   </property>
+  </action>
+  <action name="read_control_point">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/dingwei.png</normaloff>:/images/images/dingwei.png</iconset>
+   </property>
+   <property name="text">
+    <string>读取控制点文件(&amp;O)</string>
    </property>
   </action>
  </widget>

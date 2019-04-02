@@ -29,17 +29,20 @@ SOURCES += \
         mainwindow.cpp \
     mygraphicsview.cpp \
     convert.cpp \
-    myslider.cpp
+    myslider.cpp \
+    houghcircledlg.cpp
 
 HEADERS += \
         mainwindow.h \
     mygraphicsview.h \
     convert.h \
     convert.h \
-    myslider.h
+    myslider.h \
+    houghcircledlg.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    houghcircledlg.ui
 
 UI_DIR = $$PWD
 
