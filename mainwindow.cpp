@@ -271,6 +271,7 @@ void MainWindow::releaseImages()
     if (!edgeImage.empty()) edgeImage.release();
     if (!blurImage.empty()) blurImage.release();
     if (!grayImage.empty()) grayImage.release();
+    edgeMethod = -1;
 }
 
 void MainWindow::on_edge_laplacian_triggered()
@@ -391,6 +392,9 @@ void MainWindow::on_edge_roberts_triggered()
             Mat image = srcImage.clone();
             Mat gray, blur;
             cvtColor(image, gray, COLOR_BGR2GRAY);
+            int sigma = 3;
+            int ksize = (sigma*5) | 1;
+            GaussianBlur(gray, blur, Size(ksize, ksize), sigma, sigma);
 
             int height=gray.rows, width=gray.cols;
             Mat edge(height, width, CV_8UC1);
@@ -400,12 +404,13 @@ void MainWindow::on_edge_roberts_triggered()
                 for (int j=0; j<width-1; j++)
                 {
                     edge.at<uchar>(i,j) = uchar(
-                                abs( gray.at<uchar>(i,j)*-1 + gray.at<uchar>(i+1,j+1) )/2
+                                abs( blur.at<uchar>(i,j)*-1 + blur.at<uchar>(i+1,j+1) )/2
                                 +
-                                abs( gray.at<uchar>(i,j+1)*-1 + gray.at<uchar>(i+1,j) )/2
+                                abs( blur.at<uchar>(i,j+1)*-1 + blur.at<uchar>(i+1,j) )/2
                             );
                 }
             }
+            equalizeHist(edge, edge);
             edgeImage = edge.clone();
             showImage(edgeImage);
         }
@@ -427,6 +432,9 @@ void MainWindow::on_edge_prewitt_triggered()
             Mat image = srcImage.clone();
             Mat gray, blur;
             cvtColor(image, gray, COLOR_BGR2GRAY);
+            int sigma = 3;
+            int ksize = (sigma*5) | 1;
+            GaussianBlur(gray, blur, Size(ksize, ksize), sigma, sigma);
 
             int height=gray.rows, width=gray.cols;
             Mat edge(height, width, CV_8UC1);
@@ -438,18 +446,19 @@ void MainWindow::on_edge_prewitt_triggered()
                     edge.at<uchar>(i,j) =
                             uchar(
                                 abs(
-                                    (gray.at<uchar>(i-1, j+1) + gray.at<uchar>(i, j+1) + gray.at<uchar>(i+1, j+1))*-1 +
-                                    gray.at<uchar>(i-1, j-1) + gray.at<uchar>(i, j-1) + gray.at<uchar>(i+1, j-1)
+                                    (blur.at<uchar>(i-1, j+1) + blur.at<uchar>(i, j+1) + blur.at<uchar>(i+1, j+1))*-1 +
+                                    blur.at<uchar>(i-1, j-1) + blur.at<uchar>(i, j-1) + blur.at<uchar>(i+1, j-1)
                                 ) /2
                                 +
                                 abs(
-                                    (gray.at<uchar>(i-1, j-1) + gray.at<uchar>(i-1, j) + gray.at<uchar>(i-1, j+1))*-1 +
-                                    gray.at<uchar>(i+1, j-1) + gray.at<uchar>(i+1, j) + gray.at<uchar>(i+1, j+1)
+                                    (blur.at<uchar>(i-1, j-1) + blur.at<uchar>(i-1, j) + blur.at<uchar>(i-1, j+1))*-1 +
+                                    blur.at<uchar>(i+1, j-1) + blur.at<uchar>(i+1, j) + blur.at<uchar>(i+1, j+1)
                                 ) /2
                             );
                 }
             }
-            edgeImage = edge;
+            equalizeHist(edge, edge);
+            edgeImage = edge.clone();
             showImage(edgeImage);
         }
     }
