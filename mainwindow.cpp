@@ -93,7 +93,7 @@ void MainWindow::on_image_open_triggered()
     }
 
     // 显示图像
-    showImage(inputImage, true);
+    showImage(inputImage, "Src Image");
 }
 
 void MainWindow::on_clear_image_triggered()
@@ -118,7 +118,7 @@ void MainWindow::on_edge_canny_triggered()
         showMessageBox(tr("请先打开一张图像"));
     } else if (edgeMethod == mCanny){
         CannySlider->show();
-        showImage(edgeImage);
+        showImage(edgeImage, "Canny Edge");
     } else {
         edgeMethod = mCanny;
         // 对话框
@@ -136,8 +136,14 @@ void MainWindow::on_edge_canny_triggered()
         msgBox->hide();
 
         // 显示
-        showImage(edgeImage);
+        showImage(edgeImage, "Canny Edge");
     }
+}
+
+void MainWindow::showImage(Mat img, const char winName[])
+{
+    namedWindow(winName, WINDOW_NORMAL);
+    imshow(winName, img);
 }
 
 void MainWindow::showImage(Mat img, bool isResize)
@@ -153,8 +159,6 @@ void MainWindow::showImage(Mat img, bool isResize)
     // 调整图像大小
     int viewWidth = this->geometry().width() - 23;
     int viewHeight = this->geometry().height() - ui->menuBar->height() - ui->toolBar->height() - 23;
-//    std::cout << viewWidth << ", " << viewHeight << std::endl;
-//    std::cout << img.cols << ", " << img.rows << std::endl;
     if (viewWidth < img.cols || viewHeight < img.rows) {
         // 自动调整尺寸比较大的图片
         int c = img.cols;
@@ -166,17 +170,13 @@ void MainWindow::showImage(Mat img, bool isResize)
             if (viewWidth < c * scale) scale = viewWidth / c;
         } else if (viewWidth < c) {
             scale = double(viewWidth) / double(c);
-//            if (viewHeight < r * scale) scale = viewHeight / r; // 这步永远不会执行，因为已经无法满足 viewHeight < r，更不可能满足viewHeight < r * scale
         }
 
         disImage = disImage.scaled(int(c*scale), int(r*scale));
-//        std::cout << scale << std::endl;
-//        std::cout << c*scale << ", " << r*scale << std::endl;
     }
 
     scene->clear();
     scene->addPixmap(QPixmap::fromImage(disImage));
-
     ImageView->show();
 }
 
@@ -218,7 +218,7 @@ void MainWindow::On_CannySlider_valueChanged(int threshod)
     {
         edgeImage = edgeDetectCanny(srcImage, threshod).clone();
 
-        showImage(edgeImage);
+        showImage(edgeImage, "Canny Edge");
     }
 }
 
@@ -226,7 +226,7 @@ void MainWindow::on_show_srcImage_triggered()
 {
     if (!srcImage.empty())
     {
-        showImage(srcImage);
+        showImage(srcImage, "Src Image");
         CannySlider->hide();
     }
 }
@@ -281,7 +281,7 @@ void MainWindow::on_edge_laplacian_triggered()
     {
         if (edgeMethod == mLaplacian)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "Laplacian Edge");
         } else {
             edgeMethod = mLaplacian;
 
@@ -296,9 +296,9 @@ void MainWindow::on_edge_laplacian_triggered()
             Laplacian(grayImage, laplace, CV_16S, 5);
             convertScaleAbs(laplace, edgeImage, (sigma+1)*0.25);
 
-            showImage(edgeImage);
+            showImage(edgeImage, "Laplacian Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_edge_log_triggered()
@@ -307,7 +307,7 @@ void MainWindow::on_edge_log_triggered()
     {
         if (edgeMethod == mLOG)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "LOG Edge");
         } else {
             edgeMethod = mLOG;
 
@@ -328,9 +328,9 @@ void MainWindow::on_edge_log_triggered()
             Laplacian(blurImage, laplace, CV_16S, 5);
             convertScaleAbs(laplace, edgeImage, (sigma+1)*0.25);
 
-            showImage(edgeImage);
+            showImage(edgeImage, "LOG Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_edge_sobel_triggered()
@@ -339,7 +339,7 @@ void MainWindow::on_edge_sobel_triggered()
     {
         if (edgeMethod == mSobel)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "Sobel Edge");
         } else {
             edgeMethod = mSobel;
 
@@ -373,9 +373,9 @@ void MainWindow::on_edge_sobel_triggered()
 
             equalizeHist(edgeImage, edgeImage);
 
-            showImage(edgeImage);
+            showImage(edgeImage, "Sobel Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_edge_roberts_triggered()
@@ -384,7 +384,7 @@ void MainWindow::on_edge_roberts_triggered()
     {
         if (edgeMethod == mRoberts)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "Roberts Edge");
         }
         else
         {
@@ -413,9 +413,9 @@ void MainWindow::on_edge_roberts_triggered()
             }
             equalizeHist(edge, edge);
             edgeImage = edge.clone();
-            showImage(edgeImage);
+            showImage(edgeImage, "Roberts Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_edge_prewitt_triggered()
@@ -424,7 +424,7 @@ void MainWindow::on_edge_prewitt_triggered()
     {
         if (edgeMethod == mPrewitt)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "Prewitt Edge");
         }
         else
         {
@@ -460,15 +460,17 @@ void MainWindow::on_edge_prewitt_triggered()
             }
             equalizeHist(edge, edge);
             edgeImage = edge.clone();
-            showImage(edgeImage);
+            showImage(edgeImage, "Prewitt Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_show_edge_triggered()
 {
     if (!edgeImage.empty())
-        showImage(edgeImage);
+        showImage(edgeImage, "Current Edge");
+     else
+        showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_show_blur_triggered()
@@ -487,10 +489,11 @@ void MainWindow::on_show_blur_triggered()
             GaussianBlur(grayImage, blurImage, Size(ksize, ksize), sigma, sigma);
         }
         else {
+            showMessageBox(tr("请先打开一张图像"));
             return;
         }
     }
-    showImage(blurImage);
+    showImage(blurImage, "Blur");
 }
 
 void MainWindow::on_show_gray_triggered()
@@ -503,11 +506,12 @@ void MainWindow::on_show_gray_triggered()
             cvtColor(image, grayImage, COLOR_BGR2GRAY);
         }
         else {
+            showMessageBox(tr("请先打开一张图像"));
             return;
         }
 
     }
-    showImage(grayImage);
+    showImage(grayImage, "Gray");
 }
 
 /**
@@ -543,16 +547,16 @@ void MainWindow::on_edge_dog_triggered()
     {
         if (edgeMethod == mDOG)
         {
-            showImage(edgeImage);
+            showImage(edgeImage, "DOG Edge");
         }
         else
         {
             edgeMethod = mDOG;
             int sigma = 3;
             edgeImage = difference_of_gaussian(srcImage.clone(), sigma, (sigma*5 | 1));
-            showImage(edgeImage);
+            showImage(edgeImage, "DOG Edge");
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_calibration_triggered()
@@ -653,7 +657,7 @@ void MainWindow::HoughCircleDetect(Mat image, int method, double dp, double minD
         circle(image, center, radius, Scalar(0, 0, 255), 3, LINE_AA);
     }
 
-    showImage(image);
+    showImage(image, "Hough");
 }
 
 // 匹配 HoughDlg 的插槽
@@ -668,19 +672,50 @@ void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double p
 
 void MainWindow::on_read_control_point_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
-                                                    this->cpPath,
-                                                    tr("控制点文件(*.txt)"));
-    this->cpPath = fileName.section("/", 0, -2);
-
-    FILE *fp = fopen(fileName.toLocal8Bit().data(), "r");
-    if (fp)
+    if (cPoints.empty())
     {
-        int beginPos, pointNum;
-        fscanf(fp, "%d\t%d\n", &beginPos, &pointNum); // 获取控制点文件头信息
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
+                                                        this->cpPath,
+                                                        tr("控制点文件(*.txt)"));
+        this->cpPath = fileName.section("/", 0, -2);
 
-        // 关闭文件
-        if (feof(fp))
+        FILE *fp = fopen(fileName.toLocal8Bit().data(), "r");
+        if (fp)
+        {
+            int beginPos, pointNum;
+            fscanf(fp, "%d %d\n", &beginPos, &pointNum); // 获取控制点文件头信息
+
+            QMessageBox::information(this,
+                                     tr("头信息"),
+                                     QString().sprintf("起始点号：%d, 控制点数目：%d\n", beginPos, pointNum));
+
+            while (!feof(fp))
+            {
+                CPoint cPoint;
+                int t;
+                fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.x, &cPoint.y, &cPoint.z, &t, &t);
+
+                cout << cPoint.num << ": " << cPoint.x << ", " << cPoint.y << ", " << cPoint.z << endl;
+
+                this->cPoints.push_back(cPoint);
+            }
+
+            // 关闭文件
             fclose(fp);
+
+            ui->read_control_point->setText(tr("清空控制点(&O)"));
+        }
+    }
+    else
+    {
+        if (QMessageBox::information(this,
+                                 tr("提示"),
+                                 tr("是否清空控制点信息？"),
+                                 QMessageBox::Yes,
+                                 QMessageBox::No) == QMessageBox::Yes)
+        {
+            this->cPoints.clear();
+            ui->read_control_point->setText(tr("读取控制点文件(&O)"));
+        }
     }
 }

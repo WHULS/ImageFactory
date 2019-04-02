@@ -33,3 +33,10 @@ void MyGraphicsView::wheelEvent(QWheelEvent *event)
 
     this->translate(1, 1);
 }
+
+void MyGraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    cout << event->x() << endl;
+    cout << event->y() << endl;
+
+}

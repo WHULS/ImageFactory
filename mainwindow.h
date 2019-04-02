@@ -50,6 +50,7 @@ public:
     ~MainWindow();
 
     void releaseImages();
+    void showImage(Mat, const char*);
     void showImage(Mat, bool = false);
     void resizeToImage(Mat); // 调整窗口到最适照片
     Mat edgeDetectCanny(Mat, int edgeThresh = 1);
@@ -99,7 +100,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径 F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90
+    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径 E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -115,8 +116,8 @@ private:
     MySlider *CannySlider;
 
     // 控制点
-    vector<CPoint> cPoint;
-    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/";
+    vector<CPoint> cPoints;
+    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据"; // E:/杉/文章/大三下/4. 计算机视觉/CV实习数据
 
 };
 

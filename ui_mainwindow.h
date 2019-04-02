@@ -38,6 +38,7 @@ public:
     QAction *show_gray;
     QAction *edge_dog;
     QAction *calibration;
+    QAction *read_control_point;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -49,7 +50,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(666, 483);
+        MainWindow->resize(292, 251);
         image_open = new QAction(MainWindow);
         image_open->setObjectName(QString::fromUtf8("image_open"));
         image_open->setCheckable(false);
@@ -122,6 +123,11 @@ public:
         QIcon icon12;
         icon12.addFile(QString::fromUtf8(":/icons/icons/camico2.ico"), QSize(), QIcon::Normal, QIcon::Off);
         calibration->setIcon(icon12);
+        read_control_point = new QAction(MainWindow);
+        read_control_point->setObjectName(QString::fromUtf8("read_control_point"));
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/images/images/dingwei.png"), QSize(), QIcon::Normal, QIcon::Off);
+        read_control_point->setIcon(icon13);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -130,7 +136,7 @@ public:
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 666, 23));
+        menuBar->setGeometry(QRect(0, 0, 292, 23));
         menu_F = new QMenu(menuBar);
         menu_F->setObjectName(QString::fromUtf8("menu_F"));
         menu = new QMenu(menuBar);
@@ -160,6 +166,7 @@ public:
         menu->addAction(edge_roberts);
         menu->addAction(edge_prewitt);
         menu->addAction(edge_dog);
+        menu_Y->addAction(read_control_point);
         menu_Y->addAction(calibration);
 
         retranslateUi(MainWindow);
@@ -209,6 +216,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         calibration->setToolTip(QApplication::translate("MainWindow", "\346\221\204\345\275\261\346\234\272\345\256\232\346\240\207(B)", nullptr));
 #endif // QT_NO_TOOLTIP
+        read_control_point->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\346\216\247\345\210\266\347\202\271\346\226\207\344\273\266(&O)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));

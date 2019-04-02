@@ -3,8 +3,11 @@
 
 #include <QGraphicsView>
 #include <QApplication>
+#include <QMouseEvent>
 #include <QWheelEvent>
 #include <iostream>
+
+using namespace std;
 
 class MyGraphicsView : public QGraphicsView
 {
@@ -13,6 +16,7 @@ public:
     ~MyGraphicsView();
 
 private slots:
+    void mousePressEvent(QMouseEvent *);
     void wheelEvent(QWheelEvent *);
 };
 
