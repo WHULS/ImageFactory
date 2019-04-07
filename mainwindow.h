@@ -56,8 +56,9 @@ public:
     Mat edgeDetectCanny(Mat, int edgeThresh = 1);
     void showMessageBox(QString);
     Mat difference_of_gaussian(Mat image, int sigma=3, int ksize=15, int k=3);
-
     void HoughCircleDetect(Mat image, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius);
+    // 检测控制点的鼠标事件
+    static void CPointMouseClick(int event, int x, int y, int flags, void* userdata);
 
 private slots:
     void on_image_open_triggered();

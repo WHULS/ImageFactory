@@ -104,14 +104,14 @@ public:
         edge_prewitt->setIcon(icon9);
         show_edge = new QAction(MainWindow);
         show_edge->setObjectName(QString::fromUtf8("show_edge"));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/images/images/datadig.png"), QSize(), QIcon::Normal, QIcon::Off);
-        show_edge->setIcon(icon10);
+        show_edge->setIcon(icon3);
         show_blur = new QAction(MainWindow);
         show_blur->setObjectName(QString::fromUtf8("show_blur"));
-        show_blur->setIcon(icon10);
+        show_blur->setIcon(icon4);
         show_gray = new QAction(MainWindow);
         show_gray->setObjectName(QString::fromUtf8("show_gray"));
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/images/images/datadig.png"), QSize(), QIcon::Normal, QIcon::Off);
         show_gray->setIcon(icon10);
         edge_dog = new QAction(MainWindow);
         edge_dog->setObjectName(QString::fromUtf8("edge_dog"));
@@ -146,8 +146,6 @@ public:
         MainWindow->setMenuBar(menuBar);
 
         toolBar->addAction(image_open);
-        toolBar->addAction(fit_to_image);
-        toolBar->addAction(show_srcImage);
         toolBar->addSeparator();
         toolBar->addAction(show_edge);
         toolBar->addAction(show_blur);

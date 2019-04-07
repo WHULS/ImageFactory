@@ -228,7 +228,7 @@ void MainWindow::on_show_srcImage_triggered()
     {
         showImage(srcImage, "Src Image");
         CannySlider->hide();
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::showMessageBox(QString msg)
@@ -257,13 +257,14 @@ void MainWindow::resizeToImage(Mat img)
             if (this->isMaximized()) this->showNormal();
             this->setGeometry(leftTopX, lettTopY, appWidth, appHeight);
         }
-    }
+    } else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::on_fit_to_image_triggered()
 {
     if (!edgeImage.empty()) resizeToImage(edgeImage);
     else if (!srcImage.empty()) resizeToImage(srcImage);
+    else showMessageBox(tr("请先打开一张图像"));
 }
 
 void MainWindow::releaseImages()
@@ -470,7 +471,7 @@ void MainWindow::on_show_edge_triggered()
     if (!edgeImage.empty())
         showImage(edgeImage, "Current Edge");
      else
-        showMessageBox(tr("请先打开一张图像"));
+        showMessageBox(tr("请先进行边缘提取"));
 }
 
 void MainWindow::on_show_blur_triggered()
@@ -623,7 +624,24 @@ void MainWindow::on_calibration_triggered()
         imshow("Hello?", image);
     }*/
 
+    if (srcImage.empty())
+        showMessageBox(tr("请先打开一张图像"));
+    else {
+        showImage(srcImage, "Detect CPoint");
+        setMouseCallback("Detect CPoint", CPointMouseClick);
+    }
 }
+
+void MainWindow::CPointMouseClick(int event, int x, int y, int flags, void* userdata)
+{
+    if (event == EVENT_LBUTTONUP)
+    {
+        QMessageBox::information(nullptr,
+                                 tr("Control Point"),
+                                 QString().sprintf("%d\n%d", x, y));
+    }
+}
+
 /** Hough 检测图像中的圆并显示(原图输入)
  * @brief MainWindow::HoughCircleDetect
  * @param image
