@@ -30,7 +30,8 @@ SOURCES += \
     mygraphicsview.cpp \
     convert.cpp \
     myslider.cpp \
-    houghcircledlg.cpp
+    houghcircledlg.cpp \
+    SampleImage.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
     convert.h \
     convert.h \
     myslider.h \
-    houghcircledlg.h
+    houghcircledlg.h \
+    SampleImage.h
 
 FORMS += \
     mainwindow.ui \

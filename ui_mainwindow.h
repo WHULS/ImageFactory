@@ -39,9 +39,9 @@ public:
     QAction *edge_dog;
     QAction *calibration;
     QAction *read_control_point;
-    QAction *actionMoravec_M;
-    QAction *actionForstner_F;
-    QAction *actionHarris_H;
+    QAction *point_Moravec;
+    QAction *point_Forstner;
+    QAction *point_Harris;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -54,7 +54,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(452, 202);
+        MainWindow->resize(393, 274);
         image_open = new QAction(MainWindow);
         image_open->setObjectName(QString::fromUtf8("image_open"));
         image_open->setCheckable(false);
@@ -132,12 +132,21 @@ public:
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/images/images/dingwei.png"), QSize(), QIcon::Normal, QIcon::Off);
         read_control_point->setIcon(icon13);
-        actionMoravec_M = new QAction(MainWindow);
-        actionMoravec_M->setObjectName(QString::fromUtf8("actionMoravec_M"));
-        actionForstner_F = new QAction(MainWindow);
-        actionForstner_F->setObjectName(QString::fromUtf8("actionForstner_F"));
-        actionHarris_H = new QAction(MainWindow);
-        actionHarris_H->setObjectName(QString::fromUtf8("actionHarris_H"));
+        point_Moravec = new QAction(MainWindow);
+        point_Moravec->setObjectName(QString::fromUtf8("point_Moravec"));
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8(":/images/images/M.png"), QSize(), QIcon::Normal, QIcon::Off);
+        point_Moravec->setIcon(icon14);
+        point_Forstner = new QAction(MainWindow);
+        point_Forstner->setObjectName(QString::fromUtf8("point_Forstner"));
+        QIcon icon15;
+        icon15.addFile(QString::fromUtf8(":/images/images/F.png"), QSize(), QIcon::Normal, QIcon::Off);
+        point_Forstner->setIcon(icon15);
+        point_Harris = new QAction(MainWindow);
+        point_Harris->setObjectName(QString::fromUtf8("point_Harris"));
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8(":/images/images/H.png"), QSize(), QIcon::Normal, QIcon::Off);
+        point_Harris->setIcon(icon16);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -146,7 +155,7 @@ public:
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 452, 23));
+        menuBar->setGeometry(QRect(0, 0, 393, 23));
         menu_F = new QMenu(menuBar);
         menu_F->setObjectName(QString::fromUtf8("menu_F"));
         menu = new QMenu(menuBar);
@@ -179,9 +188,9 @@ public:
         menu->addAction(edge_dog);
         menu_Y->addAction(read_control_point);
         menu_Y->addAction(calibration);
-        menu_P->addAction(actionMoravec_M);
-        menu_P->addAction(actionForstner_F);
-        menu_P->addAction(actionHarris_H);
+        menu_P->addAction(point_Moravec);
+        menu_P->addAction(point_Forstner);
+        menu_P->addAction(point_Harris);
 
         retranslateUi(MainWindow);
 
@@ -231,9 +240,9 @@ public:
         calibration->setToolTip(QApplication::translate("MainWindow", "\346\221\204\345\275\261\346\234\272\345\256\232\346\240\207(B)", nullptr));
 #endif // QT_NO_TOOLTIP
         read_control_point->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\346\216\247\345\210\266\347\202\271\346\226\207\344\273\266(&O)", nullptr));
-        actionMoravec_M->setText(QApplication::translate("MainWindow", "Moravec (&M)", nullptr));
-        actionForstner_F->setText(QApplication::translate("MainWindow", "Forstner (&F)", nullptr));
-        actionHarris_H->setText(QApplication::translate("MainWindow", "Harris (&H)", nullptr));
+        point_Moravec->setText(QApplication::translate("MainWindow", "Moravec (&M)", nullptr));
+        point_Forstner->setText(QApplication::translate("MainWindow", "Forstner (&F)", nullptr));
+        point_Harris->setText(QApplication::translate("MainWindow", "Harris (&H)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));

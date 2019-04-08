@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // 初始化样本图像类
+    sampleImages = new SampleImage();
+
     // 屏幕大小
     QScreen *pSc = QGuiApplication::primaryScreen();
     availableWidth = pSc->availableGeometry().width();
@@ -71,7 +74,7 @@ void MainWindow::on_image_open_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
                                                     this->imagePath,
-                                                    tr("Image File(*.png *.jpg *.jpeg *.bmp)"));
+                                                    tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
     this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
 
     if (fileName.isEmpty()) return;
@@ -624,11 +627,24 @@ void MainWindow::on_calibration_triggered()
         imshow("Hello?", image);
     }*/
 
-    if (srcImage.empty())
-        showMessageBox(tr("请先打开一张图像"));
-    else {
-        showImage(srcImage, "Detect CPoint");
-        setMouseCallback("Detect CPoint", CPointMouseClick);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
+                                                    this->imagePath,
+                                                    tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
+    this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
+
+    if (fileName.isEmpty()) return;
+
+    Mat caliImage = imread(fileName.toLocal8Bit().data(), 1);
+    
+    if (!caliImage.empty() && caliImage.data) {
+        size_t imageNum = sampleImages->pushSampleImage(caliImage);
+        sampleImages->calibration(imageNum);
+    } else {
+        QMessageBox::warning(this,
+                             tr("打开图像失败！"),
+                             tr("图像为空"),
+                             QMessageBox::Yes);
+        return;
     }
 }
 
@@ -690,7 +706,7 @@ void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double p
 
 void MainWindow::on_read_control_point_triggered()
 {
-    if (cPoints.empty())
+    if (sampleImages->controlPointEmpty())
     {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
                                                         this->cpPath,
@@ -713,9 +729,8 @@ void MainWindow::on_read_control_point_triggered()
                 int t;
                 fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.x, &cPoint.y, &cPoint.z, &t, &t);
 
-                cout << cPoint.num << ": " << cPoint.x << ", " << cPoint.y << ", " << cPoint.z << endl;
-
-                this->cPoints.push_back(cPoint);
+//                cout << cPoint.num << ": " << cPoint.x << ", " << cPoint.y << ", " << cPoint.z << endl;
+                sampleImages->pushControlPoint(cPoint);
             }
 
             // 关闭文件
@@ -723,6 +738,7 @@ void MainWindow::on_read_control_point_triggered()
 
             ui->read_control_point->setText(tr("清空控制点(&O)"));
         }
+
     }
     else
     {
@@ -732,7 +748,7 @@ void MainWindow::on_read_control_point_triggered()
                                  QMessageBox::Yes,
                                  QMessageBox::No) == QMessageBox::Yes)
         {
-            this->cPoints.clear();
+            sampleImages->clearControlPoint();
             ui->read_control_point->setText(tr("读取控制点文件(&O)"));
         }
     }

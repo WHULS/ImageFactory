@@ -6,6 +6,7 @@
 #include <QSlider>
 #include "mygraphicsview.h"
 #include "myslider.h"
+#include "SampleImage.h"
 
 // 引入OpenCV
 #include <opencv2/opencv.hpp>
@@ -26,20 +27,6 @@ class MainWindow;
 // 边缘提取方法
 enum EdgeMethod{mCanny=0, mLaplacian=1, mSobel=2, mLOG=3, mPrewitt=4, mRoberts=5,
                mDOG=6};
-
-// 定义结构体存储控制点
-/**
-  * @param x
-  * @param y
-  * @param z
-  * @param num 点号
-  */
-typedef struct {
-    double x;
-    double y;
-    double z;
-    int num;
-} CPoint;
 
 class MainWindow : public QMainWindow
 {
@@ -103,7 +90,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90"; // 图像路径 E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90
+    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -118,10 +105,10 @@ private:
     MyGraphicsView *ImageView;
     MySlider *CannySlider;
 
+    // 存储和处理样本图像的类
+    SampleImage *sampleImages;
     // 控制点
-    vector<CPoint> cPoints;
-    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据"; // E:/杉/文章/大三下/4. 计算机视觉/CV实习数据
-
+    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
 };
 
 #endif // MAINWINDOW_H
