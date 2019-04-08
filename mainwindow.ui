@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>292</width>
-    <height>251</height>
+    <width>393</width>
+    <height>274</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>292</width>
+     <width>393</width>
      <height>23</height>
     </rect>
    </property>
@@ -67,9 +67,18 @@
     <addaction name="read_control_point"/>
     <addaction name="calibration"/>
    </widget>
+   <widget class="QMenu" name="menu_P">
+    <property name="title">
+     <string>点特征提取(&amp;P)</string>
+    </property>
+    <addaction name="point_Moravec"/>
+    <addaction name="point_Forstner"/>
+    <addaction name="point_Harris"/>
+   </widget>
    <addaction name="menu_F"/>
    <addaction name="menu"/>
    <addaction name="menu_Y"/>
+   <addaction name="menu_P"/>
   </widget>
   <action name="image_open">
    <property name="checkable">
@@ -240,6 +249,33 @@
    </property>
    <property name="text">
     <string>读取控制点文件(&amp;O)</string>
+   </property>
+  </action>
+  <action name="point_Moravec">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/M.png</normaloff>:/images/images/M.png</iconset>
+   </property>
+   <property name="text">
+    <string>Moravec (&amp;M)</string>
+   </property>
+  </action>
+  <action name="point_Forstner">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/F.png</normaloff>:/images/images/F.png</iconset>
+   </property>
+   <property name="text">
+    <string>Forstner (&amp;F)</string>
+   </property>
+  </action>
+  <action name="point_Harris">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/H.png</normaloff>:/images/images/H.png</iconset>
+   </property>
+   <property name="text">
+    <string>Harris (&amp;H)</string>
    </property>
   </action>
  </widget>

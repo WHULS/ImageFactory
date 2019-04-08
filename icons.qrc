@@ -14,6 +14,9 @@
         <file>images/DOG.png</file>
         <file>images/xbox.png</file>
         <file>images/dingwei.png</file>
+        <file>images/M.png</file>
+        <file>images/H.png</file>
+        <file>images/F.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>

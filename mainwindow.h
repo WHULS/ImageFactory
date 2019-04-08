@@ -93,6 +93,8 @@ private slots:
 
     void on_read_control_point_triggered();
 
+    void on_point_Moravec_triggered();
+
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
     void On_HoughCircle_valueChanged(double, double, double, double, int, int);

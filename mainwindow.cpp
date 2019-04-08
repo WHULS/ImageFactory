@@ -737,3 +737,8 @@ void MainWindow::on_read_control_point_triggered()
         }
     }
 }
+
+void MainWindow::on_point_Moravec_triggered()
+{
+
+}
