@@ -119,6 +119,16 @@ static bool select_flag;
 static Mat rectImage;
 static CaliImage caliImage;
 
+// 绘制十字
+static void drawCross(Mat img, Point center, int size=100,  Scalar color=Scalar(0,0,255), int thickness=1)
+{
+    // 绘制横线
+    line(img,Point(center.x-size/2,center.y),Point(center.x+size/2,center.y),color,thickness);
+    // 绘制竖线
+    line(img,Point(center.x,center.y-size/2),Point(center.x,center.y+size/2),color,thickness);
+
+}
+
 // 在指定区域检测椭圆
 static bool detectEllipse(Mat roiImg)
 {
@@ -141,20 +151,34 @@ static bool detectEllipse(Mat roiImg)
 
         box = fitEllipse(contours[i]);
 
-
         ellipse(showImg, box, Scalar(0, 255, 0), 2);
 
         // 只画一个椭圆，一般第一个椭圆是ROI中最下方的那个
         break;
     }
+    // 在框选图像上画十字
+    drawCross(showImg, box.center, 30);
+
+    // 显示框选图像
+    namedWindow("Is it OK?", WINDOW_NORMAL);
     imshow("Is it OK?", showImg);
+
     if (QMessageBox::information(nullptr,
                              QObject::tr("提示"),
-                             QString().sprintf("控制点中心坐标为 (%d, %d)", 1, 2),
+                             QString().sprintf("控制点中心坐标为 (%lf, %lf)", select.x + box.center.x, select.y + box.center.y),
                              QMessageBox::Yes,
                              QMessageBox::No)==QMessageBox::Yes)
     {
-        // TODO: 获取椭圆中心的坐标
+        // 在原图上画椭圆
+        RotatedRect ellipseBox = box;
+        ellipseBox.center.x += select.x;
+        ellipseBox.center.y += select.y;
+
+        ellipse(rectImage, ellipseBox, Scalar(0, 255, 0), 2);
+        // 十字标
+        drawCross(rectImage, ellipseBox.center, 30);
+        imshow("Detect Ellipse", rectImage);
+
         destroyWindow("Is it OK?");
     }
     else
