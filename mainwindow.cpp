@@ -627,35 +627,12 @@ void MainWindow::on_calibration_triggered()
         imshow("Hello?", image);
     }*/
 
+    // 获取文件路径
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
                                                     this->imagePath,
                                                     tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
     this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
-
     if (fileName.isEmpty()) return;
-
-    Mat caliImage = imread(fileName.toLocal8Bit().data(), 1);
-    
-    if (!caliImage.empty() && caliImage.data) {
-        size_t imageNum = sampleImages->pushSampleImage(caliImage);
-        sampleImages->calibration(imageNum);
-    } else {
-        QMessageBox::warning(this,
-                             tr("打开图像失败！"),
-                             tr("图像为空"),
-                             QMessageBox::Yes);
-        return;
-    }
-}
-
-void MainWindow::CPointMouseClick(int event, int x, int y, int flags, void* userdata)
-{
-    if (event == EVENT_LBUTTONUP)
-    {
-        QMessageBox::information(nullptr,
-                                 tr("Control Point"),
-                                 QString().sprintf("%d\n%d", x, y));
-    }
 }
 
 /** Hough 检测图像中的圆并显示(原图输入)

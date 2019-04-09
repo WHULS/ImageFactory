@@ -8,13 +8,17 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+// 引入 Qt
+#include <QMessageBox>
+#include <QString>
+
 #include <iostream>
 #include <vector>
 
 using namespace cv;
 using namespace std;
 
-// 定义结构体存储控制点
+// 存储控制点的结构体
 /**
   * @param x
   * @param y
@@ -22,11 +26,26 @@ using namespace std;
   * @param num 点号
   */
 typedef struct {
-    double x;
-    double y;
-    double z;
+    double x; // mm
+    double y; // mm
+    double z; // mm
     int num;
 } CPoint;
+
+// 存储像片检校信息的结构体
+typedef struct {
+	QString imagePath;
+	vector<CPoint> controlPoints;
+	double X; // mm
+	double Y; // mm
+	double Z; // mm
+	double phi;   // rad
+	double omega; // rad
+	double kappa; // rad
+	double x_0; // mm
+	double y_0; // mm
+	double f;   // mm
+} CaliInfo;
 
 class SampleImage
 {
@@ -38,6 +57,7 @@ private:
     vector<Mat> sampleImages;
 public:
     SampleImage();
+    ~SampleImage();
 
     // 判断控制点是否为空
     bool controlPointEmpty();
@@ -68,9 +88,16 @@ public:
     // 对指定像片进行检校
     bool calibration(size_t imageNum);
 
+	// 在指定区域检测椭圆
+	bool detectEllipse(int row, int col, int height=200, int width=200);
+
 // static 方法
 public:
-    static void CPointMouseClick(int event, int x, int y, int flags, void* userdata);
+	static void CPointMouseClick(int event, int x, int y, int flags, void *params);
+
+// static 变量
+private:
+    static Mat currentImage;
 };
 
 #endif // SAMPLEIMAGE_H

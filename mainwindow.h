@@ -44,8 +44,6 @@ public:
     void showMessageBox(QString);
     Mat difference_of_gaussian(Mat image, int sigma=3, int ksize=15, int k=3);
     void HoughCircleDetect(Mat image, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius);
-    // 检测控制点的鼠标事件
-    static void CPointMouseClick(int event, int x, int y, int flags, void* userdata);
 
 private slots:
     void on_image_open_triggered();
@@ -90,7 +88,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
+    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -107,8 +105,9 @@ private:
 
     // 存储和处理样本图像的类
     SampleImage *sampleImages;
+
     // 控制点
-    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
+    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
 };
 
 #endif // MAINWINDOW_H

@@ -1,11 +1,16 @@
 #include "SampleImage.h"
 
-// 引入 Qt
-#include <QMessageBox>
+// 初始化 currentImage
+Mat SampleImage::currentImage;
 
 SampleImage::SampleImage()
 {
 
+}
+
+SampleImage::~SampleImage()
+{
+    currentImage.release();
 }
 
 bool SampleImage::controlPointEmpty()
@@ -107,13 +112,20 @@ bool SampleImage::clearSampleImage()
     return true;
 }
 
-void SampleImage::CPointMouseClick(int event, int x, int y, int flags, void* userdata)
+void SampleImage::CPointMouseClick(int event, int x, int y, int flags, void *params)
 {
-    if (event == EVENT_LBUTTONUP)
+    switch (event) {
+    case EVENT_LBUTTONDBLCLK:
     {
-        QMessageBox::information(nullptr,
-                                 QObject::tr("Control Point"),
-                                 QString().sprintf("%d\n%d", x, y));
+        cout << x << ", " << y << endl;
+        namedWindow("hi", WINDOW_NORMAL);
+        imshow("hi", currentImage);
+        break;
+    }
+    default:
+    {
+        break;
+    }
     }
 }
 
@@ -126,6 +138,10 @@ bool SampleImage::calibration(size_t imageNum)
         // 显示照片
         namedWindow("Detect CPoint", WINDOW_NORMAL);
         imshow("Detect CPoint", caliImage);
+
+        // 更新当前影像
+        if (!currentImage.empty()) currentImage.release();
+        currentImage = caliImage;
         
         // 事件监听
         setMouseCallback("Detect CPoint", CPointMouseClick);
@@ -137,5 +153,9 @@ bool SampleImage::calibration(size_t imageNum)
         cout << "像片获取失败" << endl;
         return false;
     }
-    
+}
+
+bool SampleImage::detectEllipse(int row, int col, int height, int width)
+{
+
 }
