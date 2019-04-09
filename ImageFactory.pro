@@ -31,7 +31,8 @@ SOURCES += \
     convert.cpp \
     myslider.cpp \
     houghcircledlg.cpp \
-    SampleImage.cpp
+    SampleData.cpp \
+    CaliImage.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     convert.h \
     myslider.h \
     houghcircledlg.h \
-    SampleImage.h
+    SampleData.h \
+    CaliImage.h
 
 FORMS += \
     mainwindow.ui \

@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // 初始化样本图像类
-    sampleImages = new SampleImage();
+    sampleData = new SampleData();
 
     // 屏幕大小
     QScreen *pSc = QGuiApplication::primaryScreen();
@@ -633,6 +633,8 @@ void MainWindow::on_calibration_triggered()
                                                     tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
     this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
     if (fileName.isEmpty()) return;
+
+    sampleData->calibration(fileName);
 }
 
 /** Hough 检测图像中的圆并显示(原图输入)
@@ -683,7 +685,7 @@ void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double p
 
 void MainWindow::on_read_control_point_triggered()
 {
-    if (sampleImages->controlPointEmpty())
+    if (sampleData->controlPointEmpty())
     {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
                                                         this->cpPath,
@@ -704,10 +706,10 @@ void MainWindow::on_read_control_point_triggered()
             {
                 CPoint cPoint;
                 int t;
-                fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.x, &cPoint.y, &cPoint.z, &t, &t);
+                fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.X, &cPoint.Y, &cPoint.Z, &t, &t);
 
 //                cout << cPoint.num << ": " << cPoint.x << ", " << cPoint.y << ", " << cPoint.z << endl;
-                sampleImages->pushControlPoint(cPoint);
+                sampleData->pushControlPoint(cPoint);
             }
 
             // 关闭文件
@@ -725,7 +727,7 @@ void MainWindow::on_read_control_point_triggered()
                                  QMessageBox::Yes,
                                  QMessageBox::No) == QMessageBox::Yes)
         {
-            sampleImages->clearControlPoint();
+            sampleData->clearControlPoint();
             ui->read_control_point->setText(tr("读取控制点文件(&O)"));
         }
     }
