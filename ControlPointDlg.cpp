@@ -20,23 +20,23 @@ void ControlPointDlg::pushControlPoint(double X, double Y, double Z, int num)
     // 添加一行
     table->setRowCount(row + 1);
 
-    labels << QString(row);
+    labels << QString().sprintf("%d", row);
     table->setVerticalHeaderLabels(labels);
 
-    QTableWidgetItem *itemX, *itemY, *itemZ, *itemN;
+    QTableWidgetItem *itemN, *itemX, *itemY, *itemZ;
+    itemN = new QTableWidgetItem();
     itemX = new QTableWidgetItem();
     itemY = new QTableWidgetItem();
     itemZ = new QTableWidgetItem();
-    itemN = new QTableWidgetItem();
 
-    itemX->setText(QString("%lf").arg(X));
-    table->setItem(row, 0, itemX);
-    itemX->setText(QString("%lf").arg(Y));
-    table->setItem(row, 1, itemY);
-    itemX->setText(QString("%lf").arg(Z));
-    table->setItem(row, 2, itemZ);
-    itemX->setText(QString("%lf").arg(num));
-    table->setItem(row, 3, itemN);
+    itemN->setText(QString().sprintf("%d", num));
+    table->setItem(row, 0, itemN);
+    itemX->setText(QString().sprintf("%lf", X));
+    table->setItem(row, 1, itemX);
+    itemY->setText(QString().sprintf("%lf", Y));
+    table->setItem(row, 2, itemY);
+    itemZ->setText(QString().sprintf("%lf", Z));
+    table->setItem(row, 3, itemZ);
 }
 
 void ControlPointDlg::pushControlPoint(CPoint cp)
@@ -48,4 +48,16 @@ void ControlPointDlg::pushControlPoint(CPoint cp)
     Z = cp.Z;
     num = cp.num;
     pushControlPoint(X, Y, Z, num);
+}
+
+void ControlPointDlg::on_controlPointList_itemClicked(QTableWidgetItem *item)
+{
+    cout << item->text().toLocal8Bit().data() << endl;
+}
+
+void ControlPointDlg::clearControlPoint()
+{
+    QTableWidget *table = ui->controlPointList;
+    // table->clear();
+    table->setRowCount(0);
 }

@@ -4,11 +4,11 @@
 static Mat currentImage;
 static vector<CPoint> controlPoints;
 static vector<CaliImage> caliImages; // 存储所有检校照片的数组
-//static ControlPointDlg *CpDlg = new ControlPointDlg;
+static ControlPointDlg *CpDlg;
 
 SampleData::SampleData()
 {
-
+    CpDlg = new ControlPointDlg;
 }
 
 SampleData::~SampleData()
@@ -18,7 +18,7 @@ SampleData::~SampleData()
 
 void SampleData::showCpDlg()
 {
-//    CpDlg->show();
+    CpDlg->show();
 }
 
 bool SampleData::controlPointEmpty()
@@ -40,14 +40,14 @@ bool SampleData::caliImageEmpty()
 size_t SampleData::pushControlPoint(double x, double y, double z, int num)
 {
     CPoint cp = {x, y, z, num};
-//    CpDlg->pushControlPoint(cp); // 存入对话框
+    CpDlg->pushControlPoint(cp); // 存入对话框
     controlPoints.push_back(cp);
     return controlPoints.size()-1;
 }
 size_t SampleData::pushControlPoint(CPoint cp)
 {
     controlPoints.push_back(cp);
-//    CpDlg->pushControlPoint(cp); // 存入对话框
+    CpDlg->pushControlPoint(cp); // 存入对话框
     return controlPoints.size()-1;
 }
 // 添加影像，返回添加的位置
@@ -67,7 +67,7 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
     }
     else
     {
-        for (size_t i=0; i<controlPoints.size()-1; i++)
+        for (size_t i=0; i<controlPoints.size(); i++)
         {
             if (controlPoints[i].num == num)
             {
@@ -76,6 +76,27 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
             }
         }
 		// 找不到控制点
+        return false;
+    }
+}
+static bool getControlPoint(int num, CPoint *cp)
+{
+    if (controlPoints.empty())
+    {
+        // 控制点为空
+        return false;
+    }
+    else
+    {
+        for (size_t i=0; i<controlPoints.size(); i++)
+        {
+            if (controlPoints[i].num == num)
+            {
+                *cp = controlPoints[i];
+                return true;
+            }
+        }
+        // 找不到控制点
         return false;
     }
 }
@@ -113,6 +134,7 @@ int SampleData::caliImageNumber()
 bool SampleData::clearControlPoint()
 {
     controlPoints.clear();
+    CpDlg->clearControlPoint();
     return true;
 }
 // 清空影像
@@ -188,10 +210,30 @@ static bool detectEllipse(Mat roiImg)
         drawCross(rectImage, ellipseBox.center, 30, 2);
         imshow("Detect Ellipse", rectImage);
 
-        // 存入影像数组中
-        CPoint cp;
-        cp.x = double(ellipseBox.center.x);
-        cp.y = double(ellipseBox.center.y);
+        // 选择控制点
+        SelectCpDlg *sCpDlg = new SelectCpDlg();
+        sCpDlg->show();
+
+        int num = sCpDlg->exec();
+        if (num != -1)
+        {
+            CPoint cp;
+            if (getControlPoint(num, &cp))
+            {
+                cp.x = double(ellipseBox.center.x);
+                cp.y = double(ellipseBox.center.y);
+
+                // 存入影像数组中
+                caliImage.ControlPoints.push_back(cp);
+            }
+            else
+            {
+                QMessageBox::information(nullptr,
+                                         QObject::tr("提示"),
+                                         QObject::tr("控制点读取错误"));
+            }
+
+        }
 
         destroyWindow("Is it OK?");
     }

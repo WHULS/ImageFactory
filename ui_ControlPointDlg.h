@@ -43,6 +43,9 @@ public:
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         controlPointList->setHorizontalHeaderItem(3, __qtablewidgetitem3);
         controlPointList->setObjectName(QString::fromUtf8("controlPointList"));
+        controlPointList->setAlternatingRowColors(true);
+        controlPointList->setTextElideMode(Qt::ElideNone);
+        controlPointList->setSortingEnabled(true);
 
         gridLayout->addWidget(controlPointList, 0, 0, 1, 1);
 

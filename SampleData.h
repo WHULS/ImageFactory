@@ -20,6 +20,7 @@ using namespace std;
 
 #include "CaliImage.h"
 #include "ControlPointDlg.h"
+#include "SelectCpDlg.h"
 
 class SampleData
 {

@@ -2,6 +2,7 @@
 #define CONTROLPOINTDLG_H
 
 #include <QDialog>
+#include <QTableWidgetItem>
 
 #include "CaliImage.h"
 
@@ -18,6 +19,9 @@ public:
     ~ControlPointDlg();
     void pushControlPoint(double X, double Y, double Z, int num);
     void pushControlPoint(CPoint cp);
+    void clearControlPoint();
+private slots:
+    void on_controlPointList_itemClicked(QTableWidgetItem *item);
 
 private:
     Ui::ControlPointDlg *ui;

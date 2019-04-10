@@ -44,7 +44,7 @@ public:
     {
         if (HoughCircleDlg->objectName().isEmpty())
             HoughCircleDlg->setObjectName(QString::fromUtf8("HoughCircleDlg"));
-        HoughCircleDlg->resize(360, 192);
+        HoughCircleDlg->resize(360, 203);
         gridLayout = new QGridLayout(HoughCircleDlg);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         horizontalLayout = new QHBoxLayout();

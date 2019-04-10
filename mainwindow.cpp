@@ -708,7 +708,7 @@ void MainWindow::on_read_control_point_triggered()
                 int t;
                 fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.X, &cPoint.Y, &cPoint.Z, &t, &t);
 
-//                cout << cPoint.num << ": " << cPoint.x << ", " << cPoint.y << ", " << cPoint.z << endl;
+                // cout << cPoint.num << ": " << cPoint.X << ", " << cPoint.Y << ", " << cPoint.Z << endl;
                 sampleData->pushControlPoint(cPoint);
             }
 

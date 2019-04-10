@@ -33,7 +33,8 @@ SOURCES += \
     houghcircledlg.cpp \
     SampleData.cpp \
     CaliImage.cpp \
-    ControlPointDlg.cpp
+    ControlPointDlg.cpp \
+    SelectCpDlg.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,12 +45,14 @@ HEADERS += \
     houghcircledlg.h \
     SampleData.h \
     CaliImage.h \
-    ControlPointDlg.h
+    ControlPointDlg.h \
+    SelectCpDlg.h
 
 FORMS += \
     mainwindow.ui \
     houghcircledlg.ui \
-    ControlPointDlg.ui
+    ControlPointDlg.ui \
+    SelectCpDlg.ui
 
 UI_DIR = $$PWD
 
