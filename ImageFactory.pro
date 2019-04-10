@@ -31,10 +31,10 @@ SOURCES += \
     convert.cpp \
     myslider.cpp \
     houghcircledlg.cpp \
-    SampleData.cpp \
     CaliImage.cpp \
     ControlPointDlg.cpp \
-    SelectCpDlg.cpp
+    SelectCpDlg.cpp \
+    SampleData.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,16 +43,17 @@ HEADERS += \
     convert.h \
     myslider.h \
     houghcircledlg.h \
-    SampleData.h \
     CaliImage.h \
     ControlPointDlg.h \
-    SelectCpDlg.h
+    SelectCpDlg.h \
+    SampleData.h
 
 FORMS += \
     mainwindow.ui \
     houghcircledlg.ui \
     ControlPointDlg.ui \
-    SelectCpDlg.ui
+    SelectCpDlg.ui \
+    SampleData.ui
 
 UI_DIR = $$PWD
 

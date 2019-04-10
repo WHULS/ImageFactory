@@ -1,4 +1,5 @@
 #include "SampleData.h"
+#include "ui_SampleData.h"
 
 // 声明静态成员
 static Mat currentImage;
@@ -6,15 +7,78 @@ static vector<CPoint> controlPoints;
 static vector<CaliImage> caliImages; // 存储所有检校照片的数组
 static ControlPointDlg *CpDlg;
 
-SampleData::SampleData()
+SampleData::SampleData(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::SampleData)
 {
+    ui->setupUi(this);
     CpDlg = new ControlPointDlg;
+
+    /*
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QBrush>
+#include <QRadialGradient>
+#include <QDebug>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    listView = new QListView(this);
+    standardItemModel = new QStandardItemModel(this);
+
+    QStringList strList;
+    strList.append("string1");
+    strList.append("string2");
+    strList.append("string3");
+    strList.append("string4");
+    strList.append("string5");
+    strList.append("string6");
+    strList.append("string7");
+    strList << "string8";
+    strList += "string9";
+    int nCount = strList.size();
+    for(int i = 0; i < nCount; i++)
+    {
+        QString string = static_cast<QString>(strList.at(i));
+        QStandardItem *item = new QStandardItem(string);
+        if(i % 2 == 1)
+        {
+            QLinearGradient linearGrad(QPointF(0, 0), QPointF(200, 200));
+            linearGrad.setColorAt(0, Qt::darkGreen);
+            linearGrad.setColorAt(1, Qt::yellow);
+            QBrush brush(linearGrad);
+            item->setBackground(brush);
+        }
+        standardItemModel->appendRow(item);
+    }
+    listView->setModel(standardItemModel);
+    listView->setFixedSize(200,300);
+    connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::itemClicked(QModelIndex index)
+{
+    qDebug() << index.data().toString();
+}
+
+*/
 }
 
 SampleData::~SampleData()
 {
     currentImage.release();
+    delete ui;
 }
+
 
 void SampleData::showCpDlg()
 {
@@ -62,8 +126,8 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
 {
     if (controlPoints.empty())
     {
-		// 控制点为空
-		return false;
+        // 控制点为空
+        return false;
     }
     else
     {
@@ -75,7 +139,7 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
                 return true;
             }
         }
-		// 找不到控制点
+        // 找不到控制点
         return false;
     }
 }
@@ -107,16 +171,16 @@ bool SampleData::getSampleData(size_t num, Mat *img)
     {
         return false;
     }
-	else
-	{
-		// 超出图像范围
-		if (num > caliImages.size()-1)
-			return false;
-		
+    else
+    {
+        // 超出图像范围
+        if (num > caliImages.size()-1)
+            return false;
+
         *img = caliImages[num].Image;
-		return true;
-	}
-	
+        return true;
+    }
+
 }
 
 // 获取控制点数量
@@ -274,7 +338,7 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
     case EVENT_RBUTTONUP:
     {
         select_flag = false;
-        //显示框出的ROI   
+        //显示框出的ROI
         Rect roi = Rect(Point(select.x, select.y), Point(x, y));
         if (roi.width && roi.height)
         {
@@ -305,10 +369,10 @@ bool SampleData::calibration(size_t imageNum)
         // 更新当前影像
         if (!currentImage.empty()) currentImage.release();
         currentImage = caliImage.clone();
-        
+
         // 事件监听
         setMouseCallback("Detect Ellipse", CPointMouseClick);
-        
+
         return true;
     }
     else

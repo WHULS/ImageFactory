@@ -23,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 初始化样本图像类
+    // 初始化样本数据类
     sampleData = new SampleData();
+    sampleData->show();
 
     // 屏幕大小
     QScreen *pSc = QGuiApplication::primaryScreen();

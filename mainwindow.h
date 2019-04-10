@@ -88,7 +88,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
+    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -107,7 +107,7 @@ private:
     SampleData *sampleData;
 
     // 控制点
-    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
+    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
 };
 
 #endif // MAINWINDOW_H
