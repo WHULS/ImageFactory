@@ -19,6 +19,7 @@ using namespace cv;
 using namespace std;
 
 #include "CaliImage.h"
+#include "ControlPointDlg.h"
 
 class SampleData
 {
@@ -55,6 +56,8 @@ public:
     // 对指定像片进行检校
     bool calibration(size_t imageNum);
     bool calibration(QString imagePath);
+
+    void showCpDlg();
 };
 
 #endif // SAMPLEIMAGE_H

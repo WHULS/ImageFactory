@@ -712,6 +712,9 @@ void MainWindow::on_read_control_point_triggered()
                 sampleData->pushControlPoint(cPoint);
             }
 
+            // 显示控制点对话框
+            sampleData->showCpDlg();
+
             // 关闭文件
             fclose(fp);
 

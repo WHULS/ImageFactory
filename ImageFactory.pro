@@ -32,7 +32,8 @@ SOURCES += \
     myslider.cpp \
     houghcircledlg.cpp \
     SampleData.cpp \
-    CaliImage.cpp
+    CaliImage.cpp \
+    ControlPointDlg.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,11 +43,13 @@ HEADERS += \
     myslider.h \
     houghcircledlg.h \
     SampleData.h \
-    CaliImage.h
+    CaliImage.h \
+    ControlPointDlg.h
 
 FORMS += \
     mainwindow.ui \
-    houghcircledlg.ui
+    houghcircledlg.ui \
+    ControlPointDlg.ui
 
 UI_DIR = $$PWD
 

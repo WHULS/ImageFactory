@@ -4,6 +4,7 @@
 static Mat currentImage;
 static vector<CPoint> controlPoints;
 static vector<CaliImage> caliImages; // 存储所有检校照片的数组
+//static ControlPointDlg *CpDlg = new ControlPointDlg;
 
 SampleData::SampleData()
 {
@@ -13,6 +14,11 @@ SampleData::SampleData()
 SampleData::~SampleData()
 {
     currentImage.release();
+}
+
+void SampleData::showCpDlg()
+{
+//    CpDlg->show();
 }
 
 bool SampleData::controlPointEmpty()
@@ -34,12 +40,14 @@ bool SampleData::caliImageEmpty()
 size_t SampleData::pushControlPoint(double x, double y, double z, int num)
 {
     CPoint cp = {x, y, z, num};
+//    CpDlg->pushControlPoint(cp); // 存入对话框
     controlPoints.push_back(cp);
     return controlPoints.size()-1;
 }
 size_t SampleData::pushControlPoint(CPoint cp)
 {
     controlPoints.push_back(cp);
+//    CpDlg->pushControlPoint(cp); // 存入对话框
     return controlPoints.size()-1;
 }
 // 添加影像，返回添加的位置
@@ -120,7 +128,7 @@ static Mat rectImage;
 static CaliImage caliImage;
 
 // 绘制十字
-static void drawCross(Mat img, Point center, int size=100,  Scalar color=Scalar(0,0,255), int thickness=1)
+static void drawCross(Mat img, Point center, int size=100, int thickness=1,  Scalar color=Scalar(0,0,255))
 {
     // 绘制横线
     line(img,Point(center.x-size/2,center.y),Point(center.x+size/2,center.y),color,thickness);
@@ -175,9 +183,15 @@ static bool detectEllipse(Mat roiImg)
         ellipseBox.center.y += select.y;
 
         ellipse(rectImage, ellipseBox, Scalar(0, 255, 0), 2);
+
         // 十字标
-        drawCross(rectImage, ellipseBox.center, 30);
+        drawCross(rectImage, ellipseBox.center, 30, 2);
         imshow("Detect Ellipse", rectImage);
+
+        // 存入影像数组中
+        CPoint cp;
+        cp.x = double(ellipseBox.center.x);
+        cp.y = double(ellipseBox.center.y);
 
         destroyWindow("Is it OK?");
     }
