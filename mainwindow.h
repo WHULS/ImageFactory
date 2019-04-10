@@ -74,11 +74,9 @@ private slots:
 
     void on_edge_dog_triggered();
 
-    void on_calibration_triggered();
-
-    void on_read_control_point_triggered();
-
     void on_point_Moravec_triggered();
+
+    void on_run_fetch_cloud_triggered();
 
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）
@@ -88,7 +86,7 @@ private:
     Ui::MainWindow *ui;
 
     // 图像
-    QString imagePath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
+    QString imagePath;
     cv::Mat srcImage;  // 原始图像
     cv::Mat edgeImage; // 边缘图像
     int edgeMethod = -1;
@@ -102,12 +100,6 @@ private:
     QGraphicsScene *scene;
     MyGraphicsView *ImageView;
     MySlider *CannySlider;
-
-    // 存储和处理样本图像的类
-    SampleData *sampleData;
-
-    // 控制点
-    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
 };
 
 #endif // MAINWINDOW_H

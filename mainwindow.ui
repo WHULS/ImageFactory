@@ -64,8 +64,7 @@
     <property name="title">
      <string>点云提取 (&amp;Y)</string>
     </property>
-    <addaction name="read_control_point"/>
-    <addaction name="calibration"/>
+    <addaction name="run_fetch_cloud"/>
    </widget>
    <widget class="QMenu" name="menu_P">
     <property name="title">
@@ -230,27 +229,6 @@
     <string>DOG (&amp;D)</string>
    </property>
   </action>
-  <action name="calibration">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/camico2.ico</normaloff>:/icons/icons/camico2.ico</iconset>
-   </property>
-   <property name="text">
-    <string>摄影机定标(&amp;B)</string>
-   </property>
-   <property name="toolTip">
-    <string>摄影机定标(B)</string>
-   </property>
-  </action>
-  <action name="read_control_point">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/images/images/dingwei.png</normaloff>:/images/images/dingwei.png</iconset>
-   </property>
-   <property name="text">
-    <string>读取控制点文件(&amp;O)</string>
-   </property>
-  </action>
   <action name="point_Moravec">
    <property name="icon">
     <iconset resource="icons.qrc">
@@ -276,6 +254,15 @@
    </property>
    <property name="text">
     <string>Harris (&amp;H)</string>
+   </property>
+  </action>
+  <action name="run_fetch_cloud">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/xbox.png</normaloff>:/images/images/xbox.png</iconset>
+   </property>
+   <property name="text">
+    <string>启动 (&amp;R)</string>
    </property>
   </action>
  </widget>

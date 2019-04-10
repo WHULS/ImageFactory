@@ -11,7 +11,12 @@
 
 // 引入 Qt
 #include <QMessageBox>
+#include <QFileDialog>
 #include <QString>
+#include <QListView>
+#include <QStandardItemModel>
+#include <QDebug>
+#include <QAbstractItemView>
 
 #include <iostream>
 #include <vector>
@@ -61,14 +66,44 @@ public:
     // 清空影像
     bool clearSampleData();
 
-    // 对指定像片进行检校
-    bool calibration(size_t imageNum);
-    bool calibration(QString imagePath);
-
     void showCpDlg();
+
+    void renewData(int idx);
+
+    // 绘制十字
+    void drawCross(Mat img, Point center, int size=100, int thickness=1,  Scalar color=Scalar(0,0,255));
+    // 在指定区域检测椭圆
+    bool detectEllipse(Mat roiImg);
+
+public slots:
+    void dataListClicked(QModelIndex index);
+public:
+    void dataListClicked(int row);
+
+private slots:
+    void on_read_control_point_triggered();
+
+    void on_open_image_triggered();
+
+    void on_dataInfo_clicked(const QModelIndex &index);
 
 private:
     Ui::SampleData *ui;
+    QStandardItemModel *dataListModel; // 数据列表
+    QStandardItemModel *dataInfoModel; // 数据内容
+    // 图像路径
+    QString imageDir = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
+    QString imagePath;
+    // 控制点
+    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
+    int currentCPtNum=0; // 用来记录当前输入的控制点的号数
+
+public:
+    Mat currentImage;
+    CaliImage caliImage;
+    vector<CaliImage> caliImages; // 存储所有检校照片的数组
+    vector<CPoint> controlPoints;
+    ControlPointDlg *CpDlg;
 };
 
 #endif // SAMPLEDATA_H

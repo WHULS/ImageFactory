@@ -1,11 +1,12 @@
 #include "SelectCpDlg.h"
 #include "ui_SelectCpDlg.h"
 
-SelectCpDlg::SelectCpDlg(QWidget *parent) :
+SelectCpDlg::SelectCpDlg(int cptNum, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SelectCpDlg)
 {
     ui->setupUi(this);
+    ui->point_number->setValue(cptNum);
 }
 
 SelectCpDlg::~SelectCpDlg()

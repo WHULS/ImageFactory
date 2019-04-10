@@ -12,7 +12,7 @@ class SelectCpDlg : public QDialog
     Q_OBJECT
 
 public:
-    explicit SelectCpDlg(QWidget *parent = nullptr);
+    explicit SelectCpDlg(int cptNum, QWidget *parent = nullptr);
     ~SelectCpDlg();
 
 private slots:

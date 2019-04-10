@@ -2,75 +2,46 @@
 #include "ui_SampleData.h"
 
 // 声明静态成员
-static Mat currentImage;
-static vector<CPoint> controlPoints;
-static vector<CaliImage> caliImages; // 存储所有检校照片的数组
-static ControlPointDlg *CpDlg;
+static Rect select;
+static bool select_flag;
+static Mat rectImage;
+static SampleData *sd;
 
 SampleData::SampleData(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SampleData)
 {
+    // 将 this 指针赋给静态成员，这样可以在静态成员函数中调用该实例的变量
+    sd = this;
+
     ui->setupUi(this);
     CpDlg = new ControlPointDlg;
 
-    /*
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <QBrush>
-#include <QRadialGradient>
-#include <QDebug>
+    // 设置第1栏 - 数据头
+    QListView *dataList;
+    dataList = ui->sampleDataList;
+    // 设置为不可修改
+    dataList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
+    dataListModel = new QStandardItemModel();
+    // 将数据模型绑定到 dataList
+    dataList->setModel(dataListModel);
 
-    listView = new QListView(this);
-    standardItemModel = new QStandardItemModel(this);
 
+    // 填写项
     QStringList strList;
-    strList.append("string1");
-    strList.append("string2");
-    strList.append("string3");
-    strList.append("string4");
-    strList.append("string5");
-    strList.append("string6");
-    strList.append("string7");
-    strList << "string8";
-    strList += "string9";
-    int nCount = strList.size();
-    for(int i = 0; i < nCount; i++)
+    strList << "当前像片";
+    strList << "[数组]控制点";
+    strList << "[数组]检校照片";
+    for (int i=0; i<strList.size(); i++)
     {
-        QString string = static_cast<QString>(strList.at(i));
-        QStandardItem *item = new QStandardItem(string);
-        if(i % 2 == 1)
-        {
-            QLinearGradient linearGrad(QPointF(0, 0), QPointF(200, 200));
-            linearGrad.setColorAt(0, Qt::darkGreen);
-            linearGrad.setColorAt(1, Qt::yellow);
-            QBrush brush(linearGrad);
-            item->setBackground(brush);
-        }
-        standardItemModel->appendRow(item);
+        QString str = static_cast<QString>(strList.at(i));
+        QStandardItem *item = new QStandardItem(str);
+        dataListModel->appendRow(item);
     }
-    listView->setModel(standardItemModel);
-    listView->setFixedSize(200,300);
-    connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
-}
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::itemClicked(QModelIndex index)
-{
-    qDebug() << index.data().toString();
-}
-
-*/
+    // 绑定事件与槽
+    connect(dataList, SIGNAL(clicked(QModelIndex)), this, SLOT(dataListClicked(QModelIndex)));
 }
 
 SampleData::~SampleData()
@@ -79,6 +50,131 @@ SampleData::~SampleData()
     delete ui;
 }
 
+void SampleData::dataListClicked(int row)
+{
+    switch (row) {
+    case 0:
+    {
+        QTableView *dataInfo;
+        dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+
+        // 设置表头属性
+        dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("属性")));
+        dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("值")));
+        dataInfo->setColumnWidth(0, 75);
+        dataInfo->verticalHeader()->hide(); // 隐藏竖直的行号
+        dataInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+        if (!currentImage.empty())
+        {
+            dataInfoModel->setItem(0, 0, new QStandardItem("Rows"));
+            dataInfoModel->setItem(0, 1, new QStandardItem(QString().sprintf("%d", currentImage.rows)));
+
+            dataInfoModel->setItem(1, 0, new QStandardItem("Cols"));
+            dataInfoModel->setItem(1, 1, new QStandardItem(QString().sprintf("%d", currentImage.cols)));
+
+            dataInfoModel->setItem(2, 0, new QStandardItem("Path"));
+            dataInfoModel->setItem(2, 1, new QStandardItem(caliImage.ImagePath));
+
+            dataInfoModel->setItem(3, 0, new QStandardItem("CPoint"));
+            dataInfoModel->setItem(3, 1, new QStandardItem(QString().sprintf("%d", caliImage.ControlPoints.size())));
+
+            dataInfoModel->setItem(4, 0, new QStandardItem("X"));
+            dataInfoModel->setItem(4, 1, new QStandardItem(QString().sprintf("%lf", caliImage.X)));
+
+            dataInfoModel->setItem(5, 0, new QStandardItem("Y"));
+            dataInfoModel->setItem(5, 1, new QStandardItem(QString().sprintf("%lf", caliImage.Y)));
+
+            dataInfoModel->setItem(6, 1, new QStandardItem(QString().sprintf("%lf", caliImage.Z)));
+            dataInfoModel->setItem(6, 0, new QStandardItem("Z"));
+
+            dataInfoModel->setItem(7, 0, new QStandardItem("Phi"));
+            dataInfoModel->setItem(7, 1, new QStandardItem(QString().sprintf("%lf", caliImage.Phi)));
+
+            dataInfoModel->setItem(8, 0, new QStandardItem("Omega"));
+            dataInfoModel->setItem(8, 1, new QStandardItem(QString().sprintf("%lf", caliImage.Omega)));
+
+            dataInfoModel->setItem(9, 0, new QStandardItem("Kappa"));
+            dataInfoModel->setItem(9, 1, new QStandardItem(QString().sprintf("%lf", caliImage.Kappa)));
+
+            dataInfoModel->setItem(10, 0, new QStandardItem("x_0"));
+            dataInfoModel->setItem(10, 1, new QStandardItem(QString().sprintf("%lf", caliImage.x_0)));
+
+            dataInfoModel->setItem(11, 0, new QStandardItem("y_0"));
+            dataInfoModel->setItem(11, 1, new QStandardItem(QString().sprintf("%lf", caliImage.y_0)));
+
+            dataInfoModel->setItem(12, 0, new QStandardItem("f"));
+            dataInfoModel->setItem(12, 1, new QStandardItem(QString().sprintf("%lf", caliImage.f)));
+
+            // 调整列宽
+            ui->dataInfo->resizeColumnsToContents();
+
+            namedWindow("Current Image", WINDOW_NORMAL);
+            imshow("Current Image", currentImage);
+        }
+        else
+        {
+            dataInfoModel->setItem(0, 0, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 1, new QStandardItem("暂无数据"));
+        }
+        break;
+    }
+    case 1:
+    {
+        QTableView *dataInfo;
+        dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+
+        dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("点号")));
+        dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("X")));
+        dataInfoModel->setHorizontalHeaderItem(2, new QStandardItem(tr("Y")));
+        dataInfoModel->setHorizontalHeaderItem(3, new QStandardItem(tr("Z")));
+        dataInfo->setColumnWidth(0, 75);
+        dataInfo->verticalHeader()->hide(); // 隐藏竖直的行号
+        dataInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
+        dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("点号")));
+        dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("X")));
+        dataInfoModel->setHorizontalHeaderItem(2, new QStandardItem(tr("Y")));
+        dataInfoModel->setHorizontalHeaderItem(3, new QStandardItem(tr("Z")));
+
+        if (controlPoints.empty())
+        {
+            dataInfoModel->setItem(0, 0, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 1, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 2, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 3, new QStandardItem("null"));
+        }
+        else
+        {
+            for (size_t i=0; i<controlPoints.size(); i++)
+            {
+                dataInfoModel->setItem(int(i), 0, new QStandardItem(QString().sprintf("%d", controlPoints[i].num)));
+                dataInfoModel->setItem(int(i), 1, new QStandardItem(QString().sprintf("%lf", controlPoints[i].X)));
+                dataInfoModel->setItem(int(i), 2, new QStandardItem(QString().sprintf("%lf", controlPoints[i].Y)));
+                dataInfoModel->setItem(int(i), 3, new QStandardItem(QString().sprintf("%lf", controlPoints[i].Z)));
+            }
+            // 调整列宽
+            ui->dataInfo->resizeColumnsToContents();
+        }
+        break;
+    }
+    case 2:
+    {
+        dataInfoModel->setRowCount(0);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void SampleData::dataListClicked(QModelIndex index)
+{
+//    qDebug() << index.data().toString(); // TODO: 解决显示的中文乱码
+    dataListClicked(index.row());
+}
 
 void SampleData::showCpDlg()
 {
@@ -126,7 +222,7 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
 {
     if (controlPoints.empty())
     {
-        // 控制点为空
+        qDebug() << "控制点为空";
         return false;
     }
     else
@@ -139,31 +235,11 @@ bool SampleData::getControlPoint(int num, CPoint *cp)
                 return true;
             }
         }
-        // 找不到控制点
+        qDebug() << "找不到控制点";
         return false;
     }
 }
-static bool getControlPoint(int num, CPoint *cp)
-{
-    if (controlPoints.empty())
-    {
-        // 控制点为空
-        return false;
-    }
-    else
-    {
-        for (size_t i=0; i<controlPoints.size(); i++)
-        {
-            if (controlPoints[i].num == num)
-            {
-                *cp = controlPoints[i];
-                return true;
-            }
-        }
-        // 找不到控制点
-        return false;
-    }
-}
+
 // 获取数组中第num幅影像
 bool SampleData::getSampleData(size_t num, Mat *img)
 {
@@ -208,13 +284,8 @@ bool SampleData::clearSampleData()
     return true;
 }
 
-static Rect select;
-static bool select_flag;
-static Mat rectImage;
-static CaliImage caliImage;
-
 // 绘制十字
-static void drawCross(Mat img, Point center, int size=100, int thickness=1,  Scalar color=Scalar(0,0,255))
+void SampleData::drawCross(Mat img, Point center, int size, int thickness,  Scalar color)
 {
     // 绘制横线
     line(img,Point(center.x-size/2,center.y),Point(center.x+size/2,center.y),color,thickness);
@@ -224,7 +295,7 @@ static void drawCross(Mat img, Point center, int size=100, int thickness=1,  Sca
 }
 
 // 在指定区域检测椭圆
-static bool detectEllipse(Mat roiImg)
+bool SampleData::detectEllipse(Mat roiImg)
 {
     Mat thrImg, showImg;
 
@@ -272,23 +343,26 @@ static bool detectEllipse(Mat roiImg)
 
         // 十字标
         drawCross(rectImage, ellipseBox.center, 30, 2);
-        imshow("Detect Ellipse", rectImage);
+        imshow("Current Image", rectImage);
 
         // 选择控制点
-        SelectCpDlg *sCpDlg = new SelectCpDlg();
+        SelectCpDlg *sCpDlg = new SelectCpDlg(currentCPtNum);
         sCpDlg->show();
 
-        int num = sCpDlg->exec();
-        if (num != -1)
+        currentCPtNum = sCpDlg->exec();
+        if (currentCPtNum != -1)
         {
             CPoint cp;
-            if (getControlPoint(num, &cp))
+            if (getControlPoint(currentCPtNum, &cp))
             {
                 cp.x = double(ellipseBox.center.x);
                 cp.y = double(ellipseBox.center.y);
 
                 // 存入影像数组中
                 caliImage.ControlPoints.push_back(cp);
+
+                currentCPtNum++;
+                sd->renewData(0);
             }
             else
             {
@@ -309,7 +383,7 @@ static bool detectEllipse(Mat roiImg)
     return true;
 }
 
-// 【静态成员变量】 鼠标事件监听
+// 鼠标事件监听
 static void CPointMouseClick(int event, int x, int y, int flags, void *params)
 {
     switch (event)
@@ -327,11 +401,11 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
         if (select_flag)
         {
             Point p1, p2;
-            currentImage.copyTo(rectImage);
+            sd->currentImage.copyTo(rectImage);
             p1 = Point(select.x, select.y);
             p2 = Point(x, y);
             rectangle(rectImage, p1, p2, Scalar(0, 255, 0), 2);
-            imshow("Detect Ellipse", rectImage);
+            imshow("Current Image", rectImage);
         }
         break;
     }
@@ -343,9 +417,9 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
         if (roi.width && roi.height)
         {
             // 获取ROI影像
-            Mat roiImg = currentImage(roi);
+            Mat roiImg = sd->currentImage(roi);
             // 在ROI影像上检测椭圆
-            detectEllipse(roiImg);
+            sd->detectEllipse(roiImg);
         }
         break;
     }
@@ -356,53 +430,121 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
     }
 }
 
-// 对指定像片进行检校
-bool SampleData::calibration(size_t imageNum)
+void SampleData::on_read_control_point_triggered()
 {
-    Mat caliImage;
-    if (getSampleData(imageNum, &caliImage))
+    if (controlPointEmpty())
     {
-        // 显示照片
-        namedWindow("Detect Ellipse", WINDOW_NORMAL);
-        imshow("Detect Ellipse", caliImage);
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
+                                                        this->cpPath,
+                                                        tr("控制点文件(*.txt)"));
+        this->cpPath = fileName.section("/", 0, -2);
 
-        // 更新当前影像
-        if (!currentImage.empty()) currentImage.release();
-        currentImage = caliImage.clone();
+        FILE *fp = fopen(fileName.toLocal8Bit().data(), "r");
+        if (fp)
+        {
+            int beginPos, pointNum;
+            fscanf(fp, "%d %d\n", &beginPos, &pointNum); // 获取控制点文件头信息
 
-        // 事件监听
-        setMouseCallback("Detect Ellipse", CPointMouseClick);
+            QMessageBox::information(this,
+                                     tr("头信息"),
+                                     QString().sprintf("起始点号：%d, 控制点数目：%d\n", beginPos, pointNum));
 
-        return true;
+            while (!feof(fp))
+            {
+                CPoint cPoint;
+                int t;
+                fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.X, &cPoint.Y, &cPoint.Z, &t, &t);
+
+                // cout << cPoint.num << ": " << cPoint.X << ", " << cPoint.Y << ", " << cPoint.Z << endl;
+                pushControlPoint(cPoint);
+            }
+
+
+            // 关闭文件
+            fclose(fp);
+
+            ui->read_control_point->setText(tr("清空控制点(&O)"));
+        }
+
     }
     else
     {
-        cout << "像片获取失败" << endl;
-        return false;
+        if (QMessageBox::information(this,
+                                 tr("提示"),
+                                 tr("是否清空控制点信息？"),
+                                 QMessageBox::Yes,
+                                 QMessageBox::No) == QMessageBox::Yes)
+        {
+            clearControlPoint();
+            ui->read_control_point->setText(tr("读取控制点文件(&O)"));
+        }
     }
+
+    // 刷新视窗
+    renewData(1);
 }
-bool SampleData::calibration(QString imagePath)
+
+void SampleData::on_open_image_triggered()
 {
+    // 获取文件路径
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
+                                                    this->imageDir,
+                                                    tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
+    this->imageDir = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
+    this->imagePath = fileName;
+    if (fileName.isEmpty()) return;
+    
     caliImage.ImagePath = imagePath;
 
     Mat caliImage = imread(imagePath.toLocal8Bit().data(), 1);
+    qDebug() << imagePath;
     if (!caliImage.empty() || caliImage.data)
     {
-        namedWindow("Detect Ellipse", WINDOW_NORMAL);
-        imshow("Detect Ellipse", caliImage);
+        namedWindow("Current Image", WINDOW_NORMAL);
+        imshow("Current Image", caliImage);
 
         // 更新当前影像
         if (!currentImage.empty()) currentImage.release();
         currentImage = caliImage;
 
         // 事件监听
-        setMouseCallback("Detect Ellipse", CPointMouseClick);
+        setMouseCallback("Current Image", CPointMouseClick);
 
-        return true;
+        // 刷新视窗
+        renewData(0);
     }
     else
     {
-        cout << "像片打开失败" << endl;
-        return false;
+        qDebug() << "像片打开失败";
+    }
+}
+
+void SampleData::renewData(int idx)
+{
+    if (ui->sampleDataList->currentIndex().row() == idx)
+    {
+        dataListClicked(idx);
+    }
+    
+}
+
+void SampleData::on_dataInfo_clicked(const QModelIndex &index)
+{
+    int row = index.row();
+    switch (row) {
+    case 3:
+    {
+        Mat crossImage = currentImage.clone();
+        for (size_t i=0; i<caliImage.ControlPoints.size(); i++)
+        {
+            // 加上0.5四舍五入
+            drawCross(crossImage, Point(caliImage.ControlPoints[i].x+0.5, caliImage.ControlPoints[i].y+0.5), 100, 3);
+        }
+        namedWindow("Control Points", WINDOW_NORMAL);
+        imshow("Control Points", crossImage);
+        break;
+    }
+    default:
+        break;
     }
 }

@@ -23,10 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 初始化样本数据类
-    sampleData = new SampleData();
-    sampleData->show();
-
     // 屏幕大小
     QScreen *pSc = QGuiApplication::primaryScreen();
     availableWidth = pSc->availableGeometry().width();
@@ -564,79 +560,6 @@ void MainWindow::on_edge_dog_triggered()
     } else showMessageBox(tr("请先打开一张图像"));
 }
 
-void MainWindow::on_calibration_triggered()
-{
-    /*if(!srcImage.empty())
-    {
-        // Hough 变换检测圆
-//        Mat image = srcImage.clone();
-//        HoughCircleDetect(image, HOUGH_GRADIENT, 1, image.rows/8, 100, 30, 1, 30);
-
-//        // 创建对话框
-//        HoughCircleDlg *hcDlg = new HoughCircleDlg(this);
-//        hcDlg->show();
-
-//        // 连接信号和槽
-//        connect(hcDlg, SIGNAL(ParamsChanged(double, double, double, double, int, int)),
-//                this, SLOT(On_HoughCircle_valueChanged(double, double, double, double, int, int)));
-
-        Mat image = srcImage.clone();
-        // 用 DOG 算子检测边缘（弃用：轮廓过于明显，产生双环）
-        Mat edge = difference_of_gaussian(image);
-        // 腐蚀，缩小轮廓
-        erode(edge, edge, getStructuringElement(MORPH_RECT, Size(6,6)));
-        showImage(edge);
-
-        vector<vector<Point>> contours;
-        findContours(edge, contours, RETR_LIST, CHAIN_APPROX_NONE);
-
-
-        // 绘制轮廓线
-//        for (size_t i=0; i<contours.size(); i++)
-//        {
-//            // 计算每个 contour 的面积
-//            double area = contourArea(contours[i]);
-
-//            // 忽略太小或太大的区域
-//            if (area < 1e2 || 1e5 < area) continue;
-//            cout << contours[i].size() << endl;
-
-//            // 绘制 contour
-//            drawContours(image, contours, static_cast<int>(i), Scalar(0,0,255), 2);
-//        }
-
-//        showImage(image);
-        RotatedRect box;
-        int count = 0;
-        for (size_t i=0; i<contours.size(); i++)
-        {
-            double area = contourArea(contours[i]);
-            if (area < 1e2 || 1e5 < area) continue;
-            if (contours[i].size() < 100) continue;
-
-            box = fitEllipse(contours[i]);
-
-            double boxRatio = double(box.size.height)/double(box.size.width);
-            if (boxRatio > 5) continue;
-
-            ellipse(image, box, Scalar(0, 255, 0), 2);
-            putText(image, to_string(count), box.center, FONT_HERSHEY_SIMPLEX, 2, Scalar(0, 0, 255), 2);
-
-            count++;
-        }
-
-        imshow("Hello?", image);
-    }*/
-
-    // 获取文件路径
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"),
-                                                    this->imagePath,
-                                                    tr("Image File(*.png *.jpg *.jpeg *.bmp *.raw)"));
-    this->imagePath = fileName.section("/", 0, -2); // 保存图像位置，作为下次打开的根目录
-    if (fileName.isEmpty()) return;
-
-    sampleData->calibration(fileName);
-}
 
 /** Hough 检测图像中的圆并显示(原图输入)
  * @brief MainWindow::HoughCircleDetect
@@ -684,60 +607,13 @@ void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double p
     }
 }
 
-void MainWindow::on_read_control_point_triggered()
-{
-    if (sampleData->controlPointEmpty())
-    {
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Control Point"),
-                                                        this->cpPath,
-                                                        tr("控制点文件(*.txt)"));
-        this->cpPath = fileName.section("/", 0, -2);
-
-        FILE *fp = fopen(fileName.toLocal8Bit().data(), "r");
-        if (fp)
-        {
-            int beginPos, pointNum;
-            fscanf(fp, "%d %d\n", &beginPos, &pointNum); // 获取控制点文件头信息
-
-            QMessageBox::information(this,
-                                     tr("头信息"),
-                                     QString().sprintf("起始点号：%d, 控制点数目：%d\n", beginPos, pointNum));
-
-            while (!feof(fp))
-            {
-                CPoint cPoint;
-                int t;
-                fscanf(fp, "%d %lf %lf %lf %d\n %d\n", &cPoint.num, &cPoint.X, &cPoint.Y, &cPoint.Z, &t, &t);
-
-                // cout << cPoint.num << ": " << cPoint.X << ", " << cPoint.Y << ", " << cPoint.Z << endl;
-                sampleData->pushControlPoint(cPoint);
-            }
-
-            // 显示控制点对话框
-            sampleData->showCpDlg();
-
-            // 关闭文件
-            fclose(fp);
-
-            ui->read_control_point->setText(tr("清空控制点(&O)"));
-        }
-
-    }
-    else
-    {
-        if (QMessageBox::information(this,
-                                 tr("提示"),
-                                 tr("是否清空控制点信息？"),
-                                 QMessageBox::Yes,
-                                 QMessageBox::No) == QMessageBox::Yes)
-        {
-            sampleData->clearControlPoint();
-            ui->read_control_point->setText(tr("读取控制点文件(&O)"));
-        }
-    }
-}
-
 void MainWindow::on_point_Moravec_triggered()
 {
 
+}
+
+void MainWindow::on_run_fetch_cloud_triggered()
+{
+    SampleData *sampleDataWin = new SampleData();
+    sampleDataWin->show();
 }
