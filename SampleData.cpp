@@ -27,7 +27,6 @@ SampleData::SampleData(QWidget *parent) :
     // 将数据模型绑定到 dataList
     dataList->setModel(dataListModel);
 
-
     // 填写项
     QStringList strList;
     strList << "当前像片";
@@ -42,6 +41,10 @@ SampleData::SampleData(QWidget *parent) :
 
     // 绑定事件与槽
     connect(dataList, SIGNAL(clicked(QModelIndex)), this, SLOT(dataListClicked(QModelIndex)));
+
+    QModelIndex currentIndex = dataListModel->index(2, 0);
+    dataList->setCurrentIndex(currentIndex);
+    emit dataList->clicked(currentIndex);
 }
 
 SampleData::~SampleData()
@@ -52,6 +55,7 @@ SampleData::~SampleData()
 
 void SampleData::dataListClicked(int row)
 {
+    currentListNum = row;
     switch (row) {
     case 0:
     {
@@ -107,9 +111,7 @@ void SampleData::dataListClicked(int row)
             dataInfoModel->setItem(12, 0, new QStandardItem("f"));
             dataInfoModel->setItem(12, 1, new QStandardItem(QString().sprintf("%lf", caliImage.f)));
 
-
-            namedWindow("Current Image", WINDOW_NORMAL);
-            imshow("Current Image", currentImage);
+            showCurrentImage();
         }
         else
         {
@@ -416,9 +418,16 @@ bool SampleData::detectEllipse(Mat roiImg)
             {
                 cp.x = double(ellipseBox.center.x);
                 cp.y = double(ellipseBox.center.y);
+                cp.num = currentCPtNum;
 
                 // 存入影像数组中
                 caliImage.ControlPoints.push_back(cp);
+
+                if (imageIndex != -1)
+                {
+                    caliImages[imageIndex].ControlPoints.push_back(cp);
+                    renewData(2);
+                }
 
                 currentCPtNum++;
                 renewData(0);
@@ -459,6 +468,14 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
     {
         if (select_flag)
         {
+            if (sd->controlPoints.size() == 0)
+            {
+                QMessageBox::information(nullptr,
+                                         QObject::tr("提示"),
+                                         QObject::tr("请先读取控制点"));
+                select_flag = false;
+                break;
+            }
             Point p1, p2;
             sd->currentImage.copyTo(rectImage);
             p1 = Point(select.x, select.y);
@@ -486,20 +503,25 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
     case EVENT_LBUTTONDBLCLK:
     {
         if (QMessageBox::information(sd,
-                                     sd->tr("提示"),
-                                     sd->tr("是否保存当前影像并打开下一幅？"),
-                                     QMessageBox::Yes,
-                                     QMessageBox::No) == QMessageBox::Yes)
+                                    sd->tr("提示"),
+                                    sd->tr("是否保存当前影像并打开下一幅？"),
+                                    QMessageBox::Yes,
+                                    QMessageBox::No) == QMessageBox::Yes)
         {
             // 存入数组
-            sd->caliImages.push_back(sd->caliImage);
+            if (sd->imageIndex == -1)
+                sd->caliImages.push_back(sd->caliImage);
+            else
+                sd->caliImages[sd->imageIndex] = sd->caliImage;
             // 清空
             sd->caliImage.clear();
+            sd->currentCPtNum=0;
             // 打开新影像
             sd->on_open_image_triggered();
             // 刷新信息表
             sd->renewData(2);
         }
+        
         break;
     }
     default:
@@ -575,19 +597,18 @@ void SampleData::on_open_image_triggered()
     
     caliImage.ImagePath = imagePath;
 
-    Mat caliImage = imread(imagePath.toLocal8Bit().data(), 1);
+    Mat readImage = imread(imagePath.toLocal8Bit().data(), 1);
     qDebug() << imagePath;
-    if (!caliImage.empty() || caliImage.data)
+    if (!readImage.empty() || readImage.data)
     {
-        namedWindow("Current Image", WINDOW_NORMAL);
-        imshow("Current Image", caliImage);
-
         // 更新当前影像
-        if (!currentImage.empty()) currentImage.release();
-        currentImage = caliImage;
+        currentImage.release();
+        currentImage = readImage;
 
-        // 事件监听
-        setMouseCallback("Current Image", CPointMouseClick);
+        // 标记为非图像数组内像片
+        imageIndex = -1;
+
+        showCurrentImage();
 
         // 刷新视窗
         renewData(0);
@@ -607,26 +628,62 @@ void SampleData::renewData(int idx)
     
 }
 
+// 指定图像上画控制点
+void SampleData::showControlPoint(Mat cPtImage, vector<CPoint> points, String winName)
+{
+    Mat crossImage = cPtImage.clone();
+    Point center;
+    for (size_t i=0; i<points.size(); i++)
+    {
+        // 画十字标，加上0.5四舍五入
+        center = Point(points[i].x, points[i].y);
+        drawCross(crossImage, center, 100, 3);
+        // 画点号
+        putText(crossImage, to_string(caliImage.ControlPoints[i].num), Point(center.x+10, center.y-10),
+                FONT_HERSHEY_SCRIPT_SIMPLEX, 5.0, Scalar(255, 0, 0), 5);
+    }
+    namedWindow(winName, WINDOW_NORMAL);
+    imshow(winName, crossImage);
+}
+
 void SampleData::on_dataInfo_clicked(const QModelIndex &index)
 {
     int row = index.row();
+    int col = index.column();
+
+    // 表头字符串
+    // QString columnHeaderString =  dataInfoModel->horizontalHeaderItem(index.column())->text();
+
     // 当点击的是“当前影像”一栏的“控制点(row 3)”时
-    if (row == 3 && (index.data().toString()==QString("CPoint") ||
-                     index.siblingAtColumn(index.column()-1).data().toString()==QString("CPoint")))
+    if (currentListNum==0 && row == 3)
     {
-        Mat crossImage = currentImage.clone();
-        Point center;
-        for (size_t i=0; i<caliImage.ControlPoints.size(); i++)
+        showControlPoint(currentImage, caliImage.ControlPoints, caliImage.ImagePath.section("/", -1, -1).toLocal8Bit().data());
+    }
+    else if (currentListNum==2 && !caliImages.empty())
+    {
+        caliImage = caliImages[size_t(row)];
+        // 标记影像
+        imageIndex = row;
+        currentImage.release();
+        currentImage = imread(caliImage.ImagePath.toLocal8Bit().data(), 1);
+        if (currentImage.empty())
         {
-            // 画十字标，加上0.5四舍五入
-            center = Point(caliImage.ControlPoints[i].x, caliImage.ControlPoints[i].y);
-            drawCross(crossImage, center, 100, 3);
-            // 画点号
-            putText(crossImage, to_string(caliImage.ControlPoints[i].num), Point(center.x+10, center.y-10),
-                    FONT_HERSHEY_SCRIPT_SIMPLEX, 5.0, Scalar(255, 0, 0), 5);
+            qDebug() << "图像为空";
         }
-        namedWindow("Control Points", WINDOW_NORMAL);
-        imshow("Control Points", crossImage);
+        else
+        {
+            // 更新图像信息
+            renewData(0);
+            // 由于renewData只针对已显示的list更新，因此需要手动更新影像
+            showCurrentImage();
+
+            // 点下控制点所在列
+            if (col == 1)
+            {
+                showControlPoint(currentImage, caliImage.ControlPoints, caliImage.ImagePath.section("/", -1, -1).toLocal8Bit().data());
+            }
+        }
+
     }
 }
 
@@ -657,7 +714,11 @@ void SampleData::on_save_calibration_info_triggered()
 
     // 控制点
     QDomElement cPts = doc.createElement("Control-Points");
-    // ...
+
+    QDomElement controlPointNumber = doc.createElement("Control-Point-Number");
+    controlPointNumber.appendChild(doc.createTextNode(QString().sprintf("%d", int(controlPoints.size()))));
+    cPts.appendChild(controlPointNumber);
+
     for (size_t i=0; i<controlPoints.size(); i++)
     {
         QDomElement cPt = doc.createElement("Control-Point");
@@ -685,15 +746,225 @@ void SampleData::on_save_calibration_info_triggered()
 
         cPts.appendChild(cPt);
     }
+
     root.appendChild(cPts);
 
     // 检校像片
-    QDomElement cImgs = doc.createElement("Calibration-Images");
-    // ...
-    root.appendChild(cImgs);
+    QDomElement caliImgs = doc.createElement("Calibration-Images");
+
+    for (size_t i=0; i<caliImages.size(); i++)
+    {
+        QDomElement caliImg = doc.createElement("Calibration-Image");
+
+        QDomElement imgPath = doc.createElement("Image-Path");
+        QDomElement worldX = doc.createElement("X");
+        QDomElement worldY = doc.createElement("Y");
+        QDomElement worldZ = doc.createElement("Z");
+        QDomElement phi = doc.createElement("Phi");
+        QDomElement omega = doc.createElement("Omega");
+        QDomElement kappa = doc.createElement("Kappa");
+        QDomElement x_0 = doc.createElement("x_0");
+        QDomElement y_0 = doc.createElement("y_0");
+        QDomElement f = doc.createElement("f");
+        QDomElement cPts = doc.createElement("Control-Points");
+        QDomElement cPtNum = doc.createElement("Control-Point-Number");
+
+        imgPath.appendChild(doc.createTextNode(caliImages[i].ImagePath));
+        worldX.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].X)));
+        worldY.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].Y)));
+        worldZ.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].Z)));
+        phi.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].Phi)));
+        omega.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].Omega)));
+        kappa.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].Kappa)));
+        x_0.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].x_0)));
+        y_0.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].y_0)));
+        f.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].f)));
+
+        size_t ptNum = caliImages[i].ControlPoints.size();
+        cPtNum.appendChild(doc.createTextNode(QString().sprintf("%d", int(ptNum))));
+        cPts.appendChild(cPtNum);
+        for (size_t j=0; j<ptNum; j++)
+        {
+            QDomElement cPt = doc.createElement("Control-Point");
+
+            QDomElement ptNo = doc.createElement("No");
+            QDomElement X = doc.createElement("X");
+            QDomElement Y = doc.createElement("Y");
+            QDomElement Z = doc.createElement("Z");
+            QDomElement x = doc.createElement("x");
+            QDomElement y = doc.createElement("y");
+
+            ptNo.appendChild(doc.createTextNode(QString().sprintf("%d", caliImages[i].ControlPoints[j].num)));
+            X.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].ControlPoints[j].X)));
+            Y.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].ControlPoints[j].Y)));
+            Z.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].ControlPoints[j].Z)));
+            x.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].ControlPoints[j].x)));
+            y.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].ControlPoints[j].y)));
+
+            cPt.appendChild(ptNo);
+            cPt.appendChild(X);
+            cPt.appendChild(Y);
+            cPt.appendChild(Z);
+            cPt.appendChild(x);
+            cPt.appendChild(y);
+
+            cPts.appendChild(cPt);
+        }
+
+        caliImg.appendChild(imgPath);
+        caliImg.appendChild(worldX);
+        caliImg.appendChild(worldY);
+        caliImg.appendChild(worldZ);
+        caliImg.appendChild(phi);
+        caliImg.appendChild(omega);
+        caliImg.appendChild(kappa);
+        caliImg.appendChild(x_0);
+        caliImg.appendChild(y_0);
+        caliImg.appendChild(f);
+        caliImg.appendChild(cPts);
+
+        caliImgs.appendChild(caliImg);
+    }
+
+    root.appendChild(caliImgs);
 
     // 文件保存
     QTextStream out(&file);
     doc.save(out, 4);
     file.close();
+
+    QMessageBox::information(this,
+                             tr("成功"),
+                             tr("保存成功！"));
+}
+
+void SampleData::on_open_calibration_info_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("保存"),
+                                                    xmlDir,
+                                                    tr("XML文件(*.xml)"));
+
+    qDebug() << fileName;
+    xmlDir = fileName.section("/", 0, -2);
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QFile::Text))
+    {
+        qDebug()<<"open for read error..." ;
+    }
+    QString errorStr;
+    int errorLine;
+    int errorColumn;
+
+    // 将xml文件读入doc树
+    QDomDocument doc;
+    if (!doc.setContent(&file, false, &errorStr, &errorLine, &errorColumn))
+    {
+        qDebug()<<"setcontent error..." ;
+        file.close();
+    }
+    file.close();
+
+    // 获取根元素
+    QDomElement root = doc.documentElement();
+    if (root.tagName() != "Sample-Data")
+    {
+       qDebug() << "root.tagName != Sample-Data...";
+       QMessageBox::information(this,
+                                       tr("提示"),
+                                       tr("请打开正确的xml文件"));
+       return;
+    }
+
+    // 第一个节点 <Control-Points>
+    QDomElement firstEl = root.firstChildElement("Control-Points");
+    QDomNode cpNode = firstEl.firstChild();
+    // 控制点个数
+    qDebug() << "控制点个数：" << cpNode.toElement().text().toInt();
+    cpNode = cpNode.nextSibling();
+    // 清空原有控制点信息
+    controlPoints.clear();
+    // 遍历控制点
+    while (!cpNode.isNull())
+    {
+        QDomElement e1, e2, e3, e4;
+        e1 = cpNode.firstChildElement("Number");
+        e2 = cpNode.firstChildElement("X");
+        e3 = cpNode.firstChildElement("Y");
+        e4 = cpNode.firstChildElement("Z");
+
+        qDebug() << e1.text() << e2.text() << e3.text() << e4.text();
+
+        // 插入控制点数组
+        CPoint cp = {e2.text().toDouble(), e3.text().toDouble(), e4.text().toDouble(), e1.text().toInt(), -1, -1};
+        controlPoints.push_back(cp);
+
+        cpNode = cpNode.nextSibling();
+    }
+    renewData(1);
+    // 第二个节点 <Calibration-Images>
+    QDomElement secondEl = root.firstChildElement("Calibration-Images");
+    QDomNode imgNode = secondEl.firstChild();
+    // 清空原有影像
+    caliImages.clear();
+    while (!imgNode.isNull())
+    {
+        QDomElement e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11;
+        e1 = imgNode.firstChildElement("Image-Path");
+        e2 = imgNode.firstChildElement("X");
+        e3 = imgNode.firstChildElement("Y");
+        e4 = imgNode.firstChildElement("Z");
+        e5 = imgNode.firstChildElement("Phi");
+        e6 = imgNode.firstChildElement("Omega");
+        e7 = imgNode.firstChildElement("Kappa");
+        e8 = imgNode.firstChildElement("x_0");
+        e9 = imgNode.firstChildElement("y_0");
+        e10 = imgNode.firstChildElement("f");
+        e11 = imgNode.firstChildElement("Control-Points");
+
+        CaliImage caliImg;
+        caliImg.ImagePath    = e1.text();
+        caliImg.X            = e2.text().toDouble();
+        caliImg.Y            = e3.text().toDouble();
+        caliImg.Z            = e4.text().toDouble();
+        caliImg.Phi          = e5.text().toDouble();
+        caliImg.Omega        = e6.text().toDouble();
+        caliImg.Kappa        = e7.text().toDouble();
+        caliImg.x_0          = e8.text().toDouble();
+        caliImg.y_0          = e9.text().toDouble();
+        caliImg.f            = e10.text().toDouble();
+
+        QDomNode imgCpNode = e11.firstChild();
+        qDebug() << "图片【" << e1.text() << "】的控制点个数为："
+                 << imgCpNode.toElement().text().toInt();
+        imgCpNode = imgCpNode.nextSibling();
+        while (!imgCpNode.isNull())
+        {
+            QDomElement e1,e2,e3,e4,e5,e6;
+            e1 = imgCpNode.firstChildElement("No");
+            e2 = imgCpNode.firstChildElement("X");
+            e3 = imgCpNode.firstChildElement("Y");
+            e4 = imgCpNode.firstChildElement("Z");
+            e5 = imgCpNode.firstChildElement("x");
+            e6 = imgCpNode.firstChildElement("y");
+
+            CPoint cp = {e2.text().toDouble(), e3.text().toDouble(), e4.text().toDouble(),
+                        e1.text().toInt(),
+                        e5.text().toDouble(),e6.text().toDouble()};
+            caliImg.ControlPoints.push_back(cp);
+
+            imgCpNode = imgCpNode.nextSibling();
+        }
+        caliImages.push_back(caliImg);
+        imgNode = imgNode.nextSibling();
+    }
+    renewData(2);
+}
+
+void SampleData::showCurrentImage()
+{
+    namedWindow("Current Image", WINDOW_NORMAL);
+    imshow("Current Image", currentImage);
+    setMouseCallback("Current Image", CPointMouseClick);
 }

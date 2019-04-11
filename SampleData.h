@@ -77,6 +77,12 @@ public:
     // 在指定区域检测椭圆
     bool detectEllipse(Mat roiImg);
 
+    // 显示控制点图像
+    void showControlPoint(Mat cPtImage, vector<CPoint> points, String winName="Control Points");
+
+    // 显示当前图像并设置事件
+    void showCurrentImage();
+
 public slots:
     void dataListClicked(QModelIndex index);
 public:
@@ -100,16 +106,21 @@ private:
     QString imagePath;
     // 控制点
     QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
-    int currentCPtNum=0; // 用来记录当前输入的控制点的号数
 
     // XML
-    QString xmlDir = "D:/";
+    QString xmlDir = "E:/Qt/Program/ImageFactory/Calibration Information";
 public:
+    int currentListNum;
     Mat currentImage;
     CaliImage caliImage;
     vector<CaliImage> caliImages; // 存储所有检校照片的数组
     vector<CPoint> controlPoints;
     ControlPointDlg *CpDlg;
+    int currentCPtNum=0; // 用来记录当前输入的控制点的号数
+    // 从数组中取得的照片的编号，只有从数组中取得照片，该编号才会生效，用于更新控制点选择信息
+    int imageIndex=-1;
+private slots:
+    void on_open_calibration_info_triggered();
 };
 
 #endif // SAMPLEDATA_H
