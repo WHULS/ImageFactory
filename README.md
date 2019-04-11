@@ -43,9 +43,12 @@
   - Moravec
   - Harris
   - Forstner
+  - SIFT
 - 影像匹配
   - 相关系数
   - 最小二乘
+  - SIFT
 - 镜头检校 - 使用 OpenCV 的标准板
 - 摄影机定标
+ - 二维 DLT
 - *三维点云提取与生成
