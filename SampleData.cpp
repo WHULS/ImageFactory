@@ -107,8 +107,6 @@ void SampleData::dataListClicked(int row)
             dataInfoModel->setItem(12, 0, new QStandardItem("f"));
             dataInfoModel->setItem(12, 1, new QStandardItem(QString().sprintf("%lf", caliImage.f)));
 
-            // 调整列宽
-            ui->dataInfo->resizeColumnsToContents();
 
             namedWindow("Current Image", WINDOW_NORMAL);
             imshow("Current Image", currentImage);
@@ -118,6 +116,8 @@ void SampleData::dataListClicked(int row)
             dataInfoModel->setItem(0, 0, new QStandardItem("null"));
             dataInfoModel->setItem(0, 1, new QStandardItem("暂无数据"));
         }
+        // 调整列宽
+        ui->dataInfo->resizeColumnsToContents();
         break;
     }
     case 1:
@@ -134,10 +134,6 @@ void SampleData::dataListClicked(int row)
         dataInfo->setColumnWidth(0, 75);
         dataInfo->verticalHeader()->hide(); // 隐藏竖直的行号
         dataInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
-        dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("点号")));
-        dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("X")));
-        dataInfoModel->setHorizontalHeaderItem(2, new QStandardItem(tr("Y")));
-        dataInfoModel->setHorizontalHeaderItem(3, new QStandardItem(tr("Z")));
 
         if (controlPoints.empty())
         {
@@ -155,14 +151,65 @@ void SampleData::dataListClicked(int row)
                 dataInfoModel->setItem(int(i), 2, new QStandardItem(QString().sprintf("%lf", controlPoints[i].Y)));
                 dataInfoModel->setItem(int(i), 3, new QStandardItem(QString().sprintf("%lf", controlPoints[i].Z)));
             }
-            // 调整列宽
-            ui->dataInfo->resizeColumnsToContents();
         }
+        // 调整列宽
+        ui->dataInfo->resizeColumnsToContents();
         break;
     }
     case 2:
     {
-        dataInfoModel->setRowCount(0);
+        QTableView *dataInfo;
+        dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+
+        dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("像片名")));
+        dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("控制点数")));
+        dataInfoModel->setHorizontalHeaderItem(2, new QStandardItem(tr("X")));
+        dataInfoModel->setHorizontalHeaderItem(3, new QStandardItem(tr("Y")));
+        dataInfoModel->setHorizontalHeaderItem(4, new QStandardItem(tr("Z")));
+        dataInfoModel->setHorizontalHeaderItem(5, new QStandardItem(tr("φ")));
+        dataInfoModel->setHorizontalHeaderItem(6, new QStandardItem(tr("ω")));
+        dataInfoModel->setHorizontalHeaderItem(7, new QStandardItem(tr("κ")));
+        dataInfoModel->setHorizontalHeaderItem(8, new QStandardItem(tr("x_0")));
+        dataInfoModel->setHorizontalHeaderItem(9, new QStandardItem(tr("y_0")));
+        dataInfoModel->setHorizontalHeaderItem(10, new QStandardItem(tr("f")));
+        dataInfo->verticalHeader()->hide(); // 隐藏竖直的行号
+        dataInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+        if (controlPoints.empty())
+        {
+            dataInfoModel->setItem(0, 0, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 1, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 2, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 3, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 4, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 5, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 6, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 7, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 8, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 9, new QStandardItem("null"));
+            dataInfoModel->setItem(0, 10, new QStandardItem("null"));
+        }
+        else
+        {
+            for (size_t i=0; i<caliImages.size(); i++)
+            {
+                dataInfoModel->setItem(int(i), 0, new QStandardItem(caliImages[i].ImagePath.section("/", -1, -1)));
+                dataInfoModel->setItem(int(i), 1, new QStandardItem(QString().sprintf("%d", caliImages[i].ControlPoints.size())));
+                dataInfoModel->setItem(int(i), 2, new QStandardItem(QString().sprintf("%lf", caliImages[i].X)));
+                dataInfoModel->setItem(int(i), 3, new QStandardItem(QString().sprintf("%lf", caliImages[i].Y)));
+                dataInfoModel->setItem(int(i), 4, new QStandardItem(QString().sprintf("%lf", caliImages[i].Z)));
+                dataInfoModel->setItem(int(i), 5, new QStandardItem(QString().sprintf("%lf", caliImages[i].Phi)));
+                dataInfoModel->setItem(int(i), 6, new QStandardItem(QString().sprintf("%lf", caliImages[i].Omega)));
+                dataInfoModel->setItem(int(i), 7, new QStandardItem(QString().sprintf("%lf", caliImages[i].Kappa)));
+                dataInfoModel->setItem(int(i), 8, new QStandardItem(QString().sprintf("%lf", caliImages[i].x_0)));
+                dataInfoModel->setItem(int(i), 9, new QStandardItem(QString().sprintf("%lf", caliImages[i].y_0)));
+                dataInfoModel->setItem(int(i), 10, new QStandardItem(QString().sprintf("%lf", caliImages[i].f)));
+            }
+        }
+        // 调整列宽
+        ui->dataInfo->resizeColumnsToContents();
         break;
     }
     default:
@@ -245,6 +292,7 @@ bool SampleData::getSampleData(size_t num, Mat *img)
 {
     if (caliImages.empty())
     {
+        qDebug() << "数组为空";
         return false;
     }
     else
@@ -253,8 +301,18 @@ bool SampleData::getSampleData(size_t num, Mat *img)
         if (num > caliImages.size()-1)
             return false;
 
-        *img = caliImages[num].Image;
-        return true;
+        QString imagePath = caliImages[num].ImagePath;
+        Mat readImage = imread(imagePath.toLocal8Bit().data(), 1);
+        if (!readImage.empty() || readImage.data)
+        {
+            *img = readImage;
+            return true;
+        }
+        else
+        {
+            qDebug() << "图像打开失败";
+            return false;
+        }
     }
 
 }
@@ -349,10 +407,11 @@ bool SampleData::detectEllipse(Mat roiImg)
         SelectCpDlg *sCpDlg = new SelectCpDlg(currentCPtNum);
         sCpDlg->show();
 
-        currentCPtNum = sCpDlg->exec();
-        if (currentCPtNum != -1)
+        int exitNum = sCpDlg->exec();
+        if (exitNum != -1)
         {
             CPoint cp;
+            currentCPtNum = exitNum;
             if (getControlPoint(currentCPtNum, &cp))
             {
                 cp.x = double(ellipseBox.center.x);
@@ -362,7 +421,7 @@ bool SampleData::detectEllipse(Mat roiImg)
                 caliImage.ControlPoints.push_back(cp);
 
                 currentCPtNum++;
-                sd->renewData(0);
+                renewData(0);
             }
             else
             {
@@ -420,6 +479,26 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
             Mat roiImg = sd->currentImage(roi);
             // 在ROI影像上检测椭圆
             sd->detectEllipse(roiImg);
+        }
+        break;
+    }
+    // 双击保存
+    case EVENT_LBUTTONDBLCLK:
+    {
+        if (QMessageBox::information(sd,
+                                     sd->tr("提示"),
+                                     sd->tr("是否保存当前影像并打开下一幅？"),
+                                     QMessageBox::Yes,
+                                     QMessageBox::No) == QMessageBox::Yes)
+        {
+            // 存入数组
+            sd->caliImages.push_back(sd->caliImage);
+            // 清空
+            sd->caliImage.clear();
+            // 打开新影像
+            sd->on_open_image_triggered();
+            // 刷新信息表
+            sd->renewData(2);
         }
         break;
     }
@@ -531,20 +610,90 @@ void SampleData::renewData(int idx)
 void SampleData::on_dataInfo_clicked(const QModelIndex &index)
 {
     int row = index.row();
-    switch (row) {
-    case 3:
+    // 当点击的是“当前影像”一栏的“控制点(row 3)”时
+    if (row == 3 && (index.data().toString()==QString("CPoint") ||
+                     index.siblingAtColumn(index.column()-1).data().toString()==QString("CPoint")))
     {
         Mat crossImage = currentImage.clone();
+        Point center;
         for (size_t i=0; i<caliImage.ControlPoints.size(); i++)
         {
-            // 加上0.5四舍五入
-            drawCross(crossImage, Point(caliImage.ControlPoints[i].x+0.5, caliImage.ControlPoints[i].y+0.5), 100, 3);
+            // 画十字标，加上0.5四舍五入
+            center = Point(caliImage.ControlPoints[i].x, caliImage.ControlPoints[i].y);
+            drawCross(crossImage, center, 100, 3);
+            // 画点号
+            putText(crossImage, to_string(caliImage.ControlPoints[i].num), Point(center.x+10, center.y-10),
+                    FONT_HERSHEY_SCRIPT_SIMPLEX, 5.0, Scalar(255, 0, 0), 5);
         }
         namedWindow("Control Points", WINDOW_NORMAL);
         imshow("Control Points", crossImage);
-        break;
     }
-    default:
-        break;
+}
+
+// 保存信息到 xml 文件
+void SampleData::on_save_calibration_info_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("保存"),
+                                                    xmlDir,
+                                                    tr("XML文件(*.xml)"));
+
+    qDebug() << fileName;
+    xmlDir = fileName.section("/", 0, -2);
+
+    // 打开文件
+    QFile file(fileName);
+    file.open(QIODevice::ReadWrite);
+
+    // 文件实例
+    QDomDocument doc;
+    // 头信息
+    QDomProcessingInstruction instruction;
+    instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"GB2312\"");
+    doc.appendChild(instruction);
+    // 根节点
+    QDomElement root = doc.createElement("Sample-Data");
+    doc.appendChild(root);
+
+    // 控制点
+    QDomElement cPts = doc.createElement("Control-Points");
+    // ...
+    for (size_t i=0; i<controlPoints.size(); i++)
+    {
+        QDomElement cPt = doc.createElement("Control-Point");
+
+        // 点号
+        QDomElement numEl = doc.createElement("Number");
+        // 世界坐标
+        QDomElement xEl = doc.createElement("X");
+        QDomElement yEl = doc.createElement("Y");
+        QDomElement zEl = doc.createElement("Z");
+
+        QDomText numTx = doc.createTextNode(QString().sprintf("%d", controlPoints[i].num));
+        numEl.appendChild(numTx);
+        QDomText xTx = doc.createTextNode(QString().sprintf("%.12lf", controlPoints[i].X));
+        xEl.appendChild(xTx);
+        QDomText yTx = doc.createTextNode(QString().sprintf("%.12lf", controlPoints[i].Y));
+        yEl.appendChild(yTx);
+        QDomText zTx = doc.createTextNode(QString().sprintf("%.12lf", controlPoints[i].Z));
+        zEl.appendChild(zTx);
+
+        cPt.appendChild(numEl);
+        cPt.appendChild(xEl);
+        cPt.appendChild(yEl);
+        cPt.appendChild(zEl);
+
+        cPts.appendChild(cPt);
     }
+    root.appendChild(cPts);
+
+    // 检校像片
+    QDomElement cImgs = doc.createElement("Calibration-Images");
+    // ...
+    root.appendChild(cImgs);
+
+    // 文件保存
+    QTextStream out(&file);
+    doc.save(out, 4);
+    file.close();
 }

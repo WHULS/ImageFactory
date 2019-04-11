@@ -17,6 +17,8 @@
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QAbstractItemView>
+// xml
+#include <QDomDocument>
 
 #include <iostream>
 #include <vector>
@@ -80,12 +82,14 @@ public slots:
 public:
     void dataListClicked(int row);
 
-private slots:
+public slots:
     void on_read_control_point_triggered();
 
     void on_open_image_triggered();
 
     void on_dataInfo_clicked(const QModelIndex &index);
+
+    void on_save_calibration_info_triggered();
 
 private:
     Ui::SampleData *ui;
@@ -98,6 +102,8 @@ private:
     QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
     int currentCPtNum=0; // 用来记录当前输入的控制点的号数
 
+    // XML
+    QString xmlDir = "D:/";
 public:
     Mat currentImage;
     CaliImage caliImage;

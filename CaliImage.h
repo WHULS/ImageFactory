@@ -46,17 +46,16 @@ public:
 
 	// 变量
     QString ImagePath;
-	Mat Image;
 	vector<CPoint> ControlPoints; // 影像对应的控制点
-	double X; // mm
-	double Y; // mm
-	double Z; // mm
-	double Phi;   // rad
-	double Omega; // rad
-	double Kappa; // rad
-	double x_0; // mm
-	double y_0; // mm
-	double f;   // mm
+    double X=-1.0; // mm
+	double Y=-1.0; // mm
+	double Z=-1.0; // mm
+	double Phi=-1.0;   // rad
+	double Omega=-1.0; // rad
+	double Kappa=-1.0; // rad
+	double x_0=-1.0; // mm
+	double y_0=-1.0; // mm
+	double f=-1.0;   // mm
 };
 
 #endif // CALIIMAGE_H

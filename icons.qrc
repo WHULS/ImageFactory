@@ -17,6 +17,8 @@
         <file>images/M.png</file>
         <file>images/H.png</file>
         <file>images/F.png</file>
+        <file>images/save.png</file>
+        <file>images/open.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>

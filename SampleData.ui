@@ -66,7 +66,15 @@
     <addaction name="open_image"/>
     <addaction name="read_control_point"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>检校信息</string>
+    </property>
+    <addaction name="open_calibration_info"/>
+    <addaction name="save_calibration_info"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <action name="read_control_point">
    <property name="icon">
@@ -84,6 +92,24 @@
    </property>
    <property name="text">
     <string>打开影像 (&amp;O)</string>
+   </property>
+  </action>
+  <action name="open_calibration_info">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/open.png</normaloff>:/images/images/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开 (&amp;O)</string>
+   </property>
+  </action>
+  <action name="save_calibration_info">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/save.png</normaloff>:/images/images/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存 (&amp;S)</string>
    </property>
   </action>
  </widget>

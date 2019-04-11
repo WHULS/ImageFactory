@@ -27,11 +27,14 @@ class Ui_SampleData
 public:
     QAction *read_control_point;
     QAction *open_image;
+    QAction *open_calibration_info;
+    QAction *save_calibration_info;
     QWidget *centralwidget;
     QListView *sampleDataList;
     QTableView *dataInfo;
     QMenuBar *menuBar;
     QMenu *menu;
+    QMenu *menu_2;
 
     void setupUi(QMainWindow *SampleData)
     {
@@ -48,6 +51,16 @@ public:
         QIcon icon1;
         icon1.addFile(QString::fromUtf8(":/images/images/image.png"), QSize(), QIcon::Normal, QIcon::Off);
         open_image->setIcon(icon1);
+        open_calibration_info = new QAction(SampleData);
+        open_calibration_info->setObjectName(QString::fromUtf8("open_calibration_info"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/images/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        open_calibration_info->setIcon(icon2);
+        save_calibration_info = new QAction(SampleData);
+        save_calibration_info->setObjectName(QString::fromUtf8("save_calibration_info"));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/images/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        save_calibration_info->setIcon(icon3);
         centralwidget = new QWidget(SampleData);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         sampleDataList = new QListView(centralwidget);
@@ -70,11 +83,16 @@ public:
         menuBar->setGeometry(QRect(0, 0, 570, 23));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
+        menu_2 = new QMenu(menuBar);
+        menu_2->setObjectName(QString::fromUtf8("menu_2"));
         SampleData->setMenuBar(menuBar);
 
         menuBar->addAction(menu->menuAction());
+        menuBar->addAction(menu_2->menuAction());
         menu->addAction(open_image);
         menu->addAction(read_control_point);
+        menu_2->addAction(open_calibration_info);
+        menu_2->addAction(save_calibration_info);
 
         retranslateUi(SampleData);
 
@@ -86,7 +104,10 @@ public:
         SampleData->setWindowTitle(QApplication::translate("SampleData", "\346\221\204\345\275\261\346\234\272\345\256\232\346\240\207", nullptr));
         read_control_point->setText(QApplication::translate("SampleData", "\350\257\273\345\217\226\346\216\247\345\210\266\347\202\271\346\226\207\344\273\266(&O)", nullptr));
         open_image->setText(QApplication::translate("SampleData", "\346\211\223\345\274\200\345\275\261\345\203\217 (&O)", nullptr));
+        open_calibration_info->setText(QApplication::translate("SampleData", "\346\211\223\345\274\200 (&O)", nullptr));
+        save_calibration_info->setText(QApplication::translate("SampleData", "\344\277\235\345\255\230 (&S)", nullptr));
         menu->setTitle(QApplication::translate("SampleData", "\347\233\270\346\234\272\345\256\232\346\240\207", nullptr));
+        menu_2->setTitle(QApplication::translate("SampleData", "\346\243\200\346\240\241\344\277\241\346\201\257", nullptr));
     } // retranslateUi
 
 };
