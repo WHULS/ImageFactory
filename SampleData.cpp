@@ -27,6 +27,12 @@ SampleData::SampleData(QWidget *parent) :
     // 将数据模型绑定到 dataList
     dataList->setModel(dataListModel);
 
+    // 设置第2栏 - 数据信息
+    QTableView *dataInfo;
+    dataInfo = ui->dataInfo;
+    dataInfoModel = new QStandardItemModel();
+    dataInfo->setModel(dataInfoModel);
+
     // 填写项
     QStringList strList;
     strList << "当前像片";
@@ -61,7 +67,7 @@ void SampleData::dataListClicked(int row)
     {
         QTableView *dataInfo;
         dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+        dataInfoModel->clear();
 
         // 设置表头属性
         dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("属性")));
@@ -126,8 +132,7 @@ void SampleData::dataListClicked(int row)
     {
         QTableView *dataInfo;
         dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+        dataInfoModel->clear();
 
         dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("点号")));
         dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("X")));
@@ -162,8 +167,7 @@ void SampleData::dataListClicked(int row)
     {
         QTableView *dataInfo;
         dataInfo = ui->dataInfo; dataInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-        dataInfoModel = new QStandardItemModel(); dataInfo->setModel(dataInfoModel);
+        dataInfoModel->clear();
 
         dataInfoModel->setHorizontalHeaderItem(0, new QStandardItem(tr("像片名")));
         dataInfoModel->setHorizontalHeaderItem(1, new QStandardItem(tr("控制点数")));
@@ -595,7 +599,6 @@ void SampleData::on_open_image_triggered()
     this->imagePath = fileName;
     if (fileName.isEmpty()) return;
     
-    caliImage.ImagePath = imagePath;
 
     Mat readImage = imread(imagePath.toLocal8Bit().data(), 1);
     qDebug() << imagePath;
@@ -604,6 +607,8 @@ void SampleData::on_open_image_triggered()
         // 更新当前影像
         currentImage.release();
         currentImage = readImage;
+        caliImage.clear();
+        caliImage.ImagePath = imagePath;
 
         // 标记为非图像数组内像片
         imageIndex = -1;
@@ -648,43 +653,10 @@ void SampleData::showControlPoint(Mat cPtImage, vector<CPoint> points, String wi
 
 void SampleData::on_dataInfo_clicked(const QModelIndex &index)
 {
-    int row = index.row();
-    int col = index.column();
-
     // 表头字符串
     // QString columnHeaderString =  dataInfoModel->horizontalHeaderItem(index.column())->text();
 
-    // 当点击的是“当前影像”一栏的“控制点(row 3)”时
-    if (currentListNum==0 && row == 3)
-    {
-        showControlPoint(currentImage, caliImage.ControlPoints, caliImage.ImagePath.section("/", -1, -1).toLocal8Bit().data());
-    }
-    else if (currentListNum==2 && !caliImages.empty())
-    {
-        caliImage = caliImages[size_t(row)];
-        // 标记影像
-        imageIndex = row;
-        currentImage.release();
-        currentImage = imread(caliImage.ImagePath.toLocal8Bit().data(), 1);
-        if (currentImage.empty())
-        {
-            qDebug() << "图像为空";
-        }
-        else
-        {
-            // 更新图像信息
-            renewData(0);
-            // 由于renewData只针对已显示的list更新，因此需要手动更新影像
-            showCurrentImage();
-
-            // 点下控制点所在列
-            if (col == 1)
-            {
-                showControlPoint(currentImage, caliImage.ControlPoints, caliImage.ImagePath.section("/", -1, -1).toLocal8Bit().data());
-            }
-        }
-
-    }
+    on_dataInfo_activated(index);
 }
 
 // 保存信息到 xml 文件
@@ -693,9 +665,11 @@ void SampleData::on_save_calibration_info_triggered()
     QString fileName = QFileDialog::getSaveFileName(this,
                                                     tr("保存"),
                                                     xmlDir,
-                                                    tr("XML文件(*.xml)"));
+                                                    tr("_03sd文件(*._03sd)"));
 
     qDebug() << fileName;
+    if (fileName.isEmpty()) return;
+
     xmlDir = fileName.section("/", 0, -2);
 
     // 打开文件
@@ -779,10 +753,11 @@ void SampleData::on_save_calibration_info_triggered()
         x_0.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].x_0)));
         y_0.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].y_0)));
         f.appendChild(doc.createTextNode(QString().sprintf("%.12lf", caliImages[i].f)));
-
+        // 每张影像的控制点个数
         size_t ptNum = caliImages[i].ControlPoints.size();
         cPtNum.appendChild(doc.createTextNode(QString().sprintf("%d", int(ptNum))));
         cPts.appendChild(cPtNum);
+        // 为每张影像填充控制点
         for (size_t j=0; j<ptNum; j++)
         {
             QDomElement cPt = doc.createElement("Control-Point");
@@ -825,7 +800,6 @@ void SampleData::on_save_calibration_info_triggered()
 
         caliImgs.appendChild(caliImg);
     }
-
     root.appendChild(caliImgs);
 
     // 文件保存
@@ -841,11 +815,12 @@ void SampleData::on_save_calibration_info_triggered()
 void SampleData::on_open_calibration_info_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("保存"),
+                                                    tr("打开数据文件"),
                                                     xmlDir,
-                                                    tr("XML文件(*.xml)"));
-
+                                                    tr("_03sd文件(*._03sd) ;; 所有文件(*.*)"));
     qDebug() << fileName;
+    if (fileName.isEmpty()) return;
+
     xmlDir = fileName.section("/", 0, -2);
 
     QFile file(fileName);
@@ -967,4 +942,47 @@ void SampleData::showCurrentImage()
     namedWindow("Current Image", WINDOW_NORMAL);
     imshow("Current Image", currentImage);
     setMouseCallback("Current Image", CPointMouseClick);
+}
+
+void SampleData::on_dataInfo_activated(const QModelIndex &index)
+{
+    int row, col;
+    row = index.row();
+    col = index.column();
+    // 当点击的是“当前影像”一栏的“控制点(row 3)”时
+    if (currentListNum==0 && row == 3)
+    {
+        showControlPoint(currentImage, caliImage.ControlPoints);
+    }
+    else if (currentListNum==2)
+    {
+        caliImageChanged(row, col);
+    }
+}
+
+void SampleData::caliImageChanged(int row, int col)
+{
+    if (row >= int(caliImages.size())) return;
+    caliImage = caliImages[size_t(row)];
+    // 标记影像
+    imageIndex = row;
+    currentImage.release();
+    currentImage = imread(caliImage.ImagePath.toLocal8Bit().data(), 1);
+    if (currentImage.empty())
+    {
+        qDebug() << "图像为空";
+    }
+    else
+    {
+        // 更新图像信息
+        renewData(0);
+        // 由于renewData只针对已显示的list更新，因此需要手动更新影像
+        showCurrentImage();
+
+        // 点下控制点所在列
+        if (col == 1)
+        {
+            showControlPoint(currentImage, caliImage.ControlPoints);
+        }
+    }
 }

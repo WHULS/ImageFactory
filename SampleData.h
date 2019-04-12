@@ -17,6 +17,7 @@
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QAbstractItemView>
+#include <QKeyEvent>
 // xml
 #include <QDomDocument>
 
@@ -85,8 +86,10 @@ public:
 
 public slots:
     void dataListClicked(QModelIndex index);
+
 public:
     void dataListClicked(int row);
+    void caliImageChanged(int row, int col=0);
 
 public slots:
     void on_read_control_point_triggered();
@@ -94,6 +97,7 @@ public slots:
     void on_open_image_triggered();
 
     void on_dataInfo_clicked(const QModelIndex &index);
+    void on_dataInfo_activated(const QModelIndex &index);
 
     void on_save_calibration_info_triggered();
 
@@ -110,15 +114,16 @@ private:
     // XML
     QString xmlDir = "E:/Qt/Program/ImageFactory/Calibration Information";
 public:
-    int currentListNum;
     Mat currentImage;
     CaliImage caliImage;
     vector<CaliImage> caliImages; // 存储所有检校照片的数组
     vector<CPoint> controlPoints;
     ControlPointDlg *CpDlg;
+
     int currentCPtNum=0; // 用来记录当前输入的控制点的号数
-    // 从数组中取得的照片的编号，只有从数组中取得照片，该编号才会生效，用于更新控制点选择信息
-    int imageIndex=-1;
+    int imageIndex=-1;    // 从数组中取得的照片的编号，只有从数组中取得照片，该编号才会生效，用于更新控制点选择信息
+    int currentListNum;    // 记录当前列表内容
+
 private slots:
     void on_open_calibration_info_triggered();
 };
