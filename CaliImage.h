@@ -43,6 +43,7 @@ public:
 	CaliImage();
 	~CaliImage();
     void clear();
+    bool isEmpty();
 
 	// 变量
     QString ImagePath;

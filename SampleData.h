@@ -30,6 +30,7 @@ using namespace std;
 #include "CaliImage.h"
 #include "ControlPointDlg.h"
 #include "SelectCpDlg.h"
+#include "Matrix.h" // 矩阵及运算
 
 namespace Ui {
 class SampleData;
@@ -84,6 +85,9 @@ public:
     // 显示当前图像并设置事件
     void showCurrentImage();
 
+    // 显示提示信息
+    void showMessage(QString str);
+
 public slots:
     void dataListClicked(QModelIndex index);
 
@@ -106,10 +110,10 @@ private:
     QStandardItemModel *dataListModel; // 数据列表
     QStandardItemModel *dataInfoModel; // 数据内容
     // 图像路径
-    QString imageDir = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
+    QString imageDir = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90";
     QString imagePath;
     // 控制点
-    QString cpPath = "F:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
+    QString cpPath = "E:/杉/文章/大三下/4. 计算机视觉/CV实习数据";
 
     // XML
     QString xmlDir = "E:/Qt/Program/ImageFactory/Calibration Information";
@@ -126,6 +130,7 @@ public:
 
 private slots:
     void on_open_calibration_info_triggered();
+    void on_calculate_dlt_param_triggered();
 };
 
 #endif // SAMPLEDATA_H

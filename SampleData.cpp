@@ -986,3 +986,70 @@ void SampleData::caliImageChanged(int row, int col)
         }
     }
 }
+void SampleData::showMessage(QString str)
+{
+    QMessageBox::information(this,
+                             tr("提示"),
+                             str);
+}
+
+void SampleData::on_calculate_dlt_param_triggered()
+{
+    if (caliImage.isEmpty())
+    {
+        showMessage("影像为空");
+        return;
+    }
+
+    if (caliImage.ControlPoints.size() < 4)
+    {
+        showMessage("请至少选取4个控制点");
+        return;
+    }
+
+    vector<CPoint> cPts = caliImage.ControlPoints;
+    size_t cpNum = cPts.size();
+    showMessage(QString().sprintf("控制点个数：%d", cpNum));
+
+    // 系数矩阵A
+    Matrix paramMatrix_A(cpNum*2, 8);
+    // 观测值X
+    Matrix observedValue_X(cpNum*2, 1);
+
+    size_t i,j;
+    for (i=0,j=0; i<cpNum*2&&j<cpNum; i+=2, j++)
+    {
+        paramMatrix_A.data[i][0] = cPts[j].X;
+        paramMatrix_A.data[i][1] = cPts[j].Y;
+        paramMatrix_A.data[i][2] = 1;
+        paramMatrix_A.data[i][3] = 0;
+        paramMatrix_A.data[i][4] = 0;
+        paramMatrix_A.data[i][5] = 0;
+        paramMatrix_A.data[i][6] = cPts[j].x * cPts[j].X;
+        paramMatrix_A.data[i][7] = cPts[j].x * cPts[j].Y;
+
+        paramMatrix_A.data[i+1][0] = 0;
+        paramMatrix_A.data[i+1][1] = 0;
+        paramMatrix_A.data[i+1][2] = 0;
+        paramMatrix_A.data[i+1][3] = cPts[j].X;
+        paramMatrix_A.data[i+1][4] = cPts[j].Y;
+        paramMatrix_A.data[i+1][5] = 1;
+        paramMatrix_A.data[i+1][6] = cPts[j].y * cPts[j].X;
+        paramMatrix_A.data[i+1][7] = cPts[j].y * cPts[j].Y;
+
+        observedValue_X.data[i][0] = cPts[j].x;
+        observedValue_X.data[i+1][0] = cPts[j].y;
+    }
+    paramMatrix_A.print();
+    observedValue_X.print();
+
+    qDebug() << "开始运算";
+    Matrix result_H = (paramMatrix_A.transposition()*paramMatrix_A).reverse()*(paramMatrix_A.transposition()*observedValue_X);
+    qDebug() << "运算结束";
+    result_H.print();
+
+    Matrix cal_result = paramMatrix_A*result_H;
+    cal_result.print();
+
+    observedValue_X.print();
+}

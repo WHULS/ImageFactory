@@ -24,3 +24,11 @@ void CaliImage::clear()
 	y_0 = -1.0;
 	f = -1.0;  
 }
+
+bool CaliImage::isEmpty()
+{
+    if (ImagePath.isEmpty())
+        return true;
+    else
+        return false;
+}

@@ -34,7 +34,8 @@ SOURCES += \
     CaliImage.cpp \
     ControlPointDlg.cpp \
     SelectCpDlg.cpp \
-    SampleData.cpp
+    SampleData.cpp \
+    Matrix.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS += \
     CaliImage.h \
     ControlPointDlg.h \
     SelectCpDlg.h \
-    SampleData.h
+    SampleData.h \
+    Matrix.h
 
 FORMS += \
     mainwindow.ui \

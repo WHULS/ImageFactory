@@ -65,6 +65,7 @@
     </property>
     <addaction name="open_image"/>
     <addaction name="read_control_point"/>
+    <addaction name="calculate_dlt_param"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -110,6 +111,15 @@
    </property>
    <property name="text">
     <string>保存 (&amp;S)</string>
+   </property>
+  </action>
+  <action name="calculate_dlt_param">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/DOG.png</normaloff>:/images/images/DOG.png</iconset>
+   </property>
+   <property name="text">
+    <string>解算DLT参数(&amp;D)</string>
    </property>
   </action>
  </widget>

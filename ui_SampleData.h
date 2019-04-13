@@ -29,6 +29,7 @@ public:
     QAction *open_image;
     QAction *open_calibration_info;
     QAction *save_calibration_info;
+    QAction *calculate_dlt_param;
     QWidget *centralwidget;
     QListView *sampleDataList;
     QTableView *dataInfo;
@@ -61,6 +62,11 @@ public:
         QIcon icon3;
         icon3.addFile(QString::fromUtf8(":/images/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
         save_calibration_info->setIcon(icon3);
+        calculate_dlt_param = new QAction(SampleData);
+        calculate_dlt_param->setObjectName(QString::fromUtf8("calculate_dlt_param"));
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/images/images/DOG.png"), QSize(), QIcon::Normal, QIcon::Off);
+        calculate_dlt_param->setIcon(icon4);
         centralwidget = new QWidget(SampleData);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         sampleDataList = new QListView(centralwidget);
@@ -91,6 +97,7 @@ public:
         menuBar->addAction(menu_2->menuAction());
         menu->addAction(open_image);
         menu->addAction(read_control_point);
+        menu->addAction(calculate_dlt_param);
         menu_2->addAction(open_calibration_info);
         menu_2->addAction(save_calibration_info);
 
@@ -106,6 +113,7 @@ public:
         open_image->setText(QApplication::translate("SampleData", "\346\211\223\345\274\200\345\275\261\345\203\217 (&O)", nullptr));
         open_calibration_info->setText(QApplication::translate("SampleData", "\346\211\223\345\274\200 (&O)", nullptr));
         save_calibration_info->setText(QApplication::translate("SampleData", "\344\277\235\345\255\230 (&S)", nullptr));
+        calculate_dlt_param->setText(QApplication::translate("SampleData", "\350\247\243\347\256\227DLT\345\217\202\346\225\260(&D)", nullptr));
         menu->setTitle(QApplication::translate("SampleData", "\347\233\270\346\234\272\345\256\232\346\240\207", nullptr));
         menu_2->setTitle(QApplication::translate("SampleData", "\346\243\200\346\240\241\344\277\241\346\201\257", nullptr));
     } // retranslateUi
