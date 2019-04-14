@@ -86,7 +86,7 @@ public:
     void showCurrentImage();
 
     // 显示提示信息
-    void showMessage(QString str);
+    int showMessage(QString str);
 
 public slots:
     void dataListClicked(QModelIndex index);
@@ -117,6 +117,9 @@ private:
 
     // XML
     QString xmlDir = "E:/Qt/Program/ImageFactory/Calibration Information";
+
+    // 二维DLT参数（多张影像）
+    vector<vector<double>> H;
 public:
     Mat currentImage;
     CaliImage caliImage;
@@ -131,6 +134,7 @@ public:
 private slots:
     void on_open_calibration_info_triggered();
     void on_calculate_dlt_param_triggered();
+    void on_orientation_element_initial_value_triggered();
 };
 
 #endif // SAMPLEDATA_H

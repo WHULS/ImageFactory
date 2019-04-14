@@ -971,6 +971,7 @@ void SampleData::caliImageChanged(int row, int col)
     if (currentImage.empty())
     {
         qDebug() << "图像为空";
+        showMessage("图像为空，请确认路径无误");
     }
     else
     {
@@ -986,11 +987,13 @@ void SampleData::caliImageChanged(int row, int col)
         }
     }
 }
-void SampleData::showMessage(QString str)
+int SampleData::showMessage(QString str)
 {
-    QMessageBox::information(this,
-                             tr("提示"),
-                             str);
+    return QMessageBox::information(this,
+                                    tr("提示"),
+                                    str,
+                                    QMessageBox::Yes,
+                                    QMessageBox::No);
 }
 
 void SampleData::on_calculate_dlt_param_triggered()
@@ -1017,39 +1020,171 @@ void SampleData::on_calculate_dlt_param_triggered()
     Matrix observedValue_X(cpNum*2, 1);
 
     size_t i,j;
+
+    // 将控制点的单位转化成mm
+    double resolutionX, resolutionY;
+    resolutionX = resolutionY = 300; // dpi
+    double pixelSizeX = 25.400 / resolutionX; // 像素大小(mm)
+    double pixelSizeY = 25.400 / resolutionY;
+    for (i=0; i<cpNum; i++)
+    {
+        cPts[i].x *= pixelSizeX;
+        cPts[i].y *= pixelSizeY;
+    }
+    qDebug() << "像素大小" << pixelSizeX << ", " << pixelSizeY << "mm";
+
     for (i=0,j=0; i<cpNum*2&&j<cpNum; i+=2, j++)
     {
-        paramMatrix_A.data[i][0] = cPts[j].X;
-        paramMatrix_A.data[i][1] = cPts[j].Y;
-        paramMatrix_A.data[i][2] = 1;
-        paramMatrix_A.data[i][3] = 0;
-        paramMatrix_A.data[i][4] = 0;
-        paramMatrix_A.data[i][5] = 0;
-        paramMatrix_A.data[i][6] = cPts[j].x * cPts[j].X;
-        paramMatrix_A.data[i][7] = cPts[j].x * cPts[j].Y;
+        paramMatrix_A[i][0] = cPts[j].X;
+        paramMatrix_A[i][1] = cPts[j].Y;
+        paramMatrix_A[i][2] = 1;
+        paramMatrix_A[i][3] = 0;
+        paramMatrix_A[i][4] = 0;
+        paramMatrix_A[i][5] = 0;
+        paramMatrix_A[i][6] = cPts[j].x * cPts[j].X;
+        paramMatrix_A[i][7] = cPts[j].x * cPts[j].Y;
 
-        paramMatrix_A.data[i+1][0] = 0;
-        paramMatrix_A.data[i+1][1] = 0;
-        paramMatrix_A.data[i+1][2] = 0;
-        paramMatrix_A.data[i+1][3] = cPts[j].X;
-        paramMatrix_A.data[i+1][4] = cPts[j].Y;
-        paramMatrix_A.data[i+1][5] = 1;
-        paramMatrix_A.data[i+1][6] = cPts[j].y * cPts[j].X;
-        paramMatrix_A.data[i+1][7] = cPts[j].y * cPts[j].Y;
+        paramMatrix_A[i+1][0] = 0;
+        paramMatrix_A[i+1][1] = 0;
+        paramMatrix_A[i+1][2] = 0;
+        paramMatrix_A[i+1][3] = cPts[j].X;
+        paramMatrix_A[i+1][4] = cPts[j].Y;
+        paramMatrix_A[i+1][5] = 1;
+        paramMatrix_A[i+1][6] = cPts[j].y * cPts[j].X;
+        paramMatrix_A[i+1][7] = cPts[j].y * cPts[j].Y;
 
-        observedValue_X.data[i][0] = cPts[j].x;
-        observedValue_X.data[i+1][0] = cPts[j].y;
+        observedValue_X[i][0] = cPts[j].x;
+        observedValue_X[i+1][0] = cPts[j].y;
     }
-    paramMatrix_A.print();
-    observedValue_X.print();
+//    paramMatrix_A.print();
+//    observedValue_X.print();
 
-    qDebug() << "开始运算";
-    Matrix result_H = (paramMatrix_A.transposition()*paramMatrix_A).reverse()*(paramMatrix_A.transposition()*observedValue_X);
-    qDebug() << "运算结束";
+    Matrix result_H = (paramMatrix_A.transposition()*paramMatrix_A).reverse()*paramMatrix_A.transposition()*observedValue_X;
     result_H.print();
 
-    Matrix cal_result = paramMatrix_A*result_H;
-    cal_result.print();
+    // 保存dlt参数
+    if (showMessage("是否保存dlt参数")==QMessageBox::Yes)
+    {
+        vector<double> H;
+        if (!result_H.toVector(&H)) exit(-1);
+        this->H.push_back(H);
 
-    observedValue_X.print();
+    }
+
+    // 检验结果
+    Matrix V = paramMatrix_A*result_H - observedValue_X;
+    double sigma_0 = sqrt((V.transposition()*V/(2*cpNum - 8))[0][0]);
+    qDebug() << "单位权中误差: " << sigma_0 << "mm";
+    showMessage(QString().sprintf("单位权中误差：%lf mm", sigma_0));
+
+    Matrix Qxx = (paramMatrix_A.transposition()*paramMatrix_A).reverse();
+//    Qxx.print();
+
+    for (int i=0; i<8; i++)
+    {
+        qDebug() << QString().sprintf("m_%d : %lf", i+1, sigma_0 * sqrt(Qxx[i][i]));
+    }
+    qDebug() << "-----";
+}
+
+void SampleData::on_orientation_element_initial_value_triggered()
+{
+    // 1. 计算内方位元素
+    if (H.size() <= 1)
+    {
+        showMessage("请至少求解两张影像的DLT参数");
+        return;
+    }
+    size_t dltNum, i;
+    dltNum = H.size();
+    // 构建线性矩阵
+    Matrix L(dltNum, 2), c(dltNum, 1);
+    for (i=0; i<dltNum; i++)
+    {
+        vector<double> h = H[i];
+        double h1,h2,h3,h4,h5,h6,h7,h8;
+        h1 = h[0]; h2 = h[1]; h3 = h[2]; h4 = h[3];
+        h5 = h[4]; h6 = h[5]; h7 = h[6]; h8 = h[7];
+
+        L[i][0] = -h1*h7*h7*h8 - h1*h8*h8*h8 + h2*h7*h7*h7 + h2*h7*h8*h8;
+        L[i][1] = -h4*h7*h7*h8 - h4*h8*h8*h8 + h5*h7*h7*h7 + h5*h7*h8*h8;
+        c[i][0] = -(-h1*h1*h7*h8 - h1*h2*h8*h8 + h1*h2*h7*h7 + h2*h2*h7*h8
+                - h4*h4*h7*h8 - h4*h5*h8*h8 + h4*h5*h7*h7 + h5*h5*h7*h8);
+    }
+    // 解算像主点
+    Matrix principalPointX;
+    principalPointX = (L.transposition()*L).reverse()*L.transposition()*c;
+    double x0, y0;
+    x0 = principalPointX[0][0]; y0 = principalPointX[1][0];
+    qDebug() << "像主点(mm): " << x0 << ", " << y0;
+    // 计算误差
+//    Matrix V = L*principalPointX - c;
+//    V.print();
+
+    // 2. 计算主距和外方位元素
+    double h1,h2,h3,h4,h5,h6,h7,h8,f;
+
+    for (size_t i=0; i<H.size(); i++)
+    {
+        vector<double> h = H[i];
+        h1 = h[0]; h2 = h[1]; h3 = h[2]; h4 = h[3];
+        h5 = h[4]; h6 = h[5]; h7 = h[6]; h8 = h[7];
+        f = sqrt(abs(((h1-h7*x0)*(h2-h8*x0)+(h4-h7*y0)*(h5-h8*y0))/(h7*h8)));
+
+        qDebug() << "主距(mm)：" << f;
+
+        double kappa, omega, phi;
+        // kappa
+        kappa = atan((h2-h8*x0)/(h5-h8*x0));
+        // omaga
+        double b1, b2, b3;
+        b3 = sqrt(1/(1 + pow(h2-h8*x0,2)/(f*f*h8*h8) + pow(h5-h8*y0,2)/(f*f*h8*h8)));
+        omega = asin(b3);
+        b1 = -(h2-h8*x0)*b3/(f*h8);
+        b2 = -(h5-h8*y0)*b3/(f*h8);
+        if (atan(b1/b2) != kappa)
+        {
+            omega = -asin(b3);
+        }
+        // phi
+        phi = atan(1/((-(h1-h7*x0)/(f*h7))*b2 - (-(h4-h7*y0)/(f*h7))*b1));
+
+        // 旋转矩阵R
+        Matrix R(3, 3);
+        R[0][0] = cos(phi)*cos(kappa) - sin(phi)*sin(omega)*sin(kappa);
+        R[0][1] = cos(phi)*sin(kappa) - sin(phi)*sin(omega)*cos(kappa);
+        R[0][2] = -sin(phi)*cos(omega);
+        R[1][0] = cos(omega)*sin(kappa);
+        R[1][1] = cos(omega)*cos(kappa);
+        R[1][2] = -sin(omega);
+        R[2][0] = sin(phi)*cos(kappa) + cos(phi)*sin(omega)*sin(kappa);
+        R[2][1] = -sin(phi)*sin(kappa) + cos(phi)*sin(omega)*cos(kappa);
+        R[2][2] = cos(phi)*cos(omega);
+
+        // 取λ平均值
+        double lambda = 0.0;
+        lambda += f*R[0][0]/(h1-h7*x0);
+        lambda += f*R[1][0]/(h2-h8*x0);
+        lambda += f*R[0][1]/(h4-h7*y0);
+        lambda += f*R[0][1]/(h5-h8*y0);
+        lambda += -R[0][2]/h7;
+        lambda += -R[1][2]/h8;
+        lambda /= 6;
+
+        Matrix L(3, 1);
+        L[0][0] = lambda*(x0-h3)/f;
+        L[1][0] = lambda*(y0-h6)/f;
+        L[2][0] = lambda;
+
+        Matrix X = R.transposition().reverse()*L;
+
+        qDebug() << "phi: " << phi;
+        qDebug() << "omega: " << omega;
+        qDebug() << "kappa: " << kappa;
+        qDebug() << "Xs: " << X[0][0];
+        qDebug() << "Ys: " << X[1][0];
+        qDebug() << "Zs: " << X[2][0];
+
+        qDebug() << "------";
+    }
 }

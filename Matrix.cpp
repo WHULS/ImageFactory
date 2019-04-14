@@ -82,7 +82,7 @@ Matrix Matrix::transposition()
     {
         for (j = 0; j < col; j++)
         {
-            outTransMat.data[j][i] = data[i][j];
+            outTransMat[j][i] = data[i][j];
         }
     }
 
@@ -222,4 +222,57 @@ double Matrix::det()
     // 确定符号
     sum = sign*f;
     return sum;
+}
+
+
+// 转换成向量（一维情况下）
+bool Matrix::toVector(vector<double> *outputVec)
+{
+    if (row != 1 && col != 1)
+    {
+        qDebug() << "无法转换成向量: " << row << "," << col;
+        return false;
+    }
+    size_t i;
+    if (row == 1)
+    {
+        for (i=0; i<col; i++)
+        {
+            outputVec->push_back(data[0][i]);
+        }
+        return true;
+    }
+    else if (col == 1)
+    {
+        for (i=0; i<row; i++)
+        {
+            outputVec->push_back(data[i][0]);
+        }
+        return true;
+    }
+    return false;
+}
+
+// 括号运算符重载(output)
+vector<double>& Matrix::operator[](size_t row)
+{
+    return this->data[row];
+}
+
+void Matrix::normalize()
+{
+    size_t i, j;
+    Matrix out(row, col);
+    double sum = 0.0;
+    for (j=0; j<col; j++)
+    {
+        for (i=0; i<row; i++)
+        {
+            sum += data[i][j];
+        }
+        for (i=0; i<row; i++)
+        {
+            data[i][j] /= sum;
+        }
+    }
 }

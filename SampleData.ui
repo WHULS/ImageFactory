@@ -66,6 +66,7 @@
     <addaction name="open_image"/>
     <addaction name="read_control_point"/>
     <addaction name="calculate_dlt_param"/>
+    <addaction name="orientation_element_initial_value"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -120,6 +121,15 @@
    </property>
    <property name="text">
     <string>解算DLT参数(&amp;D)</string>
+   </property>
+  </action>
+  <action name="orientation_element_initial_value">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/F.png</normaloff>:/images/images/F.png</iconset>
+   </property>
+   <property name="text">
+    <string>方位元素初值 (&amp;F)</string>
    </property>
   </action>
  </widget>

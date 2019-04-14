@@ -32,8 +32,10 @@ typedef struct {
 	int num;
 
 	// 图像坐标系坐标
-	double x; // mm
-	double y; // mm
+    double x; // pixel
+    double y; // pixel
+
+    // one inch equal 25.400 millimeter
 } CPoint;
 
 class CaliImage

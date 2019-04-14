@@ -26,6 +26,10 @@ public:
     Matrix reverse();
     // 求行列式
     double det();
+    // 转换成向量（一维情况下）
+    bool toVector(vector<double>*);
+    // 归一化
+    void normalize();
 
 // Attribute
 public:
@@ -33,6 +37,9 @@ public:
     size_t col;
     vector<vector<double>> data;
 
+public:
+    // 括号运算符重载(返回引用才能进行赋值操作)
+    vector<double>& operator[](size_t row);
 };
 
 // Operator
@@ -87,9 +94,9 @@ static Matrix operator*(Matrix m1, Matrix m2)
             tResult = 0.0;
             for (k = 0; k < w1; k++)
             {
-                tResult += m1.data[i][k] * m2.data[k][j];
+                tResult += m1[i][k] * m2[k][j];
             }
-            outMat.data[i][j] = tResult;
+            outMat[i][j] = tResult;
         }
     }
 
@@ -99,7 +106,67 @@ static Matrix operator*(Matrix m1, Matrix m2)
 /* 4. operator: 矩阵相加*/
 static Matrix operator+(Matrix m1, Matrix m2)
 {
-
+    size_t r, r2, c, c2;
+    r = m1.row; c = m1.col;
+    r2 = m2.row; c2 = m2.col;
+    if (r != r2 || c != c2)
+    {
+        qDebug() << "两个矩阵尺寸不一致";
+        exit(-1);
+    }
+    Matrix outMat(r, c);
+    size_t i, j;
+    for (i=0; i<r; i++)
+    {
+        for (j=0; j<c; j++)
+        {
+            outMat[i][j] = m1[i][j] + m2[i][j];
+        }
+    }
+    return outMat;
+}
+/* 5. operator: 矩阵相减*/
+static Matrix operator-(Matrix m1, Matrix m2)
+{
+    size_t r, r2, c, c2;
+    r = m1.row; c = m1.col;
+    r2 = m2.row; c2 = m2.col;
+    if (r != r2 || c != c2)
+    {
+        qDebug() << "两个矩阵尺寸不一致";
+        exit(-1);
+    }
+    Matrix outMat(r, c);
+    size_t i, j;
+    for (i=0; i<r; i++)
+    {
+        for (j=0; j<c; j++)
+        {
+            outMat[i][j] = m1[i][j] - m2[i][j];
+        }
+    }
+    return outMat;
+}
+/* 6. operator: 矩阵除一个数*/
+static Matrix operator/(Matrix m, double n)
+{
+    if (n < 1e-5)
+    {
+        qDebug() << "除数为0";
+        exit(-1);
+    }
+    size_t r, c;
+    r = m.row; c = m.col;
+    Matrix outMat = m;
+    size_t i, j;
+    for (i=0; i<r; i++)
+    {
+        for (j=0; j<c; j++)
+        {
+            outMat[i][j] /= n;
+        }
+    }
+    return outMat;
 }
 
 #endif // MATRIX_H

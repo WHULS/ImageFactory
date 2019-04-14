@@ -30,6 +30,7 @@ public:
     QAction *open_calibration_info;
     QAction *save_calibration_info;
     QAction *calculate_dlt_param;
+    QAction *orientation_element_initial_value;
     QWidget *centralwidget;
     QListView *sampleDataList;
     QTableView *dataInfo;
@@ -67,6 +68,11 @@ public:
         QIcon icon4;
         icon4.addFile(QString::fromUtf8(":/images/images/DOG.png"), QSize(), QIcon::Normal, QIcon::Off);
         calculate_dlt_param->setIcon(icon4);
+        orientation_element_initial_value = new QAction(SampleData);
+        orientation_element_initial_value->setObjectName(QString::fromUtf8("orientation_element_initial_value"));
+        QIcon icon5;
+        icon5.addFile(QString::fromUtf8(":/images/images/F.png"), QSize(), QIcon::Normal, QIcon::Off);
+        orientation_element_initial_value->setIcon(icon5);
         centralwidget = new QWidget(SampleData);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         sampleDataList = new QListView(centralwidget);
@@ -98,6 +104,7 @@ public:
         menu->addAction(open_image);
         menu->addAction(read_control_point);
         menu->addAction(calculate_dlt_param);
+        menu->addAction(orientation_element_initial_value);
         menu_2->addAction(open_calibration_info);
         menu_2->addAction(save_calibration_info);
 
@@ -114,6 +121,7 @@ public:
         open_calibration_info->setText(QApplication::translate("SampleData", "\346\211\223\345\274\200 (&O)", nullptr));
         save_calibration_info->setText(QApplication::translate("SampleData", "\344\277\235\345\255\230 (&S)", nullptr));
         calculate_dlt_param->setText(QApplication::translate("SampleData", "\350\247\243\347\256\227DLT\345\217\202\346\225\260(&D)", nullptr));
+        orientation_element_initial_value->setText(QApplication::translate("SampleData", "\346\226\271\344\275\215\345\205\203\347\264\240\345\210\235\345\200\274 (&F)", nullptr));
         menu->setTitle(QApplication::translate("SampleData", "\347\233\270\346\234\272\345\256\232\346\240\207", nullptr));
         menu_2->setTitle(QApplication::translate("SampleData", "\346\243\200\346\240\241\344\277\241\346\201\257", nullptr));
     } // retranslateUi

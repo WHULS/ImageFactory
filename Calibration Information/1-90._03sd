@@ -365,7 +365,7 @@
     </Control-Points>
     <Calibration-Images>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_001.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_001.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -508,7 +508,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_002.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_002.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -519,7 +519,39 @@
             <y_0>-1.000000000000</y_0>
             <f>-1.000000000000</f>
             <Control-Points>
-                <Control-Point-Number>36</Control-Point-Number>
+                <Control-Point-Number>14</Control-Point-Number>
+                <Control-Point>
+                    <No>56</No>
+                    <X>100.490007641937</X>
+                    <Y>-44.741014339456</Y>
+                    <Z>0.000000000000</Z>
+                    <x>512.044311523438</x>
+                    <y>1505.280761718750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>57</No>
+                    <X>86.786824781673</X>
+                    <Y>-38.639966929530</Y>
+                    <Z>0.000000000000</Z>
+                    <x>709.428161621094</x>
+                    <y>1524.762329101563</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>58</No>
+                    <X>73.083641921409</X>
+                    <Y>-32.538919519604</Y>
+                    <Z>0.000000000000</Z>
+                    <x>908.472167968750</x>
+                    <y>1544.417114257813</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>59</No>
+                    <X>59.380459061145</X>
+                    <Y>-26.437872109678</Y>
+                    <Z>0.000000000000</Z>
+                    <x>1107.748779296875</x>
+                    <y>1564.071289062500</y>
+                </Control-Point>
                 <Control-Point>
                     <No>0</No>
                     <X>110.000000000000</X>
@@ -529,60 +561,12 @@
                     <y>1780.957763671875</y>
                 </Control-Point>
                 <Control-Point>
-                    <No>1</No>
-                    <X>95.000000000000</X>
-                    <Y>0.000000000000</Y>
-                    <Z>0.000000000000</Z>
-                    <x>625.842590332031</x>
-                    <y>1761.429809570313</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>2</No>
-                    <X>80.000000000000</X>
-                    <Y>0.000000000000</Y>
-                    <Z>0.000000000000</Z>
-                    <x>850.054626464844</x>
-                    <y>1742.337402343750</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>3</No>
-                    <X>65.000000000000</X>
-                    <Y>0.000000000000</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1069.932250976563</x>
-                    <y>1724.090820312500</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>4</No>
-                    <X>100.489999819168</X>
-                    <Y>44.741031909687</Y>
-                    <Z>0.000000000000</Z>
-                    <x>570.856811523438</x>
-                    <y>2074.299316406250</y>
-                </Control-Point>
-                <Control-Point>
                     <No>5</No>
                     <X>86.786818025645</X>
                     <Y>38.639982103820</Y>
                     <Z>0.000000000000</Z>
                     <x>786.399047851563</x>
                     <y>2008.705810546875</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>6</No>
-                    <X>73.083636232122</X>
-                    <Y>32.538932297954</Y>
-                    <Z>0.000000000000</Z>
-                    <x>992.845397949219</x>
-                    <y>1945.191894531250</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>7</No>
-                    <X>59.380454438599</X>
-                    <Y>26.437882492088</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1193.923095703125</x>
-                    <y>1883.920166015625</y>
                 </Control-Point>
                 <Control-Point>
                     <No>8</No>
@@ -601,52 +585,12 @@
                     <y>2212.832275390625</y>
                 </Control-Point>
                 <Control-Point>
-                    <No>10</No>
-                    <X>53.530447122729</X>
-                    <Y>59.451587286133</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1339.654907226563</x>
-                    <y>2109.506347656250</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>11</No>
-                    <X>43.493488287217</X>
-                    <Y>48.304414669983</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1472.569335937500</x>
-                    <y>2011.565307617188</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>12</No>
-                    <X>33.991865722908</X>
-                    <Y>104.616217981132</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1766.375976562500</x>
-                    <y>2448.031738281250</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>13</No>
-                    <X>29.356611306148</X>
-                    <Y>90.350370074614</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1798.069702148438</x>
-                    <y>2316.197509765625</y>
-                </Control-Point>
-                <Control-Point>
                     <No>14</No>
                     <X>24.721356889388</X>
                     <Y>76.084522168096</Y>
                     <Z>0.000000000000</Z>
                     <x>1829.344482421875</x>
                     <y>2192.899902343750</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>15</No>
-                    <X>20.086102472627</X>
-                    <Y>61.818674261578</Y>
-                    <Z>0.000000000000</Z>
-                    <x>1858.783569335938</x>
-                    <y>2075.827636718750</y>
                 </Control-Point>
                 <Control-Point>
                     <No>16</No>
@@ -657,44 +601,12 @@
                     <y>2414.580322265625</y>
                 </Control-Point>
                 <Control-Point>
-                    <No>17</No>
-                    <X>-9.930208415583</X>
-                    <Y>94.479579596985</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2440.202148437500</x>
-                    <y>2289.267089843750</y>
-                </Control-Point>
-                <Control-Point>
                     <No>18</No>
                     <X>-8.362280771017</X>
                     <Y>79.561751239567</Y>
                     <Z>0.000000000000</Z>
                     <x>2351.816650390625</x>
                     <y>2171.126464843750</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>19</No>
-                    <X>-6.794353126452</X>
-                    <Y>64.643922882148</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2269.366699218750</x>
-                    <y>2059.113037109375</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>20</No>
-                    <X>-55.000005552092</X>
-                    <Y>95.262791210786</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3150.238525390625</x>
-                    <y>2231.146728515625</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>21</No>
-                    <X>-47.500004794989</X>
-                    <Y>82.272410591133</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2962.650146484375</x>
-                    <y>2138.939941406250</y>
                 </Control-Point>
                 <Control-Point>
                     <No>22</No>
@@ -705,68 +617,12 @@
                     <y>2050.946044921875</y>
                 </Control-Point>
                 <Control-Point>
-                    <No>23</No>
-                    <X>-32.500003280782</X>
-                    <Y>56.291649351828</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2610.433593750000</x>
-                    <y>1966.663818359375</y>
-                </Control-Point>
-                <Control-Point>
                     <No>24</No>
                     <X>-88.991873903196</X>
                     <Y>64.656371528239</Y>
                     <Z>0.000000000000</Z>
                     <x>3484.099609375000</x>
                     <y>1957.617431640625</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>25</No>
-                    <X>-76.856618370942</X>
-                    <Y>55.839593592570</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3255.109130859375</x>
-                    <y>1910.927368164063</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>26</No>
-                    <X>-64.721362838688</X>
-                    <Y>47.022815656901</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3032.902099609375</x>
-                    <y>1865.965820312500</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>27</No>
-                    <X>-52.586107306434</X>
-                    <Y>38.206037721232</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2816.565429687500</x>
-                    <y>1821.929931640625</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>28</No>
-                    <X>-107.596237946810</X>
-                    <Y>22.870277210682</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3507.391601562500</x>
-                    <y>1665.519042968750</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>29</No>
-                    <X>-92.924023681336</X>
-                    <Y>19.751603045589</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3289.830322265625</x>
-                    <y>1663.049316406250</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>30</No>
-                    <X>-78.251809415862</X>
-                    <Y>16.632928880496</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3074.156982421875</x>
-                    <y>1660.559936523438</y>
                 </Control-Point>
                 <Control-Point>
                     <No>31</No>
@@ -776,42 +632,10 @@
                     <x>2858.503173828125</x>
                     <y>1658.660888671875</y>
                 </Control-Point>
-                <Control-Point>
-                    <No>32</No>
-                    <X>-107.596233948042</X>
-                    <Y>-22.870296023406</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2747.872314453125</x>
-                    <y>1507.180908203125</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>33</No>
-                    <X>-92.924020227854</X>
-                    <Y>-19.751619292942</Y>
-                    <Z>0.000000000000</Z>
-                    <x>2926.828125000000</x>
-                    <y>1474.679199218750</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>34</No>
-                    <X>-78.251806507667</X>
-                    <Y>-16.632942562477</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3102.961181640625</x>
-                    <y>1442.722412109375</y>
-                </Control-Point>
-                <Control-Point>
-                    <No>35</No>
-                    <X>-63.579592787479</X>
-                    <Y>-13.514265832013</Y>
-                    <Z>0.000000000000</Z>
-                    <x>3277.074707031250</x>
-                    <y>1411.259399414063</y>
-                </Control-Point>
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_003.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_003.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -954,7 +778,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_004.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_004.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1097,7 +921,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_005.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_005.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1240,37 +1064,285 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_006.JPG</Image-Path>
-            <X>-1.000000000000</X>
-            <Y>-1.000000000000</Y>
-            <Z>-1.000000000000</Z>
-            <Phi>-1.000000000000</Phi>
-            <Omega>-1.000000000000</Omega>
-            <Kappa>-1.000000000000</Kappa>
-            <x_0>-1.000000000000</x_0>
-            <y_0>-1.000000000000</y_0>
-            <f>-1.000000000000</f>
-            <Control-Points>
-                <Control-Point-Number>0</Control-Point-Number>
-            </Control-Points>
-        </Calibration-Image>
-        <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_007.JPG</Image-Path>
-            <X>-1.000000000000</X>
-            <Y>-1.000000000000</Y>
-            <Z>-1.000000000000</Z>
-            <Phi>-1.000000000000</Phi>
-            <Omega>-1.000000000000</Omega>
-            <Kappa>-1.000000000000</Kappa>
-            <x_0>-1.000000000000</x_0>
-            <y_0>-1.000000000000</y_0>
-            <f>-1.000000000000</f>
-            <Control-Points>
-                <Control-Point-Number>0</Control-Point-Number>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_006.JPG</Image-Path>
+            <X>-1.000000000000</X>
+            <Y>-1.000000000000</Y>
+            <Z>-1.000000000000</Z>
+            <Phi>-1.000000000000</Phi>
+            <Omega>-1.000000000000</Omega>
+            <Kappa>-1.000000000000</Kappa>
+            <x_0>-1.000000000000</x_0>
+            <y_0>-1.000000000000</y_0>
+            <f>-1.000000000000</f>
+            <Control-Points>
+                <Control-Point-Number>9</Control-Point-Number>
+                <Control-Point>
+                    <No>8</No>
+                    <X>73.604364793753</X>
+                    <Y>81.745932518433</Y>
+                    <Z>0.000000000000</Z>
+                    <x>398.479919433594</x>
+                    <y>1738.124267578125</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>16</No>
+                    <X>-11.498136060149</X>
+                    <Y>109.397407954404</Y>
+                    <Z>0.000000000000</Z>
+                    <x>983.175720214844</x>
+                    <y>2288.305908203125</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>24</No>
+                    <X>-88.991873903196</X>
+                    <Y>64.656371528239</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2445.286865234375</x>
+                    <y>2420.539794921875</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>32</No>
+                    <X>-107.596233948042</X>
+                    <Y>-22.870296023406</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3451.563476562500</x>
+                    <y>1987.309936523438</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>40</No>
+                    <X>-54.999988895815</X>
+                    <Y>-95.262800827291</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3299.850341796875</x>
+                    <y>1433.800415039063</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>21</No>
+                    <X>-47.500004794989</X>
+                    <Y>82.272410591133</Y>
+                    <Z>0.000000000000</Z>
+                    <x>1722.371093750000</x>
+                    <y>2303.802734375000</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>22</No>
+                    <X>-40.000004037885</X>
+                    <Y>69.282029971481</Y>
+                    <Z>0.000000000000</Z>
+                    <x>1765.702148437500</x>
+                    <y>2181.218261718750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>25</No>
+                    <X>-76.856618370942</X>
+                    <Y>55.839593592570</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2365.081054687500</x>
+                    <y>2292.567138671875</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>26</No>
+                    <X>-64.721362838688</X>
+                    <Y>47.022815656901</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2289.378417968750</x>
+                    <y>2172.478027343750</y>
+                </Control-Point>
+            </Control-Points>
+        </Calibration-Image>
+        <Calibration-Image>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_007.JPG</Image-Path>
+            <X>-1.000000000000</X>
+            <Y>-1.000000000000</Y>
+            <Z>-1.000000000000</Z>
+            <Phi>-1.000000000000</Phi>
+            <Omega>-1.000000000000</Omega>
+            <Kappa>-1.000000000000</Kappa>
+            <x_0>-1.000000000000</x_0>
+            <y_0>-1.000000000000</y_0>
+            <f>-1.000000000000</f>
+            <Control-Points>
+                <Control-Point-Number>22</Control-Point-Number>
+                <Control-Point>
+                    <No>8</No>
+                    <X>73.604364793753</X>
+                    <Y>81.745932518433</Y>
+                    <Z>0.000000000000</Z>
+                    <x>436.115692138672</x>
+                    <y>1608.116699218750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>9</No>
+                    <X>63.567405958241</X>
+                    <Y>70.598759902283</Y>
+                    <Z>0.000000000000</Z>
+                    <x>647.754760742188</x>
+                    <y>1613.148193359375</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>14</No>
+                    <X>24.721356889388</X>
+                    <Y>76.084522168096</Y>
+                    <Z>0.000000000000</Z>
+                    <x>883.302001953125</x>
+                    <y>1822.489868164063</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>16</No>
+                    <X>-11.498136060149</X>
+                    <Y>109.397407954404</Y>
+                    <Z>0.000000000000</Z>
+                    <x>737.178466796875</x>
+                    <y>2180.167480468750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>18</No>
+                    <X>-8.362280771017</X>
+                    <Y>79.561751239567</Y>
+                    <Z>0.000000000000</Z>
+                    <x>1113.529541015625</x>
+                    <y>2014.683227539063</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>24</No>
+                    <X>-88.991873903196</X>
+                    <Y>64.656371528239</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2087.408935546875</x>
+                    <y>2448.804199218750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>25</No>
+                    <X>-76.856618370942</X>
+                    <Y>55.839593592570</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2065.841064453125</x>
+                    <y>2315.562744140625</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>26</No>
+                    <X>-64.721362838688</X>
+                    <Y>47.022815656901</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2045.475341796875</x>
+                    <y>2190.818115234375</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>27</No>
+                    <X>-52.586107306434</X>
+                    <Y>38.206037721232</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2026.412109375000</x>
+                    <y>2072.872802734375</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>31</No>
+                    <X>-63.579595150388</X>
+                    <Y>13.514254715403</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2416.712890625000</x>
+                    <y>2023.145751953125</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>32</No>
+                    <X>-107.596233948042</X>
+                    <Y>-22.870296023406</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3316.299560546875</x>
+                    <y>2118.744873046875</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>33</No>
+                    <X>-92.924020227854</X>
+                    <Y>-19.751619292942</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3104.217529296875</x>
+                    <y>2044.558471679688</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>34</No>
+                    <X>-78.251806507667</X>
+                    <Y>-16.632942562477</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2901.451171875000</x>
+                    <y>1973.566528320313</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>35</No>
+                    <X>-63.579592787479</X>
+                    <Y>-13.514265832013</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2705.976318359375</x>
+                    <y>1905.510009765625</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>36</No>
+                    <X>-88.991862598315</X>
+                    <Y>-64.656387088072</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3514.478759765625</x>
+                    <y>1829.018798828125</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>37</No>
+                    <X>-76.856608607636</X>
+                    <Y>-55.839607030607</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3286.599609375000</x>
+                    <y>1802.197631835938</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>38</No>
+                    <X>-64.721354616957</X>
+                    <Y>-47.022826973143</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3063.043457031250</x>
+                    <y>1775.446655273438</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>39</No>
+                    <X>-52.586100626277</X>
+                    <Y>-38.206046915679</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2842.535888671875</x>
+                    <y>1749.005737304688</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>40</No>
+                    <X>-54.999988895815</X>
+                    <Y>-95.262800827291</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3422.048828125000</x>
+                    <y>1547.947875976563</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>41</No>
+                    <X>-47.499990410022</X>
+                    <Y>-82.272418896297</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3221.623779296875</x>
+                    <y>1561.220336914063</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>42</No>
+                    <X>-39.999991924229</X>
+                    <Y>-69.282036965303</Y>
+                    <Z>0.000000000000</Z>
+                    <x>3019.567871093750</x>
+                    <y>1573.946777343750</y>
+                </Control-Point>
+                <Control-Point>
+                    <No>43</No>
+                    <X>-32.499993438436</X>
+                    <Y>-56.291655034309</Y>
+                    <Z>0.000000000000</Z>
+                    <x>2817.363769531250</x>
+                    <y>1587.616088867188</y>
+                </Control-Point>
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_008.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_008.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1285,7 +1357,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_009.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_009.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1300,7 +1372,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_010.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_010.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1315,7 +1387,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_011.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_011.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1330,7 +1402,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_012.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_012.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1345,7 +1417,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_013.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_013.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1360,7 +1432,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_014.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_014.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1375,7 +1447,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_015.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_015.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1390,7 +1462,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_016.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_016.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1405,7 +1477,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_017.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_017.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1420,7 +1492,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_018.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_018.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1435,7 +1507,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_019.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_019.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1450,7 +1522,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_020.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_020.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1465,7 +1537,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_021.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_021.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1480,7 +1552,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_022.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_022.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1495,7 +1567,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_023.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_023.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1510,7 +1582,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_024.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_024.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1525,7 +1597,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_025.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_025.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1540,7 +1612,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_026.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_026.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1555,7 +1627,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_027.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_027.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1570,7 +1642,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_028.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_028.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1585,7 +1657,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_029.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_029.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1600,7 +1672,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_030.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_030.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1615,7 +1687,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_031.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_031.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1630,7 +1702,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_032.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_032.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1645,7 +1717,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_033.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_033.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1660,7 +1732,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_034.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_034.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1675,7 +1747,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_035.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_035.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1690,7 +1762,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_036.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_036.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1705,7 +1777,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_037.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_037.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1720,7 +1792,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_038.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_038.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1735,7 +1807,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_039.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_039.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1750,7 +1822,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_040.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_040.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1765,7 +1837,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_041.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_041.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1780,7 +1852,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_042.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_042.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1795,7 +1867,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_043.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_043.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1810,7 +1882,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_044.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_044.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1825,7 +1897,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_045.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_045.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1840,7 +1912,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_046.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_046.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1855,7 +1927,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_047.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_047.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1870,7 +1942,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_048.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_048.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1885,7 +1957,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_049.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_049.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1900,7 +1972,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_050.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_050.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1915,7 +1987,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_051.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_051.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1930,7 +2002,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_052.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_052.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1945,7 +2017,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_053.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_053.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1960,7 +2032,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_054.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_054.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1975,7 +2047,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_055.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_055.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -1990,7 +2062,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_056.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_056.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2005,7 +2077,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_057.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_057.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2020,7 +2092,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_058.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_058.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2035,7 +2107,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_059.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_059.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2050,7 +2122,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_060.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_060.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2065,7 +2137,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_061.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_061.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2080,7 +2152,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_062.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_062.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2095,7 +2167,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_063.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_063.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2110,7 +2182,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_064.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_064.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2125,7 +2197,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_065.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_065.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2140,7 +2212,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_066.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_066.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2155,7 +2227,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_067.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_067.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2170,7 +2242,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_068.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_068.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2185,7 +2257,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_069.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_069.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2200,7 +2272,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_070.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_070.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2215,7 +2287,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_071.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_071.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2230,7 +2302,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_072.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_072.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2245,7 +2317,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_073.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_073.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2260,7 +2332,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_074.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_074.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2275,7 +2347,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_075.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_075.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2290,7 +2362,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_076.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_076.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2305,7 +2377,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_077.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_077.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2320,7 +2392,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_078.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_078.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2335,7 +2407,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_079.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_079.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2350,7 +2422,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_080.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_080.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2365,7 +2437,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_081.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_081.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2380,7 +2452,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_082.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_082.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2395,7 +2467,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_083.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_083.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2410,7 +2482,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_084.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_084.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2425,7 +2497,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_085.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_085.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2440,7 +2512,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_086.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_086.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2455,7 +2527,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_087.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_087.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2470,7 +2542,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_088.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_088.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2485,7 +2557,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_089.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_089.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
@@ -2500,7 +2572,7 @@
             </Control-Points>
         </Calibration-Image>
         <Calibration-Image>
-            <Image-Path>E:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_090.JPG</Image-Path>
+            <Image-Path>F:/杉/文章/大三下/4. 计算机视觉/CV实习数据/90/Buddha_090.JPG</Image-Path>
             <X>-1.000000000000</X>
             <Y>-1.000000000000</Y>
             <Z>-1.000000000000</Z>
