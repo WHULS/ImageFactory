@@ -75,12 +75,12 @@ public:
         least_square = new QAction(FeatureWin);
         least_square->setObjectName(QString::fromUtf8("least_square"));
         QIcon icon3;
-        icon3.addFile(QString::fromUtf8(":/images/images/\346\233\262\347\272\277.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QString::fromUtf8(":/images/images/quxian.png"), QSize(), QIcon::Normal, QIcon::Off);
         least_square->setIcon(icon3);
         correlation_index = new QAction(FeatureWin);
         correlation_index->setObjectName(QString::fromUtf8("correlation_index"));
         QIcon icon4;
-        icon4.addFile(QString::fromUtf8(":/images/images/DNA\345\217\214\346\233\262\347\272\277.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QString::fromUtf8(":/images/images/DNA.png"), QSize(), QIcon::Normal, QIcon::Off);
         correlation_index->setIcon(icon4);
         open_image = new QAction(FeatureWin);
         open_image->setObjectName(QString::fromUtf8("open_image"));

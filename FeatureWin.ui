@@ -144,7 +144,7 @@
   <action name="least_square">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/images/曲线.png</normaloff>:/images/images/曲线.png</iconset>
+     <normaloff>:/images/images/quxian.png</normaloff>:/images/images/quxian.png</iconset>
    </property>
    <property name="text">
     <string>最小二乘 (&amp;M)</string>
@@ -153,7 +153,7 @@
   <action name="correlation_index">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/images/DNA双曲线.png</normaloff>:/images/images/DNA双曲线.png</iconset>
+     <normaloff>:/images/images/DNA.png</normaloff>:/images/images/DNA.png</iconset>
    </property>
    <property name="text">
     <string>相关系数 (&amp;R)</string>

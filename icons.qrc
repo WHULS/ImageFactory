@@ -19,8 +19,8 @@
         <file>images/F.png</file>
         <file>images/save.png</file>
         <file>images/open.png</file>
-        <file>images/曲线.png</file>
-        <file>images/DNA双曲线.png</file>
+        <file>images/DNA.png</file>
+        <file>images/quxian.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>
