@@ -68,11 +68,9 @@
    </widget>
    <widget class="QMenu" name="menu_P">
     <property name="title">
-     <string>点特征提取(&amp;P)</string>
+     <string>特征提取/匹配(&amp;P)</string>
     </property>
-    <addaction name="point_Moravec"/>
-    <addaction name="point_Forstner"/>
-    <addaction name="point_Harris"/>
+    <addaction name="run_abstract_match"/>
    </widget>
    <addaction name="menu_F"/>
    <addaction name="menu"/>
@@ -229,37 +227,19 @@
     <string>DOG (&amp;D)</string>
    </property>
   </action>
-  <action name="point_Moravec">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/images/images/M.png</normaloff>:/images/images/M.png</iconset>
-   </property>
-   <property name="text">
-    <string>Moravec (&amp;M)</string>
-   </property>
-  </action>
-  <action name="point_Forstner">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/images/images/F.png</normaloff>:/images/images/F.png</iconset>
-   </property>
-   <property name="text">
-    <string>Forstner (&amp;F)</string>
-   </property>
-  </action>
-  <action name="point_Harris">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/images/images/H.png</normaloff>:/images/images/H.png</iconset>
-   </property>
-   <property name="text">
-    <string>Harris (&amp;H)</string>
-   </property>
-  </action>
   <action name="run_fetch_cloud">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/images/images/xbox.png</normaloff>:/images/images/xbox.png</iconset>
+   </property>
+   <property name="text">
+    <string>启动 (&amp;R)</string>
+   </property>
+  </action>
+  <action name="run_abstract_match">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/dingwei.png</normaloff>:/images/images/dingwei.png</iconset>
    </property>
    <property name="text">
     <string>启动 (&amp;R)</string>

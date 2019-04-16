@@ -607,13 +607,16 @@ void MainWindow::On_HoughCircle_valueChanged(double dp, double minDist, double p
     }
 }
 
-void MainWindow::on_point_Moravec_triggered()
-{
-
-}
-
+// 打开点云提取对话框
 void MainWindow::on_run_fetch_cloud_triggered()
 {
     SampleData *sampleDataWin = new SampleData();
     sampleDataWin->show();
+}
+
+// 打开点特征提取和影像匹配对话框
+void MainWindow::on_run_abstract_match_triggered()
+{
+    FeatureWin *featureWin = new FeatureWin();
+    featureWin->showMaximized();
 }

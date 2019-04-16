@@ -7,7 +7,6 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
 
 // 引入 Qt
 #include <QMessageBox>
@@ -127,8 +126,8 @@ public:
     vector<CPoint> controlPoints;
     ControlPointDlg *CpDlg;
 
-    int currentCPtNum=0; // 用来记录当前输入的控制点的号数
-    int imageIndex=-1;    // 从数组中取得的照片的编号，只有从数组中取得照片，该编号才会生效，用于更新控制点选择信息
+    int currentCPtNum=0;   // 用来记录当前输入的控制点的号数
+    int imageIndex=-1;     // 从数组中取得的照片的编号，只有从数组中取得照片，该编号才会生效，用于更新控制点选择信息
     int currentListNum;    // 记录当前列表内容
 
 private slots:

@@ -37,10 +37,8 @@ public:
     QAction *show_blur;
     QAction *show_gray;
     QAction *edge_dog;
-    QAction *point_Moravec;
-    QAction *point_Forstner;
-    QAction *point_Harris;
     QAction *run_fetch_cloud;
+    QAction *run_abstract_match;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -121,26 +119,16 @@ public:
         QIcon icon11;
         icon11.addFile(QString::fromUtf8(":/images/images/DOG.png"), QSize(), QIcon::Normal, QIcon::Off);
         edge_dog->setIcon(icon11);
-        point_Moravec = new QAction(MainWindow);
-        point_Moravec->setObjectName(QString::fromUtf8("point_Moravec"));
-        QIcon icon12;
-        icon12.addFile(QString::fromUtf8(":/images/images/M.png"), QSize(), QIcon::Normal, QIcon::Off);
-        point_Moravec->setIcon(icon12);
-        point_Forstner = new QAction(MainWindow);
-        point_Forstner->setObjectName(QString::fromUtf8("point_Forstner"));
-        QIcon icon13;
-        icon13.addFile(QString::fromUtf8(":/images/images/F.png"), QSize(), QIcon::Normal, QIcon::Off);
-        point_Forstner->setIcon(icon13);
-        point_Harris = new QAction(MainWindow);
-        point_Harris->setObjectName(QString::fromUtf8("point_Harris"));
-        QIcon icon14;
-        icon14.addFile(QString::fromUtf8(":/images/images/H.png"), QSize(), QIcon::Normal, QIcon::Off);
-        point_Harris->setIcon(icon14);
         run_fetch_cloud = new QAction(MainWindow);
         run_fetch_cloud->setObjectName(QString::fromUtf8("run_fetch_cloud"));
-        QIcon icon15;
-        icon15.addFile(QString::fromUtf8(":/images/images/xbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-        run_fetch_cloud->setIcon(icon15);
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/images/images/xbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+        run_fetch_cloud->setIcon(icon12);
+        run_abstract_match = new QAction(MainWindow);
+        run_abstract_match->setObjectName(QString::fromUtf8("run_abstract_match"));
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/images/images/dingwei.png"), QSize(), QIcon::Normal, QIcon::Off);
+        run_abstract_match->setIcon(icon13);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -181,9 +169,7 @@ public:
         menu->addAction(edge_prewitt);
         menu->addAction(edge_dog);
         menu_Y->addAction(run_fetch_cloud);
-        menu_P->addAction(point_Moravec);
-        menu_P->addAction(point_Forstner);
-        menu_P->addAction(point_Harris);
+        menu_P->addAction(run_abstract_match);
 
         retranslateUi(MainWindow);
 
@@ -228,15 +214,13 @@ public:
         show_blur->setText(QApplication::translate("MainWindow", "\346\250\241\347\263\212\345\233\276 (&B)", nullptr));
         show_gray->setText(QApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276 (&G)", nullptr));
         edge_dog->setText(QApplication::translate("MainWindow", "DOG (&D)", nullptr));
-        point_Moravec->setText(QApplication::translate("MainWindow", "Moravec (&M)", nullptr));
-        point_Forstner->setText(QApplication::translate("MainWindow", "Forstner (&F)", nullptr));
-        point_Harris->setText(QApplication::translate("MainWindow", "Harris (&H)", nullptr));
         run_fetch_cloud->setText(QApplication::translate("MainWindow", "\345\220\257\345\212\250 (&R)", nullptr));
+        run_abstract_match->setText(QApplication::translate("MainWindow", "\345\220\257\345\212\250 (&R)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));
         menu_Y->setTitle(QApplication::translate("MainWindow", "\347\202\271\344\272\221\346\217\220\345\217\226 (&Y)", nullptr));
-        menu_P->setTitle(QApplication::translate("MainWindow", "\347\202\271\347\211\271\345\276\201\346\217\220\345\217\226(&P)", nullptr));
+        menu_P->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226/\345\214\271\351\205\215(&P)", nullptr));
     } // retranslateUi
 
 };

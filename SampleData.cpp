@@ -51,6 +51,8 @@ SampleData::SampleData(QWidget *parent) :
     QModelIndex currentIndex = dataListModel->index(2, 0);
     dataList->setCurrentIndex(currentIndex);
     emit dataList->clicked(currentIndex);
+
+    on_open_calibration_info_triggered();
 }
 
 SampleData::~SampleData()
@@ -494,6 +496,11 @@ static void CPointMouseClick(int event, int x, int y, int flags, void *params)
         select_flag = false;
         //显示框出的ROI
         Rect roi = Rect(Point(select.x, select.y), Point(x, y));
+
+        // 坐标转换，保证select为左上角的点
+        select.x = select.x > x ? x : select.x;
+        select.y = select.y > y ? y : select.y;
+
         if (roi.width && roi.height)
         {
             // 获取ROI影像
@@ -640,11 +647,11 @@ void SampleData::showControlPoint(Mat cPtImage, vector<CPoint> points, String wi
     Point center;
     for (size_t i=0; i<points.size(); i++)
     {
-        // 画十字标，加上0.5四舍五入
+        // 画十字标
         center = Point(points[i].x, points[i].y);
         drawCross(crossImage, center, 100, 3);
         // 画点号
-        putText(crossImage, to_string(caliImage.ControlPoints[i].num), Point(center.x+10, center.y-10),
+        putText(crossImage, to_string(points[i].num), Point(center.x+10, center.y-10),
                 FONT_HERSHEY_SCRIPT_SIMPLEX, 5.0, Scalar(255, 0, 0), 5);
     }
     namedWindow(winName, WINDOW_NORMAL);
@@ -822,6 +829,7 @@ void SampleData::on_open_calibration_info_triggered()
     if (fileName.isEmpty()) return;
 
     xmlDir = fileName.section("/", 0, -2);
+    this->H.clear();
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QFile::Text))
@@ -956,6 +964,7 @@ void SampleData::on_dataInfo_activated(const QModelIndex &index)
     }
     else if (currentListNum==2)
     {
+        this->currentCPtNum = 0;
         caliImageChanged(row, col);
     }
 }
@@ -991,9 +1000,7 @@ int SampleData::showMessage(QString str)
 {
     return QMessageBox::information(this,
                                     tr("提示"),
-                                    str,
-                                    QMessageBox::Yes,
-                                    QMessageBox::No);
+                                    str);
 }
 
 void SampleData::on_calculate_dlt_param_triggered()
@@ -1022,16 +1029,16 @@ void SampleData::on_calculate_dlt_param_triggered()
     size_t i,j;
 
     // 将控制点的单位转化成mm
-    double resolutionX, resolutionY;
-    resolutionX = resolutionY = 300; // dpi
-    double pixelSizeX = 25.400 / resolutionX; // 像素大小(mm)
-    double pixelSizeY = 25.400 / resolutionY;
-    for (i=0; i<cpNum; i++)
-    {
-        cPts[i].x *= pixelSizeX;
-        cPts[i].y *= pixelSizeY;
-    }
-    qDebug() << "像素大小" << pixelSizeX << ", " << pixelSizeY << "mm";
+//    double resolutionX, resolutionY;
+//    resolutionX = resolutionY = 300; // dpi
+//    double pixelSizeX = 25.400 / resolutionX; // 像素大小(mm)
+//    double pixelSizeY = 25.400 / resolutionY;
+//    for (i=0; i<cpNum; i++)
+//    {
+//        cPts[i].x *= pixelSizeX;
+//        cPts[i].y *= pixelSizeY;
+//    }
+//    qDebug() << "像素大小" << pixelSizeX << ", " << pixelSizeY << "mm";
 
     for (i=0,j=0; i<cpNum*2&&j<cpNum; i+=2, j++)
     {
@@ -1060,23 +1067,39 @@ void SampleData::on_calculate_dlt_param_triggered()
 //    observedValue_X.print();
 
     Matrix result_H = (paramMatrix_A.transposition()*paramMatrix_A).reverse()*paramMatrix_A.transposition()*observedValue_X;
-    result_H.print();
+//    result_H.print();
 
     // 保存dlt参数
-    if (showMessage("是否保存dlt参数")==QMessageBox::Yes)
-    {
-        vector<double> H;
-        if (!result_H.toVector(&H)) exit(-1);
-        this->H.push_back(H);
+    vector<double> H;
+    if (!result_H.toVector(&H)) exit(-1);
+    this->H.push_back(H);
 
-    }
 
     // 检验结果
-    Matrix V = paramMatrix_A*result_H - observedValue_X;
+    Matrix calculatedVelue_X = paramMatrix_A*result_H;
+    Matrix V = calculatedVelue_X - observedValue_X;
     double sigma_0 = sqrt((V.transposition()*V/(2*cpNum - 8))[0][0]);
     qDebug() << "单位权中误差: " << sigma_0 << "mm";
     showMessage(QString().sprintf("单位权中误差：%lf mm", sigma_0));
 
+    // 绘制计算结果
+    Point center1, center2;
+    vector<CPoint> points = caliImage.ControlPoints;
+    Mat showImage = currentImage.clone();
+    for (i=0; i<cpNum; i++)
+    {
+        center2 = Point(points[i].x, points[i].y);
+        drawCross(showImage, center2, 100, 3);
+        center1 = Point(int(calculatedVelue_X[2*i][0]), int(calculatedVelue_X[2*i+1][0]));
+        circle(showImage, center1, 3, Scalar(255, 255, 0));
+        // 画点号
+        putText(showImage, to_string(points[i].num), Point(center2.x+10, center2.y-10),
+                FONT_HERSHEY_SCRIPT_SIMPLEX, 5.0, Scalar(255, 0, 0), 5);
+    }
+    namedWindow("Control Points", WINDOW_NORMAL);
+    imshow("Control Points", showImage);
+
+    // 输出单位权中误差
     Matrix Qxx = (paramMatrix_A.transposition()*paramMatrix_A).reverse();
 //    Qxx.print();
 
@@ -1108,15 +1131,18 @@ void SampleData::on_orientation_element_initial_value_triggered()
 
         L[i][0] = -h1*h7*h7*h8 - h1*h8*h8*h8 + h2*h7*h7*h7 + h2*h7*h8*h8;
         L[i][1] = -h4*h7*h7*h8 - h4*h8*h8*h8 + h5*h7*h7*h7 + h5*h7*h8*h8;
-        c[i][0] = -(-h1*h1*h7*h8 - h1*h2*h8*h8 + h1*h2*h7*h7 + h2*h2*h7*h8
-                - h4*h4*h7*h8 - h4*h5*h8*h8 + h4*h5*h7*h7 + h5*h5*h7*h8);
+        c[i][0] = -h1*h1*h7*h8 - h1*h2*h8*h8 + h1*h2*h7*h7 + h2*h2*h7*h8
+                - h4*h4*h7*h8 - h4*h5*h8*h8 + h4*h5*h7*h7 + h5*h5*h7*h8;
     }
     // 解算像主点
     Matrix principalPointX;
     principalPointX = (L.transposition()*L).reverse()*L.transposition()*c;
     double x0, y0;
     x0 = principalPointX[0][0]; y0 = principalPointX[1][0];
-    qDebug() << "像主点(mm): " << x0 << ", " << y0;
+    qDebug() << "像主点(pixel): " << x0 << ", " << y0;
+
+    qDebug() << "-----";
+
     // 计算误差
 //    Matrix V = L*principalPointX - c;
 //    V.print();
@@ -1131,7 +1157,7 @@ void SampleData::on_orientation_element_initial_value_triggered()
         h5 = h[4]; h6 = h[5]; h7 = h[6]; h8 = h[7];
         f = sqrt(abs(((h1-h7*x0)*(h2-h8*x0)+(h4-h7*y0)*(h5-h8*y0))/(h7*h8)));
 
-        qDebug() << "主距(mm)：" << f;
+        qDebug() << "主距：" << f;
 
         double kappa, omega, phi;
         // kappa

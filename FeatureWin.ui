@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FeatureWin</class>
+ <widget class="QMainWindow" name="FeatureWin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>592</width>
+    <height>410</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="Image_Left">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>L</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="Image_Right">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>R</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTableView" name="Information_Table">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>592</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>点特征提取</string>
+    </property>
+    <addaction name="moravec_fetch"/>
+    <addaction name="forstner_fetch"/>
+    <addaction name="harris_fetch"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>影像匹配</string>
+    </property>
+    <addaction name="correlation_index"/>
+    <addaction name="least_square"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>图像</string>
+    </property>
+    <addaction name="open_image"/>
+    <addaction name="clear_image"/>
+   </widget>
+   <addaction name="menu_3"/>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <action name="moravec_fetch">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/M.png</normaloff>:/images/images/M.png</iconset>
+   </property>
+   <property name="text">
+    <string>Moravec (&amp;M)</string>
+   </property>
+  </action>
+  <action name="forstner_fetch">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/F.png</normaloff>:/images/images/F.png</iconset>
+   </property>
+   <property name="text">
+    <string>Forster (&amp;F)</string>
+   </property>
+  </action>
+  <action name="harris_fetch">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/H.png</normaloff>:/images/images/H.png</iconset>
+   </property>
+   <property name="text">
+    <string>Harris (&amp;H)</string>
+   </property>
+  </action>
+  <action name="least_square">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/曲线.png</normaloff>:/images/images/曲线.png</iconset>
+   </property>
+   <property name="text">
+    <string>最小二乘 (&amp;M)</string>
+   </property>
+  </action>
+  <action name="correlation_index">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/DNA双曲线.png</normaloff>:/images/images/DNA双曲线.png</iconset>
+   </property>
+   <property name="text">
+    <string>相关系数 (&amp;R)</string>
+   </property>
+  </action>
+  <action name="open_image">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/image.png</normaloff>:/images/images/image.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开 (&amp;O)</string>
+   </property>
+  </action>
+  <action name="clear_image">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/delete.png</normaloff>:/images/images/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>清空 (&amp;D)</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

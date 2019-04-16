@@ -35,7 +35,8 @@ SOURCES += \
     ControlPointDlg.cpp \
     SelectCpDlg.cpp \
     SampleData.cpp \
-    Matrix.cpp
+    Matrix.cpp \
+    FeatureWin.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,14 +49,16 @@ HEADERS += \
     ControlPointDlg.h \
     SelectCpDlg.h \
     SampleData.h \
-    Matrix.h
+    Matrix.h \
+    FeatureWin.h
 
 FORMS += \
     mainwindow.ui \
     houghcircledlg.ui \
     ControlPointDlg.ui \
     SelectCpDlg.ui \
-    SampleData.ui
+    SampleData.ui \
+    FeatureWin.ui
 
 UI_DIR = $$PWD
 

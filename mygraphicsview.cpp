@@ -13,7 +13,8 @@ MyGraphicsView::~MyGraphicsView()
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    if (QApplication::keyboardModifiers() == Qt::ControlModifier) {
+    if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+    {
         QPoint numPixels = event->pixelDelta();
         QPoint numDegrees = event->angleDelta() / 8;
 
