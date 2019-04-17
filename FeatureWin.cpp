@@ -8,7 +8,7 @@ FeatureWin::FeatureWin(QWidget *parent) :
     ui->setupUi(this);
 
     // 数据初始化
-    imageDir = "F:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry/";
+    imageDir = "E:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry/";
 }
 
 FeatureWin::~FeatureWin()

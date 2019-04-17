@@ -1129,10 +1129,14 @@ void SampleData::on_orientation_element_initial_value_triggered()
         h1 = h[0]; h2 = h[1]; h3 = h[2]; h4 = h[3];
         h5 = h[4]; h6 = h[5]; h7 = h[6]; h8 = h[7];
 
+        qDebug() << h1 << h2 << h3 << h4 << h5 << h6 << h7 << h8;
+
         L[i][0] = -h1*h7*h7*h8 - h1*h8*h8*h8 + h2*h7*h7*h7 + h2*h7*h8*h8;
         L[i][1] = -h4*h7*h7*h8 - h4*h8*h8*h8 + h5*h7*h7*h7 + h5*h7*h8*h8;
         c[i][0] = -h1*h1*h7*h8 - h1*h2*h8*h8 + h1*h2*h7*h7 + h2*h2*h7*h8
                 - h4*h4*h7*h8 - h4*h5*h8*h8 + h4*h5*h7*h7 + h5*h5*h7*h8;
+
+        qDebug() << L[i][0] << L[i][1] << c[i][0];
     }
     // 解算像主点
     Matrix principalPointX;
@@ -1148,10 +1152,9 @@ void SampleData::on_orientation_element_initial_value_triggered()
 //    V.print();
 
     // 2. 计算主距和外方位元素
-    double h1,h2,h3,h4,h5,h6,h7,h8,f;
-
     for (size_t i=0; i<H.size(); i++)
     {
+        double h1,h2,h3,h4,h5,h6,h7,h8,f;
         vector<double> h = H[i];
         h1 = h[0]; h2 = h[1]; h3 = h[2]; h4 = h[3];
         h5 = h[4]; h6 = h[5]; h7 = h[6]; h8 = h[7];
@@ -1202,7 +1205,7 @@ void SampleData::on_orientation_element_initial_value_triggered()
         L[1][0] = lambda*(y0-h6)/f;
         L[2][0] = lambda;
 
-        Matrix X = R.transposition().reverse()*L;
+        Matrix X = (R.transposition()*R).reverse()*R.transposition()*L;
 
         qDebug() << "phi: " << phi;
         qDebug() << "omega: " << omega;
@@ -1210,6 +1213,22 @@ void SampleData::on_orientation_element_initial_value_triggered()
         qDebug() << "Xs: " << X[0][0];
         qDebug() << "Ys: " << X[1][0];
         qDebug() << "Zs: " << X[2][0];
+
+
+        // 计算新值
+        double nH1,nH2,nH3,nH4,nH5,nH6,nH7,nH8;
+        lambda = R[0][2]*X[0][0] + R[1][2]*X[1][0] + R[2][2]*X[2][0];
+        nH1 = f*R[0][0]/lambda - R[0][2]*x0/lambda;
+        nH2 = f*R[1][0]/lambda - R[1][2]*x0/lambda;
+        nH3 = x0 - f*(R[0][0]*X[0][0]+R[1][0]*X[1][0]+R[2][0]*X[2][0])/lambda;
+        nH4 = f*R[0][1]/lambda - R[0][2]*y0/lambda;
+        nH5 = f*R[1][1]/lambda - R[1][2]*y0/lambda;
+        nH6 = y0 - f*(R[0][1]*X[0][0]+R[1][1]*X[1][0]+R[2][1]*X[2][0])/lambda;
+        nH7 = -R[0][2]/lambda;
+        nH8 = -R[1][2]/lambda;
+
+        qDebug() << "Old: " << h1 << h2 << h3 << h4 << h5 << h6 << h7 << h8;
+        qDebug() << "New: " << nH1 << nH2 << nH3 << nH4 << nH5 << nH6 << nH7 << nH8;
 
         qDebug() << "------";
     }

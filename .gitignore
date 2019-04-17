@@ -1,4 +1,9 @@
 /cv
 /kinect
-*.pro.user*
 .vscode
+*.stash
+Makefile
+*.Debug
+*.Release
+/debug
+/release
