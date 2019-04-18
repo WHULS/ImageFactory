@@ -620,3 +620,9 @@ void MainWindow::on_run_abstract_match_triggered()
     FeatureWin *featureWin = new FeatureWin();
     featureWin->showMaximized();
 }
+
+void MainWindow::on_camera_calibration_triggered()
+{
+    CalibrationWin *calibrationWin = new CalibrationWin();
+    calibrationWin->show();
+}

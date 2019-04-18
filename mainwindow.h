@@ -8,6 +8,7 @@
 #include "myslider.h"
 #include "SampleData.h"
 #include "FeatureWin.h"
+#include "CalibrationWin.h"
 
 // 引入OpenCV
 #include <opencv2/opencv.hpp>
@@ -78,6 +79,8 @@ private slots:
     void on_run_fetch_cloud_triggered();
 
     void on_run_abstract_match_triggered();
+
+    void on_camera_calibration_triggered();
 
 public slots:
     void On_CannySlider_valueChanged(int); // 自定义信号响应插槽（On大写区分系统定义）

@@ -21,6 +21,7 @@
         <file>images/open.png</file>
         <file>images/DNA.png</file>
         <file>images/quxian.png</file>
+        <file>images/tool.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/camico.ico</file>

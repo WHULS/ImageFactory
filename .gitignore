@@ -1,6 +1,6 @@
 /cv
 /kinect
-*.pro.user.*
+*.pro.user*
 .vscode
 *.stash
 Makefile

@@ -47,6 +47,7 @@
      <string>图像(&amp;F)</string>
     </property>
     <addaction name="image_open"/>
+    <addaction name="camera_calibration"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -243,6 +244,15 @@
    </property>
    <property name="text">
     <string>启动 (&amp;R)</string>
+   </property>
+  </action>
+  <action name="camera_calibration">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/camico2.ico</normaloff>:/icons/icons/camico2.ico</iconset>
+   </property>
+   <property name="text">
+    <string>相机检校 (&amp;C)</string>
    </property>
   </action>
  </widget>

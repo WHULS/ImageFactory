@@ -39,6 +39,7 @@ public:
     QAction *edge_dog;
     QAction *run_fetch_cloud;
     QAction *run_abstract_match;
+    QAction *camera_calibration;
     QWidget *centralWidget;
     QToolBar *toolBar;
     QMenuBar *menuBar;
@@ -129,6 +130,11 @@ public:
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/images/images/dingwei.png"), QSize(), QIcon::Normal, QIcon::Off);
         run_abstract_match->setIcon(icon13);
+        camera_calibration = new QAction(MainWindow);
+        camera_calibration->setObjectName(QString::fromUtf8("camera_calibration"));
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8(":/icons/icons/camico2.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        camera_calibration->setIcon(icon14);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -161,6 +167,7 @@ public:
         menuBar->addAction(menu_Y->menuAction());
         menuBar->addAction(menu_P->menuAction());
         menu_F->addAction(image_open);
+        menu_F->addAction(camera_calibration);
         menu->addAction(edge_canny);
         menu->addAction(edge_laplacian);
         menu->addAction(edge_log);
@@ -216,6 +223,7 @@ public:
         edge_dog->setText(QApplication::translate("MainWindow", "DOG (&D)", nullptr));
         run_fetch_cloud->setText(QApplication::translate("MainWindow", "\345\220\257\345\212\250 (&R)", nullptr));
         run_abstract_match->setText(QApplication::translate("MainWindow", "\345\220\257\345\212\250 (&R)", nullptr));
+        camera_calibration->setText(QApplication::translate("MainWindow", "\347\233\270\346\234\272\346\243\200\346\240\241 (&C)", nullptr));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
         menu_F->setTitle(QApplication::translate("MainWindow", "\345\233\276\345\203\217(&F)", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\347\211\271\345\276\201\346\217\220\345\217\226(&A)", nullptr));

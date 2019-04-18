@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CalibrationWin</class>
+ <widget class="QMainWindow" name="CalibrationWin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>312</width>
+    <height>222</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>312</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>图像 (&amp;I)</string>
+    </property>
+    <addaction name="open_image"/>
+    <addaction name="calibration"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="open_image">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/image.png</normaloff>:/images/images/image.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开图像 (&amp;O)</string>
+   </property>
+  </action>
+  <action name="calibration">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/tool.png</normaloff>:/images/images/tool.png</iconset>
+   </property>
+   <property name="text">
+    <string>检校 (&amp;C)</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

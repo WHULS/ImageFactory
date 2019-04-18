@@ -36,7 +36,8 @@ SOURCES += \
     SelectCpDlg.cpp \
     SampleData.cpp \
     Matrix.cpp \
-    FeatureWin.cpp
+    FeatureWin.cpp \
+    CalibrationWin.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,7 +51,8 @@ HEADERS += \
     SelectCpDlg.h \
     SampleData.h \
     Matrix.h \
-    FeatureWin.h
+    FeatureWin.h \
+    CalibrationWin.h
 
 FORMS += \
     mainwindow.ui \
@@ -58,7 +60,8 @@ FORMS += \
     ControlPointDlg.ui \
     SelectCpDlg.ui \
     SampleData.ui \
-    FeatureWin.ui
+    FeatureWin.ui \
+    CalibrationWin.ui
 
 UI_DIR = $$PWD
 
@@ -76,4 +79,18 @@ RC_FILE += icons.rc
 
 # OpenCV
 INCLUDEPATH += $$PWD/cv/include
+LIBS += -L $$PWD/cv/lib/libopencv_calib3d401.dll.a
 LIBS += -L $$PWD/cv/lib/libopencv_*.a
+#LIBS += -L $$PWD/cv/lib/libopencv_dnn401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_features2d401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_flann401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_gapi401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_highgui401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_imgcodecs401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_imgproc401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_ml401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_objdetect401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_photo401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_stitching401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_video401.dll.a
+#LIBS += -L $$PWD/cv/lib/libopencv_videoio401.dll.a
