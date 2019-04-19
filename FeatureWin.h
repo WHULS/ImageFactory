@@ -39,6 +39,8 @@ public:
     int showMessage(QString);
     void showImage(Mat left, Mat right);
     void showImage(QImage l, QImage r);
+    double min(double,double,double,double);
+    double max(Mat);
 
 protected:
     void wheelEvent(QWheelEvent *);

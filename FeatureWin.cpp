@@ -145,27 +145,83 @@ void FeatureWin::wheelEvent(QWheelEvent *event)
 
 void FeatureWin::on_moravec_fetch_triggered()
 {
-    int leftHeight, leftWidth, rightHeight, rightWidth;
-    leftHeight  = this->leftImage. rows;
-    leftWidth   = this->leftImage. cols;
-    rightHeight = this->rightImage.rows;
-    rightWidth  = this->rightImage.cols;
+    Mat image = this->leftImage.clone();
+    int height, width;
+    height = image.rows;
+    width = image.cols;
 
-    qDebug() << "图像尺寸：" << leftHeight << leftWidth << rightHeight << rightWidth;
-    if (leftHeight != rightHeight || leftWidth != rightWidth)
-    {
-        showMessage("左右影像大小不一致");
-        return;
-    }
+    qDebug() << tr("图像尺寸：") << height << width;
 
-    int i, j;
-    int destAreaSize = 3;
-    int searchAreaSize = 49 + destAreaSize;
-    for (i=0; i<leftHeight; i++)
+    int i, j, k;
+    int factorSize = 5;
+    double threshold = 0.0;
+
+    // 计算各个像元的兴趣值
+    Mat interestValueMat = image.zeros(height, width, CV_64F);
+    qDebug() << interestValueMat.rows << interestValueMat.cols;
+
+    for (i=factorSize/2; i<height-factorSize/2; i++)
     {
-        for (j=0; j<leftWidth; j++)
+        for (j=factorSize/2; j<width-factorSize/2; j++)
         {
+            // 每个点的兴趣值
+            double v1, v2, v3, v4, minValue;
+            v1=v2=v3=v4=0.0;
+            for (k=-factorSize/2; k<factorSize/2; k++)
+            {
+                v1 += pow(image.at<uchar>(i, j+k) - image.at<uchar>(i, j+k+1), 2);
+                v2 += pow(image.at<uchar>(i+k, j+k) - image.at<uchar>(i+k+1, j+k+1), 2);
+                v3 += pow(image.at<uchar>(i+k, j) - image.at<uchar>(i+k+1, j), 2);
+                v4 += pow(image.at<uchar>(i-k, j+k) - image.at<uchar>(i-k-1, j+k+1), 2);
+            }
+            minValue = min(v1, v2, v3, v4);
+            interestValueMat.at<double>(i, j) = minValue;
 
+            threshold += minValue;
         }
     }
+
+    // 选取候选点
+    threshold /= (height-factorSize/2) * (width - factorSize/2); // 阈值
+
+    for (i=factorSize/2; i<height-factorSize/2; i++)
+    {
+        for (j=factorSize/2; j<width-factorSize/2; j++)
+        {
+            if (interestValueMat.at<double>(i,j) - max(interestValueMat(Range(i-factorSize, i+factorSize), Range(j-factorSize, j+factorSize))) < 1e-5
+                    && interestValueMat.at<double>(i,j) > threshold)
+            {
+                circle(image, Point(i,j), 3, Scalar(0,0,255), 3);
+            }
+        }
+    }
+    imshow("a", image);
+}
+
+double FeatureWin::min(double v1, double v2, double v3, double v4)
+{
+    double out = v1;
+    if (v2 < out) out = v2;
+    if (v3 < out) out = v3;
+    if (v4 < out) out = v4;
+    return out;
+}
+
+double FeatureWin::max(Mat mat)
+{
+    double max = mat.at<double>(0,0);
+    int i, j, height, width;
+    height = mat.rows;
+    width = mat.cols;
+    for (i=0; i<height; i++)
+    {
+        for (j=0; j<width; j++)
+        {
+            if (mat.at<double>(i,j)>max)
+            {
+                max = mat.at<double>(i,j);
+            }
+        }
+    }
+    return max;
 }
