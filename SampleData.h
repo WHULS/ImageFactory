@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 // 引入OpenCV
-#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
 
 // 引入 Qt
@@ -85,7 +85,7 @@ public:
     void showCurrentImage();
 
     // 显示提示信息
-    int showMessage(QString str);
+    int showMessage(QString, QString header=tr("提示"));
 
 public slots:
     void dataListClicked(QModelIndex index);

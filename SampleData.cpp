@@ -996,12 +996,6 @@ void SampleData::caliImageChanged(int row, int col)
         }
     }
 }
-int SampleData::showMessage(QString str)
-{
-    return QMessageBox::information(this,
-                                    tr("提示"),
-                                    str);
-}
 
 void SampleData::on_calculate_dlt_param_triggered()
 {
@@ -1108,6 +1102,47 @@ void SampleData::on_calculate_dlt_param_triggered()
         qDebug() << QString().sprintf("m_%d : %lf", i+1, sigma_0 * sqrt(Qxx[i][i]));
     }
     qDebug() << "-----";
+
+    /* 使用 OpenCV 检校*/
+    Mat sampleImage = currentImage.clone();
+    // 图像坐标
+    vector<Point2f> corners;
+    vector<vector<Point2f>> cornersVect;
+    // 世界坐标
+    vector<Point3f> worldPoints;
+    vector<vector<Point3f>> worldPointsVect;
+
+    for (size_t i=0; i<points.size(); i++)
+    {
+        corners.push_back(Point2f(points[i].x, points[i].y));
+        worldPoints.push_back(Point3f(points[i].X, points[i].Y, points[i].Z));
+    }
+
+    // 输出结果
+    Mat cameraMatirx, distCoeffs;
+    vector<Mat> rvecs,tvecs,rvecs2,tvecs2;
+
+    cornersVect.push_back(corners);
+    worldPointsVect.push_back(worldPoints);
+    // 相机检校
+    calibrateCamera(worldPointsVect,cornersVect,sampleImage.size(),cameraMatirx,distCoeffs,rvecs,tvecs);
+
+    // 输出检校结果
+    QString caliInfoStr = QString().sprintf("等效焦距(fx,fy)=(%.3lf,%.3lf)\n像主点(cx,cy)=(%.1lf,%.1lf)",
+                                            cameraMatirx.at<double>(0, 0),
+                                            cameraMatirx.at<double>(1, 1),
+                                            cameraMatirx.at<double>(0, 2),
+                                            cameraMatirx.at<double>(1, 2));
+    caliInfoStr += QString("\n畸变系数(k1,k2,p1,p2[,k3[,k4,k5,k6[,s1,s2,s3,s4[,tx,ty]]]]) :\n");
+    for (int i=0; i<distCoeffs.cols; i++)
+    {
+        caliInfoStr += QString().sprintf("%.8lf,", distCoeffs.at<double>(0, i));
+    }
+    caliInfoStr += QString().sprintf("\n外方位元素：\nφ=%.6lf\nω=%.6lf\nκ=%.6lf\nXs=%.3lf\nYs=%.3lf\nZs=%.3lf",
+            rvecs[0].at<double>(0,0), rvecs[0].at<double>(1,0), rvecs[0].at<double>(2,0),
+            tvecs[0].at<double>(0,0), tvecs[0].at<double>(1,0), tvecs[0].at<double>(2,0));
+    showMessage(caliInfoStr, "检校信息");
+
 }
 
 void SampleData::on_orientation_element_initial_value_triggered()
@@ -1232,4 +1267,11 @@ void SampleData::on_orientation_element_initial_value_triggered()
 
         qDebug() << "------";
     }
+}
+
+int SampleData::showMessage(QString str, QString header)
+{
+    return QMessageBox::information(this,
+                             header,
+                             str);
 }

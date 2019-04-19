@@ -33,16 +33,20 @@ void CalibrationWin::on_open_image_triggered()
 
 void CalibrationWin::on_calibration_triggered()
 {
+    // 内角点的行列值
     int cols = 9;
     int rows = 6;
     float distance = 30;	//间距30mm
 
     Size patternSize(rows, cols);
+    // 图像坐标
     vector<Point2f> corners;
     vector<vector<Point2f>> cornersVect;
+    // 世界坐标
     vector<Point3f> worldPoints;
     vector<vector<Point3f>> worldPointsVect;
 
+    // 构建世界坐标
     for (int i=0;i<cols;i++)
     {
         for (int j=0;j<rows;j++)
@@ -51,22 +55,27 @@ void CalibrationWin::on_calibration_triggered()
         }
     }
 
+    // 转化为灰度图像
     Mat sampleImage = image.clone();
     cvtColor(sampleImage, sampleImage, COLOR_BGR2GRAY);
 
+    // 角点检测
     bool find = findChessboardCorners(sampleImage, patternSize, corners);
     drawChessboardCorners(sampleImage, patternSize, corners, find);
 
     showImage(sampleImage, "Sample Image");
 
+    // 输出结果
     Mat cameraMatirx, distCoeffs;
     vector<Mat> rvecs,tvecs,rvecs2,tvecs2;
     if (find)
     {
         cornersVect.push_back(corners);
         worldPointsVect.push_back(worldPoints);
+        // 相机检校
         calibrateCamera(worldPointsVect,cornersVect,sampleImage.size(),cameraMatirx,distCoeffs,rvecs,tvecs);
 
+        // 输出检校结果
         print(cameraMatirx);
         print(distCoeffs);
         print(rvecs);
@@ -81,7 +90,7 @@ void CalibrationWin::on_calibration_triggered()
         {
             caliInfoStr += QString().sprintf("%.8lf,", distCoeffs.at<double>(0, i));
         }
-        caliInfoStr += QString().sprintf("外方位元素：\nφ=%.6lf\nω=%.6lf\nκ=%.6lf\nXs=%.3lf\nYs=%.3lf\nZs=%.3lf",
+        caliInfoStr += QString().sprintf("\n外方位元素：\nφ=%.6lf\nω=%.6lf\nκ=%.6lf\nXs=%.3lf\nYs=%.3lf\nZs=%.3lf",
                 rvecs[0].at<double>(0,0), rvecs[0].at<double>(1,0), rvecs[0].at<double>(2,0),
                 tvecs[0].at<double>(0,0), tvecs[0].at<double>(1,0), tvecs[0].at<double>(2,0));
         showMessage(caliInfoStr, "检校信息");
