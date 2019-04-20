@@ -6,32 +6,32 @@ Matrix::Matrix()
     col = 0;
 }
 
-Matrix::Matrix(size_t n)
+Matrix::Matrix(int n)
 {
     row = n;
     col = n;
     vector<double> tempData(size_t(n), 0);
-    for (size_t i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
         data.push_back(tempData);
     }
 }
 
-Matrix::Matrix(size_t mRow, size_t mCol)
+Matrix::Matrix(int mRow, int mCol)
 {
     row = mRow;
     col = mCol;
     vector<double> tempData(size_t(mCol), 0);
-    for (size_t i = 0; i < mRow; i++)
+    for (int i = 0; i < mRow; i++)
     {
         data.push_back(tempData);
     }
 }
 
-Matrix::Matrix(size_t mRow, size_t mCol, vector<double> mData)
+Matrix::Matrix(int mRow, int mCol, vector<double> mData)
 {
-    size_t i, j;
-    if (mData.size() != mRow*mCol)
+    int i, j;
+    if (mData.size() != size_t(mRow*mCol))
     {
         cout << "数据大小错误" << endl;
         exit(0);
@@ -42,7 +42,7 @@ Matrix::Matrix(size_t mRow, size_t mCol, vector<double> mData)
     {
         for (j = 0; j < mCol; j++)
         {
-            oneRow.push_back(mData[i*mCol + j]);
+            oneRow.push_back(mData[size_t(i*mCol + j)]);
         }
         data.push_back(oneRow);
         oneRow.clear();
@@ -51,21 +51,21 @@ Matrix::Matrix(size_t mRow, size_t mCol, vector<double> mData)
 
 Matrix::Matrix(vector<vector<double>> mData)
 {
-    row = mData.size();
-    col = mData[0].size();
+    row = int(mData.size());
+    col = int(mData[0].size());
     data = mData;
 }
 
 // 输出结果
 void Matrix::print()
 {
-    size_t i, j;
+    int i, j;
     for (i = 0; i < row; i++)
     {
         cout << i << "\t" << "|";
         for (j = 0; j < col; j++)
         {
-            cout << fixed << data[i][j] << "\t|";
+            cout << fixed << data[size_t(i)][size_t(j)] << "\t|";
         }
         cout << endl;
     }
@@ -76,13 +76,13 @@ void Matrix::print()
 // 转置
 Matrix Matrix::transposition()
 {
-    size_t i, j;
+    int i, j;
     Matrix outTransMat(col, row);
     for (i = 0; i < row; i++)
     {
         for (j = 0; j < col; j++)
         {
-            outTransMat[j][i] = data[i][j];
+            outTransMat[j][size_t(i)] = data[size_t(i)][size_t(j)];
         }
     }
 
@@ -98,13 +98,13 @@ Matrix Matrix::reverse()
         exit(-1);
     }
 
-    size_t i, j;
+    int i, j;
 
     // reverse: 利用变换矩阵
     vector<vector<double>> outData = Matrix(row, row).data; //单位阵
     for (i = 0; i < row; i++)
     {
-        outData[i][i] = 1;
+        outData[size_t(i)][size_t(i)] = 1;
     }
 
     vector<vector<double>> tData = data;                 //原矩阵
@@ -113,14 +113,14 @@ Matrix Matrix::reverse()
     {
         for (i = 0; i < row; i++)
         {
-            if (tData[i][0] != 0.0)
+            if (tData[size_t(i)][0] != 0.0)
             {
-                vector<double> tempRow1 = tData[i];
-                tData[i] = tData[0];
+                vector<double> tempRow1 = tData[size_t(i)];
+                tData[size_t(i)] = tData[0];
                 tData[0] = tempRow1;
 
-                vector<double> tempRow2 = outData[i];
-                outData[i] = outData[0];
+                vector<double> tempRow2 = outData[size_t(i)];
+                outData[size_t(i)] = outData[0];
                 outData[0] = tempRow2;
                 break;
             }
@@ -145,9 +145,9 @@ Matrix Matrix::reverse()
         {
             for (j = 0; j < i; j++)
             {
-                k = tData[i][j] / tData[j][j];
-                tData[i] = tData[i] + tData[j] * (-k);
-                outData[i] = outData[i] + outData[j] * (-k);
+                k = tData[size_t(i)][size_t(j)] / tData[size_t(j)][size_t(j)];
+                tData[size_t(i)] = tData[size_t(i)] + tData[size_t(j)] * (-k);
+                outData[size_t(i)] = outData[size_t(i)] + outData[size_t(j)] * (-k);
             }
         }
         // 对角元素归一化
@@ -182,7 +182,7 @@ double Matrix::det()
         exit(-1);
     }
     vector<vector<double>> a = data;
-    size_t i, j, N, m, n, b, c; // 计数用
+    int i, j, N, m, n, b, c; // 计数用
     int sign = 1; // 行列式符号
     double t, f = 1, sum;
     N = row;
@@ -233,7 +233,7 @@ bool Matrix::toVector(vector<double> *outputVec)
         qDebug() << "无法转换成向量: " << row << "," << col;
         return false;
     }
-    size_t i;
+    int i;
     if (row == 1)
     {
         for (i=0; i<col; i++)
@@ -254,14 +254,14 @@ bool Matrix::toVector(vector<double> *outputVec)
 }
 
 // 括号运算符重载(output)
-vector<double>& Matrix::operator[](size_t row)
+vector<double>& Matrix::operator[](int row)
 {
     return this->data[row];
 }
 
 void Matrix::normalize()
 {
-    size_t i, j;
+    int i, j;
     Matrix out(row, col);
     double sum = 0.0;
     for (j=0; j<col; j++)
@@ -275,4 +275,112 @@ void Matrix::normalize()
             data[i][j] /= sum;
         }
     }
+}
+
+Matrix Matrix::operator()(int r1, int r2, int c1, int c2)
+{
+    int newHeight, newWidth;
+    newHeight = abs(r1 - r2);
+    newWidth = abs(c1 - c2);
+    if (newHeight == 0 || newWidth == 0)
+    {
+        qDebug() << "非有效矩形";
+        exit(-1);
+    }
+    if (r1 > r2)
+    {
+        int temp;
+        temp = r1;
+        r1 = r2;
+        r2 = temp;
+    }
+    if (c1 > c2)
+    {
+        int temp;
+        temp = c1;
+        c1 = c2;
+        c2 = temp;
+    }
+    if (c2>=col || r2>=row)
+    {
+        qDebug() << "超界";
+        exit(-1);
+    }
+    Matrix newMatrix(newHeight, newWidth);
+    int i, j;
+    for (i=0; i<newHeight; i++)
+    {
+        for (j=0; j<newWidth; j++)
+        {
+            newMatrix[i][j] = data[r1+i][c1+j];
+        }
+    }
+    return newMatrix;
+}
+
+double Matrix::max()
+{
+    double out = data[0][0];
+    int i, j;
+    for (i=0; i<row; i++)
+    {
+        for (j=0; j<col; j++)
+        {
+            if (data[i][j]>out)
+                out = data[i][j];
+        }
+    }
+    return out;
+}
+double Matrix::min()
+{
+    double out = data[0][0];
+    int i, j;
+    for (i=0; i<row; i++)
+    {
+        for (j=0; j<col; j++)
+        {
+            if (data[i][j]<out)
+                out = data[i][j];
+        }
+    }
+    return out;
+}
+double Matrix::mean()
+{
+    int i, j;
+    double sum = 0.0;
+    for (i = 0; i<row; ++i)
+    {
+        for (j=0; j<col; j++)
+        {
+            sum += data[i][j];
+        }
+    }
+    return sum/(row*col);
+}
+
+Matrix Matrix::operator^(int n)
+{
+    if (n!=-1 && n!=1)
+    {
+        qDebug() << "目前只支持求逆";
+        exit(-1);
+    }
+    return n==1 ? transposition() : reverse();
+}
+
+double Matrix::tr()
+{
+    if (col != row)
+    {
+        qDebug() << "不是方阵，无法求迹";
+        exit(-1);
+    }
+    double out = data[0][0];
+    for (size_t i=0; i<col; i++)
+    {
+        out += data[i][i];
+    }
+    return out;
 }

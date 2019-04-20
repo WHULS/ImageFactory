@@ -37,7 +37,8 @@ SOURCES += \
     SampleData.cpp \
     Matrix.cpp \
     FeatureWin.cpp \
-    CalibrationWin.cpp
+    CalibrationWin.cpp \
+    PointFeatureDlg.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     SampleData.h \
     Matrix.h \
     FeatureWin.h \
-    CalibrationWin.h
+    CalibrationWin.h \
+    PointFeatureDlg.h
 
 FORMS += \
     mainwindow.ui \
@@ -61,7 +63,8 @@ FORMS += \
     SelectCpDlg.ui \
     SampleData.ui \
     FeatureWin.ui \
-    CalibrationWin.ui
+    CalibrationWin.ui \
+    PointFeatureDlg.ui
 
 UI_DIR = $$PWD
 

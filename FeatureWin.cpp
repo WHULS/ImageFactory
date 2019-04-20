@@ -8,7 +8,7 @@ FeatureWin::FeatureWin(QWidget *parent) :
     ui->setupUi(this);
 
     // 数据初始化
-    imageDir = "E:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry/";
+    imageDir = "E:/杉/文章/大三下/2. 数字摄影测量/实习/imgs_for_digital_photogrammetry/";
 }
 
 FeatureWin::~FeatureWin()
@@ -22,47 +22,70 @@ void FeatureWin::on_open_image_triggered()
 
     // 打开左影像文件
     lImagePath= QFileDialog::getOpenFileName(this,
-                                                tr("打开左影像"),
-                                                this->imageDir,
-                                                tr("Raw File (*.raw)"));
+                                             tr("打开左影像"),
+                                             this->imageDir,
+                                             tr("Raw File (*.raw);;Image File (*.bmp *.jpg *.jpeg *.png)"));
     if (lImagePath.isEmpty()) return;
-    QFile lFile(lImagePath);
-    if (!lFile.open(QFile::ReadOnly))
-    {
-        showMessage(tr("左影像打开失败"));
-        return;
-    }
-
+    this->imageDir = lImagePath.section("/", 0, -2);
     // 打开右影像文件
     rImagePath = QFileDialog::getOpenFileName(this,
-                                                  tr("打开右影像"),
-                                                  this->imageDir,
-                                                  tr("Raw File (*.raw)"));
+                                              tr("打开右影像"),
+                                              this->imageDir,
+                                              tr("Raw File (*.raw);;Image File (*.bmp *.jpg *.jpeg *.png)"));
     if (rImagePath.isEmpty()) return;
-    QFile rFile(rImagePath);
-    if (!rFile.open(QFile::ReadOnly))
+    this->imageDir = rImagePath.section("/", 0, -2);
+
+    qDebug() << "文件格式: " << rImagePath.section(".", -1, -1);
+
+    if (rImagePath.section(".", -1, -1) == "raw")
     {
-        showMessage(tr("右影像打开失败"));
-        return;
+        QFile lFile(lImagePath);
+        if (!lFile.open(QFile::ReadOnly))
+        {
+            showMessage(tr("左影像打开失败"));
+            return;
+        }
+        QFile rFile(rImagePath);
+        if (!rFile.open(QFile::ReadOnly))
+        {
+            showMessage(tr("右影像打开失败"));
+            return;
+        }
+        // 数据数组
+        QByteArray lArr, rArr;
+        lArr = lFile.readAll();
+        rArr = rFile.readAll();
+
+        // 将数据输入到QImage中(宽1240，高1210)
+        QImage lImage((uchar*)lArr.data(), 1240, 1210, QImage::Format_Grayscale8);
+        QImage rImage((uchar*)rArr.data(), 1240, 1210, QImage::Format_Grayscale8);
+
+        lImage.bits();
+
+        // copy是硬拷贝，将数据和格式一起拷贝
+        this->qLeftImage = lImage.copy();
+        this->qRightImage = rImage.copy();
+
+        this->leftImage = QImage2cvMat(qLeftImage, true);
+        this->rightImage = QImage2cvMat(qRightImage, true);
     }
-
-    // 数据数组
-    QByteArray lArr, rArr;
-    lArr = lFile.readAll();
-    rArr = rFile.readAll();
-
-    // 将数据输入到QImage中(宽1240，高1210)
-    QImage lImage((uchar*)lArr.data(), 1240, 1210, QImage::Format_Grayscale8);
-    QImage rImage((uchar*)rArr.data(), 1240, 1210, QImage::Format_Grayscale8);
-
-    lImage.bits();
-
-    // copy是硬拷贝，将数据和格式一起拷贝
-    this->qLeftImage = lImage.copy();
-    this->qRightImage = rImage.copy();
-
-    this->leftImage = QImage2cvMat(qLeftImage, true);
-    this->rightImage = QImage2cvMat(qRightImage, true);
+    else
+    {
+        this->leftImage = imread(lImagePath.toLocal8Bit().data(), 1);
+        this->rightImage = imread(rImagePath.toLocal8Bit().data(), 1);
+        if (this->leftImage.empty())
+        {
+            showMessage(tr("左影像打开失败"));
+            return;
+        }
+        if (this->rightImage.empty())
+        {
+            showMessage(tr("右影像打开失败"));
+            return;
+        }
+        this->qLeftImage = cvMat2QImage(this->leftImage);
+        this->qRightImage = cvMat2QImage(this->rightImage);
+    }
 
     showImage(leftImage, rightImage);
 }
@@ -93,6 +116,18 @@ void FeatureWin::showImage(QImage l, QImage r)
 
     ui->Image_Left->setPixmap(lPixmap.scaled(width, height, Qt::KeepAspectRatio));
     ui->Image_Right->setPixmap(rPixmap.scaled(width, height, Qt::KeepAspectRatio));
+}
+void FeatureWin::showImage(Mat image)
+{
+    QImage qImage;
+    qImage = cvMat2QImage(image);
+    QPixmap imagePixmap;
+    imagePixmap = QPixmap::fromImage(qImage);
+
+    int width = ui->Image_Left->geometry().width();
+    int height = ui->Image_Left->geometry().height();
+
+    ui->Image_Left->setPixmap(imagePixmap.scaled(width, height, Qt::KeepAspectRatio));
 }
 
 void FeatureWin::wheelEvent(QWheelEvent *event)
@@ -145,20 +180,39 @@ void FeatureWin::wheelEvent(QWheelEvent *event)
 
 void FeatureWin::on_moravec_fetch_triggered()
 {
-    Mat image = this->leftImage.clone();
+    PointFeatureDlg *featureDlg = new PointFeatureDlg();
+    connect(featureDlg, SIGNAL(ParamsChanged(int, int)), this, SLOT(moravecChanged(int, int)));
+    featureDlg->show();
+    moravec(this->leftImage.clone());
+}
+
+void FeatureWin::moravecChanged(int factorSize, int searchAreaSize)
+{
+    moravec(this->leftImage.clone(), factorSize, searchAreaSize);
+}
+
+void FeatureWin::moravec(Mat image, int factorSize, int searchAreaSize)
+{
+    qDebug() << image.channels();
+    if (image.channels() == 3)
+    {
+        cvtColor(image, image, COLOR_BGR2GRAY);
+    }
+
     int height, width;
     height = image.rows;
     width = image.cols;
 
+    if (height <= 0 || width <= 0)
+        return;
+
     qDebug() << tr("图像尺寸：") << height << width;
 
     int i, j, k;
-    int factorSize = 5;
     double threshold = 0.0;
 
     // 计算各个像元的兴趣值
-    Mat interestValueMat = image.zeros(height, width, CV_64F);
-    qDebug() << interestValueMat.rows << interestValueMat.cols;
+    Matrix interestValue(height, width);
 
     for (i=factorSize/2; i<height-factorSize/2; i++)
     {
@@ -169,33 +223,44 @@ void FeatureWin::on_moravec_fetch_triggered()
             v1=v2=v3=v4=0.0;
             for (k=-factorSize/2; k<factorSize/2; k++)
             {
-                v1 += pow(image.at<uchar>(i, j+k) - image.at<uchar>(i, j+k+1), 2);
-                v2 += pow(image.at<uchar>(i+k, j+k) - image.at<uchar>(i+k+1, j+k+1), 2);
-                v3 += pow(image.at<uchar>(i+k, j) - image.at<uchar>(i+k+1, j), 2);
-                v4 += pow(image.at<uchar>(i-k, j+k) - image.at<uchar>(i-k-1, j+k+1), 2);
+                v1 += pow(image.at<uchar>(i, j+k) - image.at<uchar>(i, j+k+1)
+                          , 2);
+                v2 += pow(image.at<uchar>(i+k, j+k) - image.at<uchar>(i+k+1, j+k+1)
+                          , 2);
+                v3 += pow(image.at<uchar>(i+k, j) - image.at<uchar>(i+k+1, j)
+                          , 2);
+                v4 += pow(image.at<uchar>(i-k, j+k) - image.at<uchar>(i-k-1, j+k+1)
+                          , 2);
             }
             minValue = min(v1, v2, v3, v4);
-            interestValueMat.at<double>(i, j) = minValue;
+            interestValue[i][j] = minValue;
 
             threshold += minValue;
         }
     }
+//    interestValue.print();
 
     // 选取候选点
-    threshold /= (height-factorSize/2) * (width - factorSize/2); // 阈值
+    threshold /= height*width; // 阈值
+    qDebug() << "阈值：" << threshold;
 
-    for (i=factorSize/2; i<height-factorSize/2; i++)
+    Mat showImage = image.clone();
+    for (i=searchAreaSize/2; i<height-searchAreaSize/2; i++)
     {
-        for (j=factorSize/2; j<width-factorSize/2; j++)
+        for (j=searchAreaSize/2; j<width-searchAreaSize/2; j++)
         {
-            if (interestValueMat.at<double>(i,j) - max(interestValueMat(Range(i-factorSize, i+factorSize), Range(j-factorSize, j+factorSize))) < 1e-5
-                    && interestValueMat.at<double>(i,j) > threshold)
-            {
-                circle(image, Point(i,j), 3, Scalar(0,0,255), 3);
-            }
+            // 剔除小于阈值的点
+            if (interestValue[i][j]<threshold) continue;
+
+            // 非极大值抑制
+            double maxValue = interestValue(i-searchAreaSize/2, i+searchAreaSize/2,j-searchAreaSize/2, j+searchAreaSize/2)
+                    .max();
+            if (interestValue[i][j] == maxValue)
+                showImage.at<uchar>(i, j) = 255;
         }
     }
-    imshow("a", image);
+//    this->showImage(showImage);
+    imshow("Moravec", showImage);
 }
 
 double FeatureWin::min(double v1, double v2, double v3, double v4)
@@ -207,21 +272,73 @@ double FeatureWin::min(double v1, double v2, double v3, double v4)
     return out;
 }
 
-double FeatureWin::max(Mat mat)
+void FeatureWin::on_forstner_fetch_triggered()
 {
-    double max = mat.at<double>(0,0);
-    int i, j, height, width;
-    height = mat.rows;
-    width = mat.cols;
-    for (i=0; i<height; i++)
+    Mat image = this->leftImage.clone();
+    qDebug() << image.channels();
+    if (image.channels() == 3)
     {
-        for (j=0; j<width; j++)
+        cvtColor(image, image, COLOR_BGR2GRAY);
+    }
+
+    int i, j, k, height, width;
+    height = image.rows;
+    width = image.cols;
+    int factorSize = 5;
+    int searchAreaSize = 5;
+
+    Matrix interestValue(height, width);
+    Matrix weightValue(height, width);
+    Mat shownImage = image.clone();
+    for (i=factorSize/2; i<height-factorSize/2; i++)
+    {
+        for (j=factorSize/2; j<width-factorSize/2; j++)
         {
-            if (mat.at<double>(i,j)>max)
+            Matrix N(2,2);
+            double gu, gv;
+            for (k=-factorSize/2; k<factorSize/2; k++)
             {
-                max = mat.at<double>(i,j);
+                // 求每个像素的robert梯度
+                gu = image.at<uchar>(i+k+1, j+k+1) - image.at<uchar>(i+k, j+k);
+                gv = image.at<uchar>(i-k, j+k+1) - image.at<uchar>(i-k-1, j+k);
+                // 灰度协方差矩阵
+                N[0][0] += gu * gu;
+                N[0][1] += gu * gv;
+                N[1][0] += gv * gu;
+                N[1][1] += gv * gv;
             }
+            // 计算兴趣值和权
+            double q, w;
+            q = 4*N.det() / pow(N.tr(), 2);
+            w = N.det() / N.tr();
+            interestValue[i][j] = q;
+            weightValue[i][j] = w;
         }
     }
-    return max;
+
+    // 经验阈值
+    double Tq, Tw, f;
+    Tq = 0.5; // 0.5~0.75
+    f = 0.75; // 0.5~1.5
+    Tw = f * weightValue.mean();
+    for (i=searchAreaSize/2; i<height-searchAreaSize/2; i++)
+    {
+        for (j=searchAreaSize/2; j<width-searchAreaSize/2; j++)
+        {
+            // 剔除小于阈值的点
+            if (interestValue[i][j] < Tq || weightValue[i][j]<Tw) continue;
+
+            // 非极大值抑制
+            double maxValue = weightValue(i-searchAreaSize/2, i+searchAreaSize/2, j-searchAreaSize/2, j+searchAreaSize/2)
+                    .max();
+            if (maxValue-weightValue[i][j] < 1e-5)
+                shownImage.at<uchar>(i,j)=255;
+        }
+    }
+    imshow("Forstner", shownImage);
+}
+
+void FeatureWin::on_harris_fetch_triggered()
+{
+
 }

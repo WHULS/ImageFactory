@@ -1060,7 +1060,7 @@ void SampleData::on_calculate_dlt_param_triggered()
 //    paramMatrix_A.print();
 //    observedValue_X.print();
 
-    Matrix result_H = (paramMatrix_A.transposition()*paramMatrix_A).reverse()*paramMatrix_A.transposition()*observedValue_X;
+    Matrix result_H = (((paramMatrix_A^1)*paramMatrix_A)^-1)*(paramMatrix_A^1)*observedValue_X;
 //    result_H.print();
 
     // 保存dlt参数
@@ -1072,7 +1072,7 @@ void SampleData::on_calculate_dlt_param_triggered()
     // 检验结果
     Matrix calculatedVelue_X = paramMatrix_A*result_H;
     Matrix V = calculatedVelue_X - observedValue_X;
-    double sigma_0 = sqrt((V.transposition()*V/(2*cpNum - 8))[0][0]);
+    double sigma_0 = sqrt(((V^1)*V/(2*cpNum - 8))[0][0]);
     qDebug() << "单位权中误差: " << sigma_0 << "mm";
     showMessage(QString().sprintf("单位权中误差：%lf mm", sigma_0));
 
@@ -1094,7 +1094,7 @@ void SampleData::on_calculate_dlt_param_triggered()
     imshow("Control Points", showImage);
 
     // 输出单位权中误差
-    Matrix Qxx = (paramMatrix_A.transposition()*paramMatrix_A).reverse();
+    Matrix Qxx = ((paramMatrix_A^1)*paramMatrix_A)^-1;
 //    Qxx.print();
 
     for (int i=0; i<8; i++)
@@ -1240,7 +1240,7 @@ void SampleData::on_orientation_element_initial_value_triggered()
         L[1][0] = lambda*(y0-h6)/f;
         L[2][0] = lambda;
 
-        Matrix X = (R.transposition()*R).reverse()*R.transposition()*L;
+        Matrix X = (((R^1)*R)^-1)*(R^1)*L;
 
         qDebug() << "phi: " << phi;
         qDebug() << "omega: " << omega;

@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+//STL
 #include <iostream>
 #include <vector>
 // 调试输出用
@@ -13,9 +14,9 @@ class Matrix
 // Method
 public:
     Matrix();
-    Matrix(size_t n);
-    Matrix(size_t mRow, size_t mCol);
-    Matrix(size_t mRow, size_t mCol, vector<double> mData);
+    Matrix(int n);
+    Matrix(int mRow, int mCol);
+    Matrix(int mRow, int mCol, vector<double> mData);
     Matrix(vector<vector<double>> mData);
 
     // 输出结果
@@ -30,16 +31,26 @@ public:
     bool toVector(vector<double>*);
     // 归一化
     void normalize();
+    // 最大值
+    double max();
+    // 最小值
+    double min();
+    // 平均值
+    double mean();
+    // 迹
+    double tr();
 
 // Attribute
 public:
-    size_t row;
-    size_t col;
+    int row;
+    int col;
     vector<vector<double>> data;
 
 public:
     // 括号运算符重载(返回引用才能进行赋值操作)
-    vector<double>& operator[](size_t row);
+    vector<double>& operator[](int row);
+    Matrix operator()(int r1, int r2, int c1, int c2);
+    Matrix operator^(int n);
 };
 
 // Operator
@@ -72,11 +83,11 @@ static vector<double> operator+(vector<double> v1, vector<double> v2)
 /* 3. operator: 矩阵相乘 */
 static Matrix operator*(Matrix m1, Matrix m2)
 {
-    size_t i, j, k;
-    size_t h1 = m1.row;
-    size_t h2 = m2.row;
-    size_t w1 = m1.col;
-    size_t w2 = m2.col;
+    int i, j, k;
+    int h1 = m1.row;
+    int h2 = m2.row;
+    int w1 = m1.col;
+    int w2 = m2.col;
 
     if (w1 != h2)
     {
@@ -94,9 +105,9 @@ static Matrix operator*(Matrix m1, Matrix m2)
             tResult = 0.0;
             for (k = 0; k < w1; k++)
             {
-                tResult += m1[i][k] * m2[k][j];
+                tResult += m1[i][size_t(k)] * m2[k][size_t(j)];
             }
-            outMat[i][j] = tResult;
+            outMat[i][size_t(j)] = tResult;
         }
     }
 
@@ -106,7 +117,7 @@ static Matrix operator*(Matrix m1, Matrix m2)
 /* 4. operator: 矩阵相加*/
 static Matrix operator+(Matrix m1, Matrix m2)
 {
-    size_t r, r2, c, c2;
+    int r, r2, c, c2;
     r = m1.row; c = m1.col;
     r2 = m2.row; c2 = m2.col;
     if (r != r2 || c != c2)
@@ -115,7 +126,7 @@ static Matrix operator+(Matrix m1, Matrix m2)
         exit(-1);
     }
     Matrix outMat(r, c);
-    size_t i, j;
+    int i, j;
     for (i=0; i<r; i++)
     {
         for (j=0; j<c; j++)
@@ -128,7 +139,7 @@ static Matrix operator+(Matrix m1, Matrix m2)
 /* 5. operator: 矩阵相减*/
 static Matrix operator-(Matrix m1, Matrix m2)
 {
-    size_t r, r2, c, c2;
+    int r, r2, c, c2;
     r = m1.row; c = m1.col;
     r2 = m2.row; c2 = m2.col;
     if (r != r2 || c != c2)
@@ -137,7 +148,7 @@ static Matrix operator-(Matrix m1, Matrix m2)
         exit(-1);
     }
     Matrix outMat(r, c);
-    size_t i, j;
+    int i, j;
     for (i=0; i<r; i++)
     {
         for (j=0; j<c; j++)
@@ -155,10 +166,10 @@ static Matrix operator/(Matrix m, double n)
         qDebug() << "除数为0";
         exit(-1);
     }
-    size_t r, c;
+    int r, c;
     r = m.row; c = m.col;
     Matrix outMat = m;
-    size_t i, j;
+    int i, j;
     for (i=0; i<r; i++)
     {
         for (j=0; j<c; j++)

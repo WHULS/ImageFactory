@@ -23,6 +23,8 @@ using namespace cv;
 using namespace std;
 
 #include "convert.h"
+#include "Matrix.h"
+#include "PointFeatureDlg.h"
 
 namespace Ui {
 class FeatureWin;
@@ -37,10 +39,14 @@ public:
     ~FeatureWin();
 
     int showMessage(QString);
+    void showImage(Mat image);
     void showImage(Mat left, Mat right);
     void showImage(QImage l, QImage r);
     double min(double,double,double,double);
-    double max(Mat);
+    void moravec(Mat image, int factorSize=5, int searchAreaSize=5);
+
+public slots:
+    void moravecChanged(int factorSize, int searchAreaSize);
 
 protected:
     void wheelEvent(QWheelEvent *);
@@ -49,6 +55,10 @@ private slots:
     void on_open_image_triggered();
 
     void on_moravec_fetch_triggered();
+
+    void on_forstner_fetch_triggered();
+
+    void on_harris_fetch_triggered();
 
 private:
     Ui::FeatureWin *ui;
