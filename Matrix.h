@@ -35,6 +35,8 @@ public:
     double max();
     // 最小值
     double min();
+    // 求和
+    double sum();
     // 平均值
     double mean();
     // 迹

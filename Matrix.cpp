@@ -220,7 +220,7 @@ double Matrix::det()
     for (i = 0; i < N; i++)
         f *= a[i][i];
     // 确定符号
-    sum = sign*f;
+    sum = double(sign)*f;
     return sum;
 }
 
@@ -346,6 +346,19 @@ double Matrix::min()
     }
     return out;
 }
+double Matrix::sum()
+{
+    int i, j;
+    double sum = 0.0;
+    for (i = 0; i<row; ++i)
+    {
+        for (j=0; j<col; j++)
+        {
+            sum += data[i][j];
+        }
+    }
+    return sum;
+}
 double Matrix::mean()
 {
     int i, j;
@@ -377,7 +390,7 @@ double Matrix::tr()
         qDebug() << "不是方阵，无法求迹";
         exit(-1);
     }
-    double out = data[0][0];
+    double out = 0.0;
     for (size_t i=0; i<col; i++)
     {
         out += data[i][i];

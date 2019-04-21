@@ -30,15 +30,17 @@ SOURCES += \
     mygraphicsview.cpp \
     convert.cpp \
     myslider.cpp \
-    houghcircledlg.cpp \
     CaliImage.cpp \
-    ControlPointDlg.cpp \
-    SelectCpDlg.cpp \
     SampleData.cpp \
     Matrix.cpp \
     FeatureWin.cpp \
     CalibrationWin.cpp \
-    PointFeatureDlg.cpp
+    \
+    Dialogs/houghcircledlg.cpp \
+    Dialogs/MoravecDlg.cpp\
+    Dialogs/ControlPointDlg.cpp \
+    Dialogs/SelectCpDlg.cpp \
+    Dialogs/ForstnerDlg.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,25 +48,29 @@ HEADERS += \
     convert.h \
     convert.h \
     myslider.h \
-    houghcircledlg.h \
     CaliImage.h \
-    ControlPointDlg.h \
-    SelectCpDlg.h \
     SampleData.h \
     Matrix.h \
     FeatureWin.h \
     CalibrationWin.h \
-    PointFeatureDlg.h
+    \
+    Dialogs/houghcircledlg.h \
+    Dialogs/MoravecDlg.h\
+    Dialogs/ControlPointDlg.h \
+    Dialogs/SelectCpDlg.h \
+    Dialogs/ForstnerDlg.h
 
 FORMS += \
     mainwindow.ui \
-    houghcircledlg.ui \
-    ControlPointDlg.ui \
-    SelectCpDlg.ui \
     SampleData.ui \
     FeatureWin.ui \
     CalibrationWin.ui \
-    PointFeatureDlg.ui
+    \
+    Dialogs/houghcircledlg.ui \
+    Dialogs/MoravecDlg.ui\
+    Dialogs/ControlPointDlg.ui \
+    Dialogs/SelectCpDlg.ui \
+    Dialogs/ForstnerDlg.ui
 
 UI_DIR = $$PWD
 

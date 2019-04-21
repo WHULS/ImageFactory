@@ -27,8 +27,8 @@ using namespace cv;
 using namespace std;
 
 #include "CaliImage.h"
-#include "ControlPointDlg.h"
-#include "SelectCpDlg.h"
+#include "Dialogs/ControlPointDlg.h"
+#include "Dialogs/SelectCpDlg.h"
 #include "Matrix.h" // 矩阵及运算
 
 namespace Ui {

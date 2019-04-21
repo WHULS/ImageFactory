@@ -13,7 +13,7 @@
 
 /* UI */
 #include <QGridLayout>
-#include <houghcircledlg.h>
+#include "Dialogs/houghcircledlg.h"
 
 #include "convert.h"
 
