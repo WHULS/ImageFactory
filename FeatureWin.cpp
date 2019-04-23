@@ -527,9 +527,7 @@ void FeatureWin::on_correlation_index_triggered()
 
     Mat_<uchar>::const_iterator lit, rit, litd, ritd;
     lit  = leftCorner. begin<uchar>();
-    rit  = rightCorner.begin<uchar>();
     litd = leftCorner. end<uchar>();
-    ritd = rightCorner.end<uchar>();
 
     int nsize = 7; // 邻域大小
 
@@ -539,6 +537,7 @@ void FeatureWin::on_correlation_index_triggered()
     height_right = rightCorner.rows;
     width_right  = rightCorner.cols;
 
+    int count=0;
     for (i=0; lit!=litd; lit++, i++)
     {
         if (!*lit) continue;
@@ -565,6 +564,9 @@ void FeatureWin::on_correlation_index_triggered()
         // 相关系数
         double correlationValue = -9999.9;
 
+        rit  = rightCorner.begin<uchar>();
+        ritd = rightCorner.end<uchar>();
+
         for (j=0; rit!=ritd; rit++, j++)
         {
             if (!*rit) continue;
@@ -584,7 +586,10 @@ void FeatureWin::on_correlation_index_triggered()
             double coVal = correlation(leftWin, rightWin);
             correlationValue = coVal > correlationValue ? coVal : correlationValue;
         }
+        if (correlationValue>0)
+            count++;
     }
+    qDebug() << count;
 }
 
 double FeatureWin::correlation(Mat win1, Mat win2)
