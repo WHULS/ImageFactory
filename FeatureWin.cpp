@@ -8,7 +8,7 @@ FeatureWin::FeatureWin(QWidget *parent) :
     ui->setupUi(this);
 
     // 数据初始化
-    imageDir = "F:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry/";
+    imageDir = "E:/杉/文章/大三下/2. 数字摄影测量/实习/imgs_for_digital_photogrammetry/";
 }
 
 FeatureWin::~FeatureWin()
@@ -372,10 +372,25 @@ void FeatureWin::on_harris_fetch_triggered()
     harris(this->leftImage.clone(), leftCorner, 9, 1.5, 0.01);
     harris(this->rightImage.clone(), rightCorner, 9, 1.5, 0.01);
 
-    showImage(leftCorner, rightCorner);
+    showImage(leftCorner+leftImage, rightCorner+rightImage);
 
     this->leftCorner = leftCorner;
     this->rightCorner = rightCorner;
+
+    Mat merge(MAX(leftImage.rows, rightImage.rows), leftImage.cols + rightImage.cols,
+              leftImage.type());
+    Mat mergeLeft, mergeRight;
+    mergeLeft = merge(Rect(0, 0, leftImage.cols, leftImage.rows));
+    mergeRight = merge(Rect(leftImage.cols, 0, rightImage.cols, rightImage.rows));
+    leftImage.copyTo(mergeLeft);
+    rightImage.copyTo(mergeRight);
+    namedWindow("merge", WINDOW_NORMAL);
+    imshow("merge", merge);
+
+    initTable();
+    QStringList strList;
+    strList << "left X" << "left Y" << "right X" << "right Y";
+    createTable(strList);
 }
 
 void FeatureWin::harris(Mat image, Mat &out, int blurRadius, double sigma, double qualityLevel)
@@ -494,25 +509,6 @@ Matrix FeatureWin::getGaussianFunction(int blurRadius, double sigma)
     return gaussianFunction;
 }
 
-void FeatureWin::drawCorner(Mat shownImage, Mat cornerMap, QString winName)
-{
-    // 绘制结果
-    int i, width;
-    width = shownImage.cols;
-    shownImage.convertTo(shownImage, CV_8UC1);
-    Mat_<uchar>::const_iterator it = cornerMap.begin<uchar>();
-    Mat_<uchar>::const_iterator itd = cornerMap.end<uchar>();
-    for (i=0; it!=itd; it++, i++)
-    {
-        if (*it)
-        {
-            shownImage.at<uchar>(i/width, i%width) = 255;
-        }
-    }
-
-    imshow(winName.toLocal8Bit().data(), shownImage);
-}
-
 void FeatureWin::on_correlation_index_triggered()
 {
     if (leftCorner.empty() || rightCorner.empty())
@@ -538,12 +534,17 @@ void FeatureWin::on_correlation_index_triggered()
     width_right  = rightCorner.cols;
 
     int count=0;
+    vector<KeyPoint> keyPoint1, keyPoint2;
     for (i=0; lit!=litd; lit++, i++)
     {
         if (!*lit) continue;
 
         row_left = i/width_left;
         col_left = i%width_left;
+
+        KeyPoint kp1, kp2;
+        kp1 = KeyPoint(col_left, row_left, 1);
+        keyPoint1.push_back(kp1);
 
         // 以角点为中心，提取左边窗口
 
@@ -584,12 +585,14 @@ void FeatureWin::on_correlation_index_triggered()
                                Range(col_right-nsize, col_right+nsize));
 
             double coVal = correlation(leftWin, rightWin);
-            correlationValue = coVal > correlationValue ? coVal : correlationValue;
+            if (coVal > correlationValue)
+            {
+                correlationValue = coVal;
+                kp2 = KeyPoint(col_right, row_right, 1);
+            }
         }
-        if (correlationValue>0)
-            count++;
+        keyPoint2.push_back(kp2);
     }
-    qDebug() << count;
 }
 
 double FeatureWin::correlation(Mat win1, Mat win2)
@@ -624,4 +627,27 @@ double FeatureWin::correlation(Mat win1, Mat win2)
     correlationValue = (sum12 - sum1*sum2/double(h1*w1))/
             sqrt((sum_1-sum1*sum1/double(h1*w1))*((sum_2-sum2*sum2/double(h1*w1))));
     return correlationValue;
+}
+
+void FeatureWin::initTable()
+{
+    // 获取数据视图
+    QTableView *pointInfoView;
+    pointInfoView = ui->Information_Table;
+    // 设置为不可修改
+    pointInfoView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // 数据模型
+    this->pointInfoModel = new QStandardItemModel();
+    pointInfoView->setModel(this->pointInfoModel);
+}
+
+void FeatureWin::createTable(QStringList strList)
+{
+    int i;
+    for (i=0; i<strList.size(); i++)
+    {
+        QString str = static_cast<QString>(strList.at(i));
+        QStandardItem *item = new QStandardItem(str);
+        this->pointInfoModel->appendRow(item);
+    }
 }

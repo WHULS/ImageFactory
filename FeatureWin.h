@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QWheelEvent>
 #include <QTime>
+#include <QStandardItemModel>
 
 // OpenCV
 #include <opencv2/opencv.hpp>
@@ -53,7 +54,8 @@ public:
     void harris(Mat image, Mat &out, int blurRadius=9, double sigma=1.5, double qualityLevel=0.01);
     double correlation(Mat win1, Mat win2);
 
-    void drawCorner(Mat shownImage, Mat cornerMap, QString winName="Corner");
+    void initTable();
+    void createTable(QStringList strList);
 
     Matrix getGaussianFunction(int blurRadius, double sigma);
 public slots:
@@ -86,6 +88,9 @@ private:
 
     QString imageDir;
     int zoomScale = 100;
+
+    // 数据表
+    QStandardItemModel *pointInfoModel;
 };
 
 #endif // FEATUREWIN_H
