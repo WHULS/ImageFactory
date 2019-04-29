@@ -35,6 +35,7 @@ public:
     QAction *correlation_index;
     QAction *open_image;
     QAction *clear_image;
+    QAction *cv_sift;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
@@ -92,6 +93,11 @@ public:
         QIcon icon6;
         icon6.addFile(QString::fromUtf8(":/images/images/delete.png"), QSize(), QIcon::Normal, QIcon::Off);
         clear_image->setIcon(icon6);
+        cv_sift = new QAction(FeatureWin);
+        cv_sift->setObjectName(QString::fromUtf8("cv_sift"));
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8(":/images/images/Sobel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cv_sift->setIcon(icon7);
         centralwidget = new QWidget(FeatureWin);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -177,6 +183,7 @@ public:
         correlation_index->setText(QApplication::translate("FeatureWin", "\347\233\270\345\205\263\347\263\273\346\225\260 (&R)", nullptr));
         open_image->setText(QApplication::translate("FeatureWin", "\346\211\223\345\274\200 (&O)", nullptr));
         clear_image->setText(QApplication::translate("FeatureWin", "\346\270\205\347\251\272 (&D)", nullptr));
+        cv_sift->setText(QApplication::translate("FeatureWin", "CV-SIFT (&C)", nullptr));
         Image_Left->setText(QApplication::translate("FeatureWin", "L", nullptr));
         Image_Right->setText(QApplication::translate("FeatureWin", "R", nullptr));
         menu->setTitle(QApplication::translate("FeatureWin", "\347\202\271\347\211\271\345\276\201\346\217\220\345\217\226", nullptr));

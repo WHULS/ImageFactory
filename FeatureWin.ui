@@ -177,6 +177,15 @@
     <string>清空 (&amp;D)</string>
    </property>
   </action>
+  <action name="cv_sift">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/Sobel.png</normaloff>:/images/images/Sobel.png</iconset>
+   </property>
+   <property name="text">
+    <string>CV-SIFT (&amp;C)</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="icons.qrc"/>
