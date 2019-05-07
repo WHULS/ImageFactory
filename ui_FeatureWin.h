@@ -185,7 +185,6 @@ public:
         menu_2->addAction(least_square_plus);
         menu_3->addAction(open_image);
         menu_3->addAction(wallis_filter);
-        menu_3->addAction(clear_image);
 
         retranslateUi(FeatureWin);
 

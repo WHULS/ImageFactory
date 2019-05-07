@@ -110,7 +110,6 @@
     </property>
     <addaction name="open_image"/>
     <addaction name="wallis_filter"/>
-    <addaction name="clear_image"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
