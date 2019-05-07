@@ -1,14 +1,28 @@
 #include "FeatureWin.h"
 #include "ui_FeatureWin.h"
 
+// 比较函数，用于匹配点排序
+// 升序排序
+static bool asc_comp(MatchPoint m1, MatchPoint m2)
+{
+    return m1.cVal < m2.cVal;
+}
+// 降序排序
+static bool dec_comp(MatchPoint m1, MatchPoint m2)
+{
+    return m1.cVal > m2.cVal;
+}
+
 FeatureWin::FeatureWin(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::FeatureWin)
 {
     ui->setupUi(this);
 
-    // 数据初始化
-    imageDir = "F:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry/";
+    // 数据初始化 /2. 数字摄影测量/imgs_for_digital_photogrammetry
+    imageDir = "F:/杉/文章/大三下/2. 数字摄影测量/imgs_for_digital_photogrammetry";
+
+    ui->statusBar->showMessage(imageDir);
 }
 
 FeatureWin::~FeatureWin()
@@ -36,6 +50,7 @@ void FeatureWin::on_open_image_triggered()
     this->imageDir = rImagePath.section("/", 0, -2);
 
     qDebug() << "文件格式: " << rImagePath.section(".", -1, -1);
+    ui->statusBar->showMessage(tr("文件格式：") + rImagePath.section(".", -1, -1));
 
     if (rImagePath.section(".", -1, -1) == "raw")
     {
@@ -134,6 +149,7 @@ void FeatureWin::merge(Mat left, Mat right, Mat &merged)
     if (left.type() != right.type())
     {
         qDebug() << "合并图像类型不一致";
+        ui->statusBar->showMessage("合并图像类型不一致");
         exit(-1);
     }
     int leftHeight, leftWidth, rightHeight, rightWidth;
@@ -189,8 +205,8 @@ void FeatureWin::wheelEvent(QWheelEvent *event)
 
         zoomScale += 2*step;
 
-        int height = int(double(ui->Image_Left->geometry().height() * zoomScale)/100.0);
-        int width = int(double(ui->Image_Left->geometry().width() * zoomScale)/100.0);
+        int height = cvRound(double(ui->Image_Left->geometry().height() * zoomScale)/100.0);
+        int width = cvRound(double(ui->Image_Left->geometry().width() * zoomScale)/100.0);
 
         // 构建缩放图像
         QPixmap lPixmap, rPixmap;
@@ -406,6 +422,7 @@ void FeatureWin::forstner(Mat image, Mat &out, int factorSize, int searchAreaSiz
     if (height <= 0 || width <= 0)
         return;
     qDebug() << tr("图像尺寸：") << height << width;
+    ui->statusBar->showMessage(QString().sprintf("图像尺寸：%d, %d", height, width));
 
     qDebug() << image.channels();
     if (image.channels() == 3)
@@ -510,6 +527,7 @@ void FeatureWin::harris(Mat image, Mat &out, int blurRadius, double sigma, doubl
     if (height <= 0 || width <= 0)
         return;
     qDebug() << tr("图像尺寸：") << height << width;
+    ui->statusBar->showMessage(QString().sprintf("图像尺寸：%d, %d", height, width));
 
     qDebug() << image.channels();
     if (image.channels() == 3)
@@ -584,20 +602,29 @@ void FeatureWin::on_correlation_index_triggered()
 
     // 初始化表格
     initTable();
-    QStringList strList;
-    strList << "No" << "left X" << "left Y" << "right X" << "right Y" << "value";
-    createTable(strList);
 
-    Mat lImg, rImg;
-    leftImage.convertTo(lImg, CV_64F);
-    rightImage.convertTo(rImg, CV_64F);
+    // 使用相关系数法寻找匹配点
+    vector<MatchPoint> matchPoints;
+    correlationMatch(leftImage.clone(), rightImage.clone(), leftCorner.clone(), rightCorner.clone(), matchPoints);
+    this->matchPoints = matchPoints;
 
+    // 降序排序
+    sort(matchPoints.begin(), matchPoints.end(), dec_comp);
+
+    // 在表格中显示匹配信息
+    presentMatchInfo(matchPoints);
+    // 绘制所有匹配线
+    showMatchImage(leftImage.clone(), rightImage.clone(), matchPoints);
+}
+void FeatureWin::correlationMatch(Mat left, Mat right, Mat leftCorner, Mat rightCorner, vector<MatchPoint> &matchPoints)
+{
+    left.convertTo(left, CV_64F);
+    right.convertTo(right, CV_64F);
+
+    // 左影像的迭代器
     Mat_<uchar>::const_iterator lit, rit, litd, ritd;
     lit  = leftCorner. begin<uchar>();
     litd = leftCorner. end<uchar>();
-
-    int nsize = 7;          // 计算窗口大小
-    int ssize = nsize * 20; // 搜索区大小
 
     int leftWidth, rightWidth, leftHeight, rightHeight;
     leftHeight  = leftCorner .rows;
@@ -605,32 +632,45 @@ void FeatureWin::on_correlation_index_triggered()
     rightHeight = rightCorner.rows;
     rightWidth  = rightCorner.cols;
 
+    if (leftHeight != rightHeight || leftWidth != rightWidth)
+    {
+        showMessage("左右影像尺寸不一致");
+        return;
+    }
+
+    // 构建搜索区，在搜索区内寻找相关系数最大的点作为匹配点
+    int nx, ny;          // 计算窗口大小
+    nx = ny = 9;
+
+    int sx, sy;          // 搜索区大小
+    sx = leftWidth/2;
+    sy = leftHeight/2;
 
     int i, j, row_left, col_left, row_right, col_right;
     for (i=0; lit!=litd; lit++, i++)
     {
         if (!*lit) continue;
 
-        row_left = i/leftWidth;
-        col_left = i%leftWidth;
+        row_left = i / leftWidth;
+        col_left = i % leftWidth;
 
         // 放弃边缘点
-        if (row_left-nsize<0 || row_left+nsize>=leftHeight ||
-                col_left-nsize<0 || col_left+nsize>=leftWidth)
+        if (row_left-ny<0 || row_left+ny>=leftHeight ||
+                col_left-nx<0 || col_left+nx>=leftWidth)
         {
             continue;
         }
 
         // 左窗口
-        Mat leftWin = lImg(Range(row_left-nsize, row_left+nsize),
-                           Range(col_left-nsize, col_left+nsize));
+        Mat leftWin = left(Range(row_left-ny, row_left+ny),
+                           Range(col_left-nx, col_left+nx));
 
-        // 搜索区
+        // 搜索区（以左匹配点的位置为中心构建搜索区）
         int r1, r2, c1, c2;
-        r1 = row_left-ssize < 0 ? 0 : row_left-ssize;
-        r2 = row_left+ssize > leftHeight ? leftHeight : row_left+ssize;
-        c1 = col_left-ssize < 0 ? 0 : col_left-ssize;
-        c2 = col_left+ssize > leftWidth ? leftWidth : col_left+ssize;
+        r1 = row_left-sy < 0 ? 0 : row_left-sy;
+        r2 = row_left+sy > leftHeight ? leftHeight : row_left+sy;
+        c1 = col_left-sx < 0 ? 0 : col_left-sx;
+        c2 = col_left+sx > leftWidth ? leftWidth : col_left+sx;
 
         Mat rightSearchArea = rightCorner(Range(r1, r2), Range(c1, c2));
 
@@ -644,7 +684,6 @@ void FeatureWin::on_correlation_index_triggered()
         rit  = rightSearchArea.begin<uchar>();
         ritd = rightSearchArea.end<uchar>();
 
-
         MatchPoint mPt;
         mPt.lpt = Point(col_left, row_left);
         for (j=0; rit!=ritd; rit++, j++)
@@ -654,14 +693,14 @@ void FeatureWin::on_correlation_index_triggered()
             row_right = j/searchWidth;
             col_right = j%searchWidth;
 
-            if ((row_right-nsize<0 || row_right+nsize>=rightHeight) || // 匹配窗口越界
-                (col_right-nsize<0 || col_right+nsize>=rightWidth))
+            if ((row_right-ny<0 || row_right+ny>rightHeight) || // 匹配窗口越界
+                (col_right-nx<0 || col_right+nx>rightWidth))
             {
                 continue;
             }
             // 右窗口
-            Mat rightWin = rImg(Range(row_right-nsize, row_right+nsize),
-                               Range(col_right-nsize, col_right+nsize));
+            Mat rightWin = right(Range(row_right-ny, row_right+ny),
+                               Range(col_right-nx, col_right+nx));
 
             double coVal = correlation(leftWin, rightWin);
             if (coVal > correlationValue)
@@ -675,12 +714,26 @@ void FeatureWin::on_correlation_index_triggered()
             matchPoints.push_back(mPt);
     }
 
-    // 在表格中显示匹配信息
-    presentMatchInfo(matchPoints);
-    // 绘制所有匹配线
-    showMatchImage(leftImage.clone(), rightImage.clone(), matchPoints);
+    // 统计匹配成功率
+    if (QMessageBox::information(nullptr,
+                                 tr("提示"),
+                                 tr("是否为核线影像？"),
+                                 QMessageBox::Yes,
+                                 QMessageBox::No) == QMessageBox::Yes)
+    {
+        int count = 0;
+        for (size_t i=0; i<matchPoints.size(); i++)
+        {
+            if (matchPoints[i].lpt.y == matchPoints[i].rpt.y)
+            {
+                count ++;
+            }
+        }
+        QMessageBox::information(nullptr,
+                                 tr("提示"),
+                                 QString().sprintf("正确匹配点的个数：%d", count));
+    }
 }
-
 double FeatureWin::correlation(Mat win1, Mat win2)
 {
     int h1,w1,h2,w2;
@@ -693,17 +746,19 @@ double FeatureWin::correlation(Mat win1, Mat win2)
         qDebug() << "左右窗口大小不一" << h1 << w1 << h2 << w2;
         exit(-1);
     }
+    if (win1.type() != CV_64F) win1.convertTo(win1, CV_64F);
+    if (win2.type() != CV_64F) win2.convertTo(win2, CV_64F);
 
-    double sum12, sum1, sum2, sum_1, sum_2;
-    sum12 = double(h1*w1)*mean(win1.mul(win2))[0];
-    sum1 = double(h1*w1)*mean(win1)[0];
-    sum2 = double(h1*w1)*mean(win2)[0];
-    sum_1 = double(h1*w1)*mean(win1.mul(win1))[0];
-    sum_2 = double(h1*w1)*mean(win2.mul(win2))[0];
-
+    double sum12, sum1, sum2, sum11, sum22;
+    sum12 = sum(win1.mul(win2))[0];
+    sum1 = sum(win1)[0];
+    sum2 = sum(win2)[0];
+    sum11 = sum(win1.mul(win1))[0];
+    sum22 = sum(win2.mul(win2))[0];
     double correlationValue;
-    correlationValue = (sum12 - sum1*sum2/double(h1*w1))/
-            sqrt((sum_1-sum1*sum1/double(h1*w1))*((sum_2-sum2*sum2/double(h1*w1))));
+    correlationValue = (sum12 - sum1 * sum2 / double(h1*w1))
+        / sqrt((sum11 - sum1*sum1 / double(h1*w1))*(sum22 - sum2*sum2 / double(h1*w1)));
+
     return correlationValue;
 }
 
@@ -719,6 +774,10 @@ void FeatureWin::initTable()
     // 数据模型
     this->pointInfoModel = new QStandardItemModel();
     pointInfoView->setModel(this->pointInfoModel);
+
+    QStringList strList;
+    strList << "No" << "left X" << "left Y" << "right X" << "right Y" << "value";
+    createTable(strList);
 }
 
 void FeatureWin::createTable(QStringList strList)
@@ -752,8 +811,6 @@ void FeatureWin::presentMatchInfo(vector<MatchPoint> matchPoints)
     }
     // 设置点击事件
     connect(ui->Information_Table, SIGNAL(clicked(QModelIndex)), this, SLOT(showPoint(QModelIndex)));
-    // 设置排序方式
-    this->pointInfoModel->sort(5, Qt::DescendingOrder);
 }
 
 void FeatureWin::showPoint(QModelIndex idx)
@@ -767,8 +824,10 @@ void FeatureWin::showPoint(QModelIndex idx)
 
     // 合成图像
     Mat left, right;
-    left = leftCornerImage.clone();
-    right = rightCornerImage.clone();
+    if (leftCornerImage.empty()) left = leftImage.clone();
+    else left = leftCornerImage.clone();
+    if (rightCornerImage.empty()) right = rightImage.clone();
+    else right = rightCornerImage.clone();
 
     cout << lpt << endl;
     cout << rpt << endl;
@@ -828,11 +887,6 @@ void FeatureWin::drawCorner(Mat &input, Mat corner, int thickness, int radius, S
 void FeatureWin::showMatchImage(Mat left, Mat right, vector<MatchPoint> matchPoints)
 {
     int leftHeight, leftWidth, rightHeight, rightWidth;
-    if (this->leftCornerImage.empty() || this->rightCornerImage.empty())
-    {
-        qDebug() << "角点影像为空";
-        exit(-1);
-    }
     if (left.channels() != right.channels())
     {
         qDebug() << "两幅影像通道数不一致";
@@ -878,11 +932,6 @@ void FeatureWin::showMatchImage(Mat left, Mat right, vector<MatchPoint> matchPoi
 void FeatureWin::showMatchImage(Mat left, Mat right, MatchPoint point)
 {
     int leftHeight, leftWidth, rightHeight, rightWidth;
-    if (this->leftCornerImage.empty() || this->rightCornerImage.empty())
-    {
-        qDebug() << "角点影像为空";
-        exit(-1);
-    }
     if (left.channels() != right.channels())
     {
         qDebug() << "两幅影像通道数不一致";
@@ -927,12 +976,737 @@ void FeatureWin::on_least_square_triggered()
         qDebug() << "影像为空";
         return;
     }
+    vector<MatchPoint> matchPoints;
+
+    Mat left, right;
+    left = leftImage.clone();
+    right = rightImage.clone();
+
+    leastSquare(left, right, 100, matchPoints, 0.5);
+
+    showMatchImage(leftImage.clone(), rightImage.clone(), matchPoints);
+
+    // 按相关系数大小排序
+    sort(matchPoints.begin(), matchPoints.end(), dec_comp);
+
+    this->matchPoints = matchPoints;
+
+    // 初始化表格
+    initTable();
+    presentMatchInfo(matchPoints);
+}
+
+/**
+ * @brief FeatureWin::leastSquare 最小二乘影像匹配算法
+ * @param left           左影像
+ * @param right          右影像
+ * @param anum           子区域数量
+ * @param matchPoints    匹配点
+ */
+void FeatureWin::leastSquare(Mat left, Mat right, int anum, vector<MatchPoint> &matchPoints, double threshold)
+{
+    int leftHeight, leftWidth, rightHeight, rightWidth;
+    leftHeight = left.rows;
+    leftWidth = left.cols;
+    rightHeight = right.rows;
+    rightWidth = right.cols;
+    if (leftHeight != rightHeight) exit(-1);
+    if (leftWidth != rightWidth) exit(-1);
+
+    // 转为灰度图
+    if (left.channels() == 3) cvtColor(left, left, COLOR_BGR2GRAY);
+    if (right.channels() == 3) cvtColor(right, right, COLOR_BGR2GRAY);
+
+    // 转为双浮点精度
+    left.convertTo(left, CV_64F);
+    right.convertTo(right, CV_64F);
+
+    // 重心化
+    left = left - mean(left)[0];
+    right = right - mean(right)[0];
+
+    cout << sum(left)[0] << endl;
+    cout << sum(right)[0] << endl;
+
+    // 子窗口大小
+    int winHeight, winWidth;
+    winHeight = leftHeight / anum;
+    winWidth = leftWidth / anum;
+
+    // 计算每一个窗口的匹配点
+    int i, j;
+    for (i = 0; i < anum; i++)
+    {
+        j = 0;
+    MatchWin2:
+        for (; j < anum; j++)
+        {
+            Mat leftWin, rightWin;
+
+            qDebug("行列(%d, %d), 当前点数：%d\n", i, j, matchPoints.size());
+            ui->statusBar->showMessage(QString().sprintf("行列(%d, %d), 当前点数：%d\n", i, j, matchPoints.size()));
+            // 直接得到左窗口
+            int x10, y10;
+            x10 = j * winWidth;
+            y10 = i * winHeight;
+            leftWin = left(Rect(x10, y10, winWidth, winHeight));
+
+            // 灰度一阶差分算子
+            Mat xKernel, yKernel;
+            xKernel = (Mat_<double>(1, 3) << -0.5, 0, 0.5);
+            yKernel = xKernel.t();
+
+            // 左窗口的梯度
+            Mat lx, ly;
+            filter2D(leftWin, lx, CV_64F, xKernel);
+            filter2D(leftWin, ly, CV_64F, yKernel);
+
+            // 畸变系数
+            double h0, h1, a0, a1, a2, b0, b1, b2;
+            // 赋初值
+            h0 = 0.0; h1 = 1.0;
+            a0 = 0.0; a1 = 1.0; a2 = 0.0;
+            b0 = 0.0; b1 = 0.0; b2 = 1.0;
+
+            // 改正数
+            double dh0, dh1, da0, da1, da2, db0, db1, db2;
+            dh0 = dh1 = da0 = da1 = da2 = db0 = db1 = db2 = 999.0;
+
+            int count = 0;
+            int iterateCount = 10;
+            while (abs(da0) >= threshold || abs(db0) >= threshold)
+            {
+                // 迭代超限，放弃影像
+                if (count > iterateCount)
+                {
+                    j++;
+                    goto MatchWin2;
+                }
+
+                // 右窗口左上角在右影像上的坐标
+                int x20, y20;
+                x20 = cvRound(a0 + a1 * x10 + a2 * y10);
+                y20 = cvRound(b0 + b1 * x10 + b2 * y10);
+
+
+                if (x20 < 0 || y20 < 0 ||
+                    x20 + winWidth >= right.cols ||
+                    y20 + winHeight >= right.rows)
+                {
+                    qDebug("窗口超出右影像范围: (%d, %d) (%d, %d)\n", x20, y20, x20 + winWidth, y20 + winHeight);
+                    j++;
+                    goto MatchWin2;
+                }
+
+                // 计算得到右窗口
+                if (!rightWin.empty()) rightWin.release();
+                rightWin.create(winHeight, winWidth, CV_64F);
+                for (int m = y10; m < y10 + winHeight; m++)
+                {
+                    for (int n = x10; n < x10 + winWidth; n++)
+                    {
+                        // 计算右影像对应像素的位置
+                        double x2, y2;
+                        x2 = a0 + a1*double(n) + a2*double(m);
+                        y2 = b0 + b1*double(n) + b2*double(m);
+
+                        // 右影像超界，放弃该影像
+                        if ((cvRound(x2) < 0 || cvRound(x2 + 1) >= right.cols) ||
+                            (cvRound(y2) < 0 || cvRound(y2 + 1) >= right.rows) ||
+                            (cvRound(x2 + 1) < 0 || cvRound(x2 + 1) >= right.cols) ||
+                            (cvRound(y2 + 1) < 0 || cvRound(y2 + 1) >= right.rows))
+                        {
+                            j++;
+                            qDebug("计算超界(%.3lf, %.3lf), (%.3lf, %.3lf)", x2, y2, x2 + winWidth, y2 + winHeight);
+                            goto MatchWin2;
+                        }
+
+                        // 重采样 + 辐射改正
+                        rightWin.at<double>(m - y10, n - x10) = h0 + h1 * resampleDouble(right, y2, x2);
+                    }
+                }
+
+                // 计算灰度差分
+                Mat gx, gy;
+                filter2D(rightWin, gx, CV_64F, xKernel);
+                filter2D(rightWin, gy, CV_64F, yKernel);
+
+                // 逐点计算误差方程
+                Mat C, L;
+                C.create(winHeight * winWidth, 8, CV_64F);
+                L.create(winHeight * winWidth, 1, CV_64F);
+                for (int m = 0; m < winHeight; m++)
+                {
+                    for (int n = 0; n < winWidth; n++)
+                    {
+                        C.at<double>(m*winWidth + n, 0) = 1;
+                        C.at<double>(m*winWidth + n, 1) = rightWin.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 2) = gx.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 3) = (n + x10)*gx.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 4) = (m + y10)*gx.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 5) = gy.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 6) = (n + x10)*gy.at<double>(m, n);
+                        C.at<double>(m*winWidth + n, 7) = (m + y10)*gy.at<double>(m, n);
+                        L.at<double>(m*winWidth + n, 0) = leftWin.at<double>(m, n) - rightWin.at<double>(m, n);
+                    }
+                }
+
+                // 解误差方程，得到改正数
+                Mat X;
+                X = (C.t() * C).inv()*C.t()*L;
+
+                dh0 = X.at<double>(0, 0);
+                dh1 = X.at<double>(1, 0);
+                da0 = X.at<double>(2, 0);
+                da1 = X.at<double>(3, 0);
+                da2 = X.at<double>(4, 0);
+                db0 = X.at<double>(5, 0);
+                db1 = X.at<double>(6, 0);
+                db2 = X.at<double>(7, 0);
+
+                // qDebug("%d: %.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf\n", count, dh0, dh1, da0, da1, da2, db0, db1, db2);
+
+                double _h0, _h1, _a0, _a1, _a2, _b0, _b1, _b2;
+                _h0 = h0;
+                _h1 = h1;
+                _a0 = a0;
+                _a1 = a1;
+                _a2 = a2;
+                _b0 = b0;
+                _b1 = b1;
+                _b2 = b2;
+
+                h0 = _h0 + dh0 + _h0*dh1;
+                h1 = _h1 + _h1*dh1;
+                a0 = _a0 + da0 + _a0*da1 + _b0*da2;
+                a1 = _a1 + _a1*da1 + _b1*da2;
+                a2 = _a2 + _a2*da1 + _b2*da2;
+                b0 = _b0 + db0 + _a0*db1 + _b0*db2;
+                b1 = _b1 + _a1*db1 + _b1*db2;
+                b2 = _b2 + _a2*db1 + _b2*db2;
+
+                // 迭代次数++
+                count++;
+            }
+
+            // 计算左窗口的最佳匹配点位置
+            int x1, y1;
+            double sumx1, sumx2, sumy1, sumy2;
+            sumx1 = sumx2 = sumy1 = sumy2 = 0.0; // 累加结果
+            for (int m = 0; m < winHeight; m++)
+            {
+                for (int n = 0; n < winWidth; n++)
+                {
+                    sumx1 += (n + x10) * lx.at<double>(m, n) * lx.at<double>(m, n);
+                    sumx2 += lx.at<double>(m, n) * lx.at<double>(m, n);
+                    sumy1 += (m + y10) * ly.at<double>(m, n) * ly.at<double>(m, n);
+                    sumy2 += ly.at<double>(m, n) * ly.at<double>(m, n);
+                }
+            }
+            x1 = cvRound(sumx1 / sumx2 + 0.5);
+            y1 = cvRound(sumy1 / sumy2 + 0.5);
+
+            // 计算右窗口匹配点位置
+            int x2, y2;
+            x2 = cvRound(a0 + a1*x1 + a2*y1);
+            y2 = cvRound(b0 + b1*x1 + b2*y1);
+
+            if (count != 0)
+            {
+                matchPoints.push_back({
+                    Point(x1, y1),
+                    Point(x2, y2),
+                    correlation(leftWin, rightWin)
+                });
+            }
+        }
+    }
+}
+
+/**
+ * @brief FeatureWin::leastSquare 最小二乘影像匹配算法
+ *        在image中根据win搜索匹配窗口
+ * @param win          匹配窗口
+ * @param image        影像
+ * @param pt           影像上匹配点位置
+ * @param cVal         相关系数
+ * @param matchPoints  匹配点
+ * @param h0 h1 a0 a1 a2 b0 b1 b2 畸变系数初值
+ */
+bool FeatureWin::leastSquare(Mat left, Mat right, Rect leftWinRect, Point &left_point, Point &right_point, double &cVal, double dr, double dc)
+{
+
+    // 影像尺寸
+    int lr, lc, rr, rc;
+    lr = left.rows;
+    lc = left.cols;
+    rr = right.rows;
+    rc = right.cols;
+
+    // 左窗口的左上角在左影像上的坐标
+    int x10, y10;
+    x10 = leftWinRect.x;
+    y10 = leftWinRect.y;
+
+    // 窗口尺寸
+    int winHeight, winWidth;
+    winHeight = leftWinRect.height;
+    winWidth = leftWinRect.width;
+
+    // 转为双浮点精度
+    if (left.type() != CV_64F) left.convertTo(left, CV_64F);
+    if (right.type() != CV_64F) right.convertTo(right, CV_64F);
+
+    // 转为灰度图
+    if (left.channels() == 3) cvtColor(left, left, COLOR_BGR2GRAY);
+    if (right.channels() == 3) cvtColor(right, right, COLOR_BGR2GRAY);
+
+    // 灰度一阶差分算子
+    Mat xKernel, yKernel;
+    xKernel = (Mat_<double>(1, 3) << -1, 0, 1);
+    yKernel = xKernel.t();
+
+    // 窗口
+    Mat leftWin, rightWin;
+    leftWin = left(leftWinRect);
+
+
+    //Mat showLeft, showRight;
+    //left.convertTo(showLeft, CV_8UC1);
+    //right.convertTo(showRight, CV_8UC1);
+    //rectangle(showLeft, leftWinRect, Scalar(255));
+    //imshow("leftwin", showLeft);
+    //waitKey(0);
+
+    if (leftWin.empty())
+    {
+        qDebug("左窗口为空\n");
+        return false;
+    }
+
+    // 畸变系数
+    double h0, h1, a0, a1, a2, b0, b1, b2;
+    h0 = 0.0; h1 = 1.0;
+    a0 = dc; a1 = 1.0; a2 = 0.0;
+    b0 = dr; b1 = 0.0; b2 = 1.0;
+
+    // 改正数
+    double dh0, dh1, da0, da1, da2, db0, db1, db2;
+    dh0 = dh1 = da0 = da1 = da2 = db0 = db1 = db2 = 999.0;
+
+    // 迭代计算影像上的匹配窗口
+    int count = 0;
+    int iterateCount = 10; // 迭代次数
+    double threshold = 0.5;
+    while (abs(da0) >= threshold || abs(db0) >= threshold)
+    {
+        // 迭代超限，放弃影像
+        if (count > iterateCount)
+        {
+            return false;
+        }
+
+        // 右窗口的左上角在右影像上的坐标
+        int x20, y20;
+        x20 = cvRound(a0 + a1*double(x10) + a2*double(y10));
+        y20 = cvRound(b0 + b1*double(x10) + b2*double(y10));
+
+        // 窗口超出图像范围
+        if (x20 < 0 || y20 < 0 ||
+            x20 + winWidth >= right.cols ||
+            y20 + winHeight >= right.rows)
+        {
+            qDebug("窗口超出右影像范围: (%d, %d) (%d, %d)\n", x20, y20, x20 + winWidth, y20 + winHeight);
+            return false;
+        }
+
+        // 重采样获得右窗口
+        if (!rightWin.empty()) rightWin.release();
+        rightWin.create(winHeight, winWidth, CV_64F);
+        for (int m = y10; m < y10 + winHeight; m++)
+        {
+            for (int n = x10; n < x10 + winWidth; n++)
+            {
+                // 计算出右窗口坐标
+                double x2, y2;
+                x2 = a0 + a1*double(n) + a2*double(m);
+                y2 = b0 + b1*double(n) + b2*double(m);
+
+                // 超界，放弃本次匹配
+                if ((cvRound(y2) < 0 || cvRound(y2) >= right.rows) ||
+                    (cvRound(x2) < 0 || cvRound(x2) >= right.cols) ||
+                    (cvRound(y2 + 1.0) < 0 || cvRound(y2 + 1.0) >= right.rows) ||
+                    (cvRound(x2 + 1.0) < 0 || cvRound(x2 + 1.0) >= right.cols))
+                {
+                    qDebug("计算点位超出右窗口范围: (x, y) = (%.3lf, %.3lf)", x2, y2);
+                    qDebug("窗口: (%d, %d) (%d, %d)\n", x20, y20, x20 + winWidth, y20 + winHeight);
+                    return false;
+                }
+
+                // 重采样 + 辐射改正
+                rightWin.at<double>(m - y10, n - x10) = h0 + h1 * resampleDouble(right, y2, x2);
+            }
+        }
+
+        //Mat showRightWin, showLeftWin;
+        //leftWin.convertTo(showLeftWin, CV_8UC1);
+        //rightWin.convertTo(showRightWin, CV_8UC1);
+        //imshow("showLeftWin", showLeftWin);
+        //imshow("showRightWin", showRightWin);
+        //waitKey(0);
+
+        // 右窗口的灰度差分
+        Mat gx, gy;
+        cv::filter2D(rightWin, gx, CV_64F, xKernel);
+        cv::filter2D(rightWin, gy, CV_64F, yKernel);
+
+        // 遍历右窗口，逐点计算误差方程
+        Mat C, L;
+        C.create(winHeight * winWidth, 8, CV_64F);
+        L.create(winHeight * winWidth, 1, CV_64F);
+
+        for (int m = 0; m < winHeight; m++)
+        {
+            for (int n = 0; n < winWidth; n++)
+            {
+                C.at<double>(m*winWidth + n, 0) = 1;
+                C.at<double>(m*winWidth + n, 1) = rightWin.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 2) = gx.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 3) = (n + x10)*gx.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 4) = (m + y10)*gx.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 5) = gy.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 6) = (n + x10)*gy.at<double>(m, n);
+                C.at<double>(m*winWidth + n, 7) = (m + y10)*gy.at<double>(m, n);
+                L.at<double>(m*winWidth + n, 0) = leftWin.at<double>(m, n) - rightWin.at<double>(m, n);
+            }
+        }
+
+        // 解误差方程，得到改正数
+        Mat X;
+        X = (C.t() * C).inv()*C.t()*L;
+
+        dh0 = X.at<double>(0, 0);
+        dh1 = X.at<double>(1, 0);
+        da0 = X.at<double>(2, 0);
+        da1 = X.at<double>(3, 0);
+        da2 = X.at<double>(4, 0);
+        db0 = X.at<double>(5, 0);
+        db1 = X.at<double>(6, 0);
+        db2 = X.at<double>(7, 0);
+
+        double _h0, _h1, _a0, _a1, _a2, _b0, _b1, _b2;
+        _h0 = h0;
+        _h1 = h1;
+        _a0 = a0;
+        _a1 = a1;
+        _a2 = a2;
+        _b0 = b0;
+        _b1 = b1;
+        _b2 = b2;
+
+        h0 = _h0 + dh0 + _h0*dh1;
+        h1 = _h1 + _h1*dh1;
+        a0 = _a0 + da0 + _a0*da1 + _b0*da2;
+        a1 = _a1 + _a1*da1 + _b1*da2;
+        a2 = _a2 + _a2*da1 + _b2*da2;
+        b0 = _b0 + db0 + _a0*db1 + _b0*db2;
+        b1 = _b1 + _a1*db1 + _b1*db2;
+        b2 = _b2 + _a2*db1 + _b2*db2;
+
+        // 迭代次数++
+        count++;
+    }
+
+    // 计算相关系数
+    cVal = correlation(leftWin, rightWin);
+    if (cVal < 0.5) return false;
+
+    // 左窗口的梯度
+    Mat lx, ly;
+    cv::filter2D(leftWin, lx, CV_64F, xKernel);
+    cv::filter2D(leftWin, ly, CV_64F, yKernel);
+
+    // 计算最佳匹配点位置(左)
+    int x1, y1;
+    double sumx1, sumx2, sumy1, sumy2;
+    sumx1 = sumx2 = sumy1 = sumy2 = 0.0; // 累加结果
+    for (int m = 0; m < winHeight; m++)
+    {
+        for (int n = 0; n < winWidth; n++)
+        {
+            sumx1 += (n + x10) * lx.at<double>(m, n) * lx.at<double>(m, n);
+            sumx2 += lx.at<double>(m, n) * lx.at<double>(m, n);
+            sumy1 += (m + y10) * ly.at<double>(m, n) * ly.at<double>(m, n);
+            sumy2 += ly.at<double>(m, n) * ly.at<double>(m, n);
+        }
+    }
+    x1 = cvRound(sumx1 / sumx2);
+    y1 = cvRound(sumy1 / sumy2);
+    left_point = Point(x1, y1);
+
+    // 得到右影像上的匹配点
+    int x2, y2;
+    x2 = cvRound(a0 + a1*x1 + a2*y1);
+    y2 = cvRound(b0 + b1*x1 + b2*y1);
+    right_point = Point(x2, y2);
+
+    return true;
+}
+double FeatureWin::resampleDouble(Mat image, double r, double c)
+{
+    int r1, r2, c1, c2;
+    r1 = cvRound(r); r2 = r1 + 1;
+    c1 = cvRound(c); c2 = c1 + 2;
+
+    double dr, dc;
+    dr = r - double(r1);
+    dc = c - double(c1);
+
+    double result = (1.0 - dr)*(1.0 - dc)*image.at<double>(r1, c1) + (1.0 - dr)*dc*image.at<double>(r1, c2) +
+        dr*(1.0 - dc)*image.at<double>(r2, c1) + dr*dc*image.at<double>(r2, c2);
+
+    return result;
+}
+
+void FeatureWin::on_least_square_plus_triggered()
+{
+    if (leftImage.empty() || rightImage.empty())
+    {
+        showMessage("影像为空");
+        return;
+    }
     if (leftCorner.empty() || rightCorner.empty())
     {
-        qDebug() << "角点影像为空";
+        showMessage("请先进行角点提取");
         return;
     }
     Mat left, right;
     left = leftImage.clone();
     right = rightImage.clone();
+
+    if (left.channels() == 3) cvtColor(left, left, COLOR_BGR2GRAY);
+    if (right.channels() == 3) cvtColor(right, right, COLOR_BGR2GRAY);
+
+    Mat leftCorner, rightCorner;
+    leftCorner = this->leftCorner.clone();
+    rightCorner = this->rightCorner.clone();
+
+    int lr, lc, rr, rc;
+    lr = left.rows;
+    lc = left.cols;
+    rr = right.rows;
+    rc = right.cols;
+    if (lr != rr || lc != rc)
+    {
+        showMessage("左右影像尺寸不一致");
+        return;
+    }
+
+    // 选取特征点
+    // 1. 选取左侧特征点
+    int centerRow, centerCol;
+    centerRow = lr / 2;
+    centerCol = lc / 2;
+
+    // 第一对匹配点
+    Point pt0, pt1;
+
+    int centerSize;
+    centerSize = 10;
+    bool isSelected = false;
+    while (!isSelected)
+    {
+        for (int i = centerRow - (centerSize / 2); i < centerRow + (centerSize / 2); i++)
+        {
+            for (int j = centerCol - (centerSize / 2); j < centerCol + (centerSize / 2); j++)
+            {
+                if (leftCorner.at<uchar>(i, j))
+                {
+                    pt0 = Point(j, i);
+                    // 2. 在右侧获取匹配点
+                    // 窗口尺寸
+                    int winHeight, winWidth;
+                    winHeight = winWidth = 50;
+
+                    // 左窗口
+                    Mat leftWin, rightWin;
+                    Rect leftRect, rightRect;
+                    leftRect = Rect(pt0.x - winWidth / 2, pt0.y - winHeight / 2, winWidth, winHeight);
+                    leftWin = left(leftRect);
+                    leftWin.convertTo(leftWin, CV_64F);
+
+                    // 在左窗口画圆
+                    Mat showLeft;
+                    showLeft = left.clone();
+                    circle(showLeft, pt0, 10, Scalar(255, 0, 0), 2);
+
+                    // 遍历右影像，获得相关系数最大的那个窗口
+                    Mat_<uchar>::const_iterator it = rightCorner.begin<uchar>();
+
+                    double correlationValue = -1.0;
+                    for (int i = 0; it != rightCorner.end<uchar>(); it++, i++)
+                    {
+                        if (*it)
+                        {
+                            int r, c;
+                            r = i / rc;
+                            c = i % rc;
+
+                            // 排除边缘
+                            if (c - winWidth / 2 < 0 || c + winWidth / 2 >= rc ||
+                                r - winHeight / 2 < 0 || r + winHeight / 2 >= rr)
+                            {
+                                continue;
+                            }
+
+                            rightWin.release();
+                            rightRect = Rect(c - winWidth / 2, r - winHeight / 2, winWidth, winHeight);
+                            rightWin = right(rightRect);
+                            rightWin.convertTo(rightWin, CV_64F);
+
+                            // 计算相关系数
+                            double cVal = correlation(leftWin, rightWin);
+                            if (cVal > correlationValue)
+                            {
+                                correlationValue = cVal;
+                                cout << correlationValue << endl;
+
+                                pt1 = Point(c, r);
+                            }
+                        }
+                    }
+
+                    // 在右窗口画圆
+                    Mat showRight;
+                    showRight = right.clone();
+                    circle(showRight, pt1, 10, Scalar(255, 0, 0), 2);
+
+                    MatchPoint matchPoint = {pt0, pt1, 0.0};
+                    showMatchImage(left, right, matchPoint);
+                    showImage(showLeft, showRight);
+
+                    // 确认
+                    if (QMessageBox::information(nullptr,
+                                                 tr("提示"),
+                                                 tr("是否为正确匹配点？"),
+                                                 QMessageBox::Yes,
+                                                 QMessageBox::No) == QMessageBox::Yes)
+                    {
+                        isSelected = true;
+                        goto HavePt0;
+                    }
+                }
+            }
+        }
+        // 若找不到特征点，则扩大搜索范围
+        centerSize += 10;
+    }
+    HavePt0:
+
+    //    [597, 579]
+    //    [605, 579]
+    cout << pt0 << endl;
+    cout << pt1 << endl;
+
+    // 2. 记录行列差值，用于预测点位
+    double dr, dc;
+    dr = pt1.y - pt0.y;
+    dc = pt1.x - pt0.x;
+
+    // 3. 逐点匹配
+    int winSize = 51;
+    vector<MatchPoint> matchPoints;
+    Mat_<uchar>::const_iterator it = leftCorner.begin<uchar>();
+
+    left.convertTo(left, CV_64F);
+    right.convertTo(right, CV_64F);
+
+    for (int i = 0; it != leftCorner.end<uchar>(); it++, i++)
+    {
+        if (*it)
+        {
+            // 获取左影像特征点的行列号
+            int r, c;
+            r = i / lc;
+            c = i % lc;
+
+            qDebug("行列(%d, %d), 当前点数：%d\n", r, c, matchPoints.size());
+            ui->statusBar->showMessage(QString().sprintf("行列(%d, %d), 当前点数：%d\n", r, c, matchPoints.size()));
+
+            // 窗口超界
+            if (r - (winSize + 1) / 2 < 0 || r + (winSize + 1) / 2 >= lr ||
+                c - (winSize + 1) / 2 < 0 || c + (winSize + 1) / 2 >= lc)
+            {
+                continue;
+            }
+
+            // 3.1 以特征点为中心构建左窗口
+            Rect leftWinRect;
+            leftWinRect = Rect(c - winSize / 2, r - winSize / 2 , winSize, winSize);
+
+
+            // 3.2 计算右影像上的匹配点坐标
+            Point lpt, rpt;
+            double correlationValue;
+            if (leastSquare(left, right, leftWinRect, lpt, rpt, correlationValue, dr, dc))
+            {
+                matchPoints.push_back({ lpt, rpt, correlationValue });
+
+                qDebug("(%d, %d), (%d, %d), %lf\n", lpt.x, lpt.y, rpt.x, rpt.y, correlationValue);
+            }
+        }
+    }
+    this->matchPoints = matchPoints;
+
+    // 4. 显示匹配图
+    left.convertTo(left, CV_8UC1);
+    right.convertTo(right, CV_8UC1);
+    showMatchImage(left, right, matchPoints);
+
+    // 5. 匹配点排序
+    sort(matchPoints.begin(), matchPoints.end(), dec_comp);
+
+    // 6. 在表格中显示
+    initTable();
+    presentMatchInfo(matchPoints);
+}
+
+void FeatureWin::on_wallis_filter_triggered()
+{
+    if (leftImage.empty() || rightImage.empty())
+    {
+        showMessage("请先打开左右影像");
+        return;
+    }
+
+    Mat left, right;
+    left = leftImage.clone();
+    right = rightImage.clone();
+
+    // 获取灰度图
+    Mat grayLeft, grayRight;
+    grayLeft = left.clone();
+    grayRight = right.clone();
+    if (grayLeft.channels() == 3) cvtColor(grayLeft, grayLeft, COLOR_BGR2GRAY);
+    if (grayRight.channels() == 3) cvtColor(grayRight, grayRight, COLOR_BGR2GRAY);
+
+    // 双浮点矩阵
+    Mat doubleLeft, doubleRight;
+    left.convertTo(doubleLeft, CV_64F);
+    right.convertTo(doubleRight, CV_64F);
+
+    // Wallis 滤波
+    Wallis wallisLeft(grayLeft, 0.5f, 0.5f, 127.0f, 50.0f);
+    Wallis wallisRight(grayRight, 0.5f, 0.5f, 127.0f, 50.0f);
+
+    Mat filterLeft, filterRight;
+    filterLeft = grayLeft.clone();
+    filterRight = grayRight.clone();
+
+    wallisLeft.Wallisfilter(filterLeft);
+    wallisRight.Wallisfilter(filterRight);
+
+    showImage(filterLeft, filterRight);
+    this->leftImage = filterLeft.clone();
+    this->rightImage = filterRight.clone();
 }

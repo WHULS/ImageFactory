@@ -102,18 +102,21 @@
     </property>
     <addaction name="correlation_index"/>
     <addaction name="least_square"/>
+    <addaction name="least_square_plus"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
      <string>图像</string>
     </property>
     <addaction name="open_image"/>
+    <addaction name="wallis_filter"/>
     <addaction name="clear_image"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="moravec_fetch">
    <property name="icon">
     <iconset resource="icons.qrc">
@@ -184,6 +187,24 @@
    </property>
    <property name="text">
     <string>CV-SIFT (&amp;C)</string>
+   </property>
+  </action>
+  <action name="least_square_plus">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/multi_color.png</normaloff>:/images/images/multi_color.png</iconset>
+   </property>
+   <property name="text">
+    <string>最小二乘plus(&amp;M)</string>
+   </property>
+  </action>
+  <action name="wallis_filter">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/images/tool.png</normaloff>:/images/images/tool.png</iconset>
+   </property>
+   <property name="text">
+    <string>Wallis滤波 (&amp;W)</string>
    </property>
   </action>
  </widget>

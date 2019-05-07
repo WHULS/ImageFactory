@@ -19,6 +19,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -36,6 +37,8 @@ public:
     QAction *open_image;
     QAction *clear_image;
     QAction *cv_sift;
+    QAction *least_square_plus;
+    QAction *wallis_filter;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
@@ -47,6 +50,7 @@ public:
     QMenu *menu;
     QMenu *menu_2;
     QMenu *menu_3;
+    QStatusBar *statusBar;
 
     void setupUi(QMainWindow *FeatureWin)
     {
@@ -98,6 +102,16 @@ public:
         QIcon icon7;
         icon7.addFile(QString::fromUtf8(":/images/images/Sobel.png"), QSize(), QIcon::Normal, QIcon::Off);
         cv_sift->setIcon(icon7);
+        least_square_plus = new QAction(FeatureWin);
+        least_square_plus->setObjectName(QString::fromUtf8("least_square_plus"));
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8(":/images/images/multi_color.png"), QSize(), QIcon::Normal, QIcon::Off);
+        least_square_plus->setIcon(icon8);
+        wallis_filter = new QAction(FeatureWin);
+        wallis_filter->setObjectName(QString::fromUtf8("wallis_filter"));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/images/images/tool.png"), QSize(), QIcon::Normal, QIcon::Off);
+        wallis_filter->setIcon(icon9);
         centralwidget = new QWidget(FeatureWin);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -156,6 +170,9 @@ public:
         menu_3 = new QMenu(menubar);
         menu_3->setObjectName(QString::fromUtf8("menu_3"));
         FeatureWin->setMenuBar(menubar);
+        statusBar = new QStatusBar(FeatureWin);
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        FeatureWin->setStatusBar(statusBar);
 
         menubar->addAction(menu_3->menuAction());
         menubar->addAction(menu->menuAction());
@@ -165,7 +182,9 @@ public:
         menu->addAction(harris_fetch);
         menu_2->addAction(correlation_index);
         menu_2->addAction(least_square);
+        menu_2->addAction(least_square_plus);
         menu_3->addAction(open_image);
+        menu_3->addAction(wallis_filter);
         menu_3->addAction(clear_image);
 
         retranslateUi(FeatureWin);
@@ -184,6 +203,8 @@ public:
         open_image->setText(QApplication::translate("FeatureWin", "\346\211\223\345\274\200 (&O)", nullptr));
         clear_image->setText(QApplication::translate("FeatureWin", "\346\270\205\347\251\272 (&D)", nullptr));
         cv_sift->setText(QApplication::translate("FeatureWin", "CV-SIFT (&C)", nullptr));
+        least_square_plus->setText(QApplication::translate("FeatureWin", "\346\234\200\345\260\217\344\272\214\344\271\230plus(&M)", nullptr));
+        wallis_filter->setText(QApplication::translate("FeatureWin", "Wallis\346\273\244\346\263\242 (&W)", nullptr));
         Image_Left->setText(QApplication::translate("FeatureWin", "L", nullptr));
         Image_Right->setText(QApplication::translate("FeatureWin", "R", nullptr));
         menu->setTitle(QApplication::translate("FeatureWin", "\347\202\271\347\211\271\345\276\201\346\217\220\345\217\226", nullptr));

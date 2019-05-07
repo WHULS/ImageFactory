@@ -29,6 +29,7 @@ using namespace std;
 #include "Matrix.h"
 #include "Dialogs/MoravecDlg.h"
 #include "Dialogs/ForstnerDlg.h"
+#include "Wallis.h"
 
 namespace Ui {
 class FeatureWin;
@@ -65,12 +66,17 @@ public:
     void moravec(Mat image, Mat &out, int factorSize=9, int searchAreaSize=9);
     void forstner(Mat image, Mat &out, int factorSize, int searchAreaSize, double Tq=0.5, double f=0.75);
     void harris(Mat image, Mat &out, int blurRadius=9, double sigma=1.5, double qualityLevel=0.01);
+    void correlationMatch(Mat left, Mat right, Mat leftCorner, Mat rightCorner, vector<MatchPoint> &matchPoints);
     double correlation(Mat win1, Mat win2);
     void drawCorner(Mat &input, Mat corner, int thickness=1, int radius=1, Scalar color=Scalar(0, 255, 0));
 
     void initTable();
     void createTable(QStringList strList);
     void presentMatchInfo(vector<MatchPoint>);
+
+    void leastSquare(Mat left, Mat right, int anum, vector<MatchPoint> &matchPoints, double threshold=0.5);
+    bool leastSquare(Mat left, Mat right, Rect leftWin, Point &left_point, Point &right_point, double &cVal, double dr=0.0, double dc=0.0);
+    double resampleDouble(Mat image, double r, double c);
 
 public slots:
     void moravecChanged(int factorSize, int searchAreaSize);
@@ -92,6 +98,10 @@ private slots:
     void on_correlation_index_triggered();
 
     void on_least_square_triggered();
+
+    void on_least_square_plus_triggered();
+
+    void on_wallis_filter_triggered();
 
 private:
     Ui::FeatureWin *ui;

@@ -35,6 +35,7 @@ SOURCES += \
     Matrix.cpp \
     FeatureWin.cpp \
     CalibrationWin.cpp \
+    Wallis.cpp \
     \
     Dialogs/houghcircledlg.cpp \
     Dialogs/MoravecDlg.cpp\
@@ -53,6 +54,7 @@ HEADERS += \
     Matrix.h \
     FeatureWin.h \
     CalibrationWin.h \
+    Wallis.h \
     \
     Dialogs/houghcircledlg.h \
     Dialogs/MoravecDlg.h\
