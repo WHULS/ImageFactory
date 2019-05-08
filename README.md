@@ -1,4 +1,4 @@
-# Image Factory `[v0.2.0]`
+# Image Factory `[v0.3.0]`
 
 > 图像工厂 (Image Factory) 是基于Qt5和opencv的图像处理程序。
 
